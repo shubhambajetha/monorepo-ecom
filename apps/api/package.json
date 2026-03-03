@@ -6,7 +6,7 @@
   "description": "API server",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "ts-node-dev --esm src/index.ts",
+    "dev": "node --loader ts-node/esm src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint src --max-warnings 0",
@@ -24,7 +24,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^22.15.3",
     "eslint": "^9.39.1",
-    "ts-node-dev": "^2.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "5.9.2"
   }
 }
