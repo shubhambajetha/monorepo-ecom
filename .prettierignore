@@ -1,0 +1,8 @@
+# Ignore files
+.next
+.turbo
+dist
+node_modules
+*.log
+coverage
+.env*
