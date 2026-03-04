@@ -1,6 +1,7 @@
 {
   "name": "@ecomerse/db",
   "version": "1.0.0",
+  "type": "module",
   "description": "Database package with Prisma",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +13,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "node ./node_modules/typescript/lib/tsc.js"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,6 @@
     "prisma": "^7.4.2"
   },
   "devDependencies": {
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   }
 }

@@ -1,9 +1,16 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@ecomerse/db";
 
 const app = express();
-const prisma = new PrismaClient();
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 app.use(cors());
 app.use(express.json());
@@ -20,7 +27,7 @@ app.get("/products", async (req, res) => {
   try {
     const products = await prisma.product.findMany();
     res.json(products);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Failed to fetch products" });
   }
 });
@@ -35,7 +42,7 @@ app.get("/products/:id", async (req, res) => {
       return res.status(404).json({ error: "Product not found" });
     }
     res.json(product);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Failed to fetch product" });
   }
 });
@@ -54,7 +61,7 @@ app.post("/products", async (req, res) => {
       },
     });
     res.json(product);
-  } catch (error) {
+  } catch {
     res.status(400).json({ error: "Failed to create product" });
   }
 });
@@ -73,7 +80,7 @@ app.post("/users", async (req, res) => {
       },
     });
     res.json(user);
-  } catch (error) {
+  } catch {
     res.status(400).json({ error: "Failed to create user" });
   }
 });
@@ -92,22 +99,30 @@ app.get("/users/:id", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
     res.json(user);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Failed to fetch user" });
   }
 });
 
 // ===== ORDERS =====
 
+type CreateOrderItem = {
+  productId: string;
+  quantity: number;
+};
+
 // Create order
 app.post("/orders", async (req, res) => {
   try {
-    const { userId, items } = req.body;
+    const { userId, items } = req.body as {
+      userId: string;
+      items: CreateOrderItem[];
+    };
     let total = 0;
 
     // Calculate total
     const orderItems = await Promise.all(
-      items.map(async (item: any) => {
+      items.map(async (item) => {
         const product = await prisma.product.findUnique({
           where: { id: item.productId },
         });
@@ -134,7 +149,7 @@ app.post("/orders", async (req, res) => {
       },
     });
     res.json(order);
-  } catch (error) {
+  } catch {
     res.status(400).json({ error: "Failed to create order" });
   }
 });
@@ -149,7 +164,7 @@ app.get("/users/:userId/orders", async (req, res) => {
       },
     });
     res.json(orders);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Failed to fetch orders" });
   }
 });
