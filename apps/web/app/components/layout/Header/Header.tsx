@@ -39,7 +39,7 @@ const products = [
   },
   {
     name: 'Security',
-    description: 'Your customers’ data will be safe and secure',
+    description: "Your customers' data will be safe and secure",
     href: '#',
     icon: FingerPrintIcon,
   },
@@ -225,3 +225,4 @@ export default function Header() {
     </header>
   );
 }
+
