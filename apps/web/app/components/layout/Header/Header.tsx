@@ -47,7 +47,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-white">
+    <header className="fixed inset-x-0 top-0 z-50 bg-white">
       {/* TOP BAR */}
       {!searchOpen && (
         <div className="bg-[#f5f5f5]">
@@ -67,23 +67,22 @@ export default function Header() {
         </div>
       )}
 
-      {/* MAIN NAV */}
+  
       <nav className="border-b border-gray-200/80">
         <div className="mx-auto hidden h-[66px] w-full max-w-[1440px] items-center px-8 lg:grid lg:grid-cols-[auto_1fr_auto]">
-          {/* LOGO */}
+        
           <Image
             src="/nike-logo.svg"
             alt="Nike"
-            width={76}
-            height={28}
-            className="h-8 w-auto"
+            width={80}
+            height={30}
+            className="h-10 w-22"
             priority
           />
 
-          {/* SEARCH MODE */}
+         
           {searchOpen ? (
             <div className="col-span-2 relative flex items-center justify-center">
-              {/* centered search */}
               <div className="flex h-[44px] w-full max-w-[900px] items-center rounded-full bg-gray-100 px-6">
                 <MagnifyingGlassIcon className="mr-4 h-5 w-5 text-gray-500" />
 
