@@ -1,13 +1,15 @@
 import Homebar from '@/app/components/home-carousel/Homebar';
 import Feature from './components/homepage/featured/Feature';
 import Swiperspo from './components/homepage/sport/Swiperspo';
+import Sportlight from './components/homepage/spotlight/sportlight';
 
 export default function Home() {
   return (
-    <main className="space-y-10 pt-[100px] lg:pt-[102px]">
+    <main className="">
       <Homebar />
       <Feature />
-      <Swiperspo/>
+      <Swiperspo />
+      <Sportlight />
     </main>
   );
 }

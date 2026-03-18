@@ -109,7 +109,7 @@ export default function Homebar() {
                   autoPlay
                   playsInline
                   preload="metadata"
-                  className="h-full w-full object-cover"
+                  className="block h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
               </>
