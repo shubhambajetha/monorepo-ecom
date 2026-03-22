@@ -3,11 +3,9 @@ import React from 'react';
 const Sportlight = () => {
   return (
     <>
-    <div className='max-w-8xl mx-auto h-full'>
-        <h1 className="font-large text-7xl font-extrabold">SPOTLIGHT</h1>
-        <p>here i diclered the faah</p>
-    </div>
-      
+      <div className="max-w-7xl mx-auto px-4 overflow-hidden">
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-tight">SPOTLIGHT</h1>
+      </div>
     </>
   );
 };
