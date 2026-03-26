@@ -30,7 +30,7 @@ const spotlightItems = [
 
 const Spotlight = () => {
   return (
-    <section className="max-w-[1440px] mx-auto py-10">
+    <section className="max-w-[1440px] mx-auto py-10 h-[500px]">
       <div className="text-center">
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight uppercase mb-3">
           SPOTLIGHT
