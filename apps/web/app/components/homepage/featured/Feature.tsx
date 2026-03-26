@@ -2,7 +2,7 @@ import React from 'react';
 
 const Feature = () => {
   return (
-    <div className="-mt-px grid grid-cols-1 md:grid-cols-12">
+    <div className="-mt-px grid grid-cols-12 md:grid-cols-12">
       <div className="col-span-6 cursor-pointer aspect-ration">
         <img src="/homepage/homepage1.png" className="block h-auto w-full object-cover" />
       </div>
