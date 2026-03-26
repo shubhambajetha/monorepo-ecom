@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperType } from 'swiper';
 import { Navigation } from 'swiper/modules';
+import { h1 } from 'framer-motion/client';
 
 type SlideItem = {
   img: string;
@@ -24,6 +25,15 @@ const Swiperspo: React.FC = () => {
 
   return (
     <div className="relative mx-auto w-full max-w-[1550px] px-3 sm:px-6">
+      <div className="mb-6 sm:mb-8 flex items-center justify-between">
+        <h2 className="text-2xl sm:text-3xl md:text-xl font-semibold text-gray-900">
+          Shop by Sport
+        </h2>
+        <button className="text-md sm:text-base transition text-xl">
+          View All →
+        </button>
+      </div>
+
       <button className="prev-btn">‹</button>
       <button className="next-btn">›</button>
 
