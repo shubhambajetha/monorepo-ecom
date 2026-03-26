@@ -5,16 +5,13 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperType } from 'swiper';
 import { Navigation } from 'swiper/modules';
 
-import 'swiper/css';
-import 'swiper/css/navigation';
-
 type SlideItem = {
   img: string;
   title: string;
 };
 
 const items: SlideItem[] = [
-  { img: '/swiperimg/slide2.png', title: 'Running' },
+  { img: '/swiperimg/slide3.png', title: 'Training' },
   { img: '/swiperimg/slide3.png', title: 'Training' },
   { img: '/swiperimg/slide4.png', title: 'Sportswear' },
   { img: '/swiperimg/slide5.png', title: 'Cricket' },
@@ -26,66 +23,74 @@ const Swiperspo: React.FC = () => {
   const swiperRef = useRef<SwiperType | null>(null);
 
   return (
-    <div className="relative mx-auto w-full max-w-8xl">
-      {/* Navigation Buttons */}
+    <div className="relative mx-auto w-full max-w-[1550px] px-3 sm:px-6">
       <button className="prev-btn">‹</button>
       <button className="next-btn">›</button>
 
       <Swiper
         modules={[Navigation]}
-        onSwiper={(swiper: SwiperType) => {
+        onSwiper={(swiper) => {
           swiperRef.current = swiper;
         }}
-        slidesPerView={3}
-        slidesPerGroup={3}
-        spaceBetween={10}
+        breakpoints={{
+          0: {
+            slidesPerView: 1.2,
+            spaceBetween: 10,
+            slidesPerGroup: 1,
+          },
+          480: {
+            slidesPerView: 2,
+            spaceBetween: 12,
+            slidesPerGroup: 2,
+          },
+          768: {
+            slidesPerView: 3,
+            spaceBetween: 16,
+            slidesPerGroup: 3,
+          },
+          1024: {
+            slidesPerView: 4,
+            spaceBetween: 20,
+            slidesPerGroup: 4,
+          },
+        }}
         loop={false}
         navigation={{
           nextEl: '.next-btn',
           prevEl: '.prev-btn',
         }}
-        onSlideChange={(swiper: SwiperType) => {
+        onSlideChange={(swiper) => {
           const prev = document.querySelector('.prev-btn') as HTMLButtonElement;
           const next = document.querySelector('.next-btn') as HTMLButtonElement;
 
-          if (swiper.isBeginning) {
-            prev.style.display = 'none';
-          } else {
-            prev.style.display = 'flex';
-          }
-
-          if (swiper.isEnd) {
-            next.style.display = 'none';
-          } else {
-            next.style.display = 'flex';
-          }
+          if (prev) prev.style.display = swiper.isBeginning ? 'none' : 'flex';
+          if (next) next.style.display = swiper.isEnd ? 'none' : 'flex';
         }}
-        onInit={(swiper: SwiperType) => {
-          // initial hide
+        onInit={(swiper) => {
           const prev = document.querySelector('.prev-btn') as HTMLButtonElement;
           if (prev) prev.style.display = 'none';
         }}
       >
-        {items.map((item: SlideItem, i: number) => (
+        {items.map((item, i) => (
           <SwiperSlide key={i}>
-            <div className="overflow-hidden cursor-pointer">
-              {/* Image */}
+            <div className="">
               <div className="overflow-hidden">
                 <img
                   src={item.img}
                   alt={item.title}
-                  className="w-full h-[600px] object-cover"
+                  className="w-full h-[220px] sm:h-[300px] md:h-[400px] lg:h-[500px] object-cover"
                 />
               </div>
 
-              {/* Text */}
-              <h2 className="mt-3 text-lg font-medium text-black">{item.title}</h2>
+              <h2 className="mt-3 text-sm sm:text-base md:text-lg font-medium text-black">
+                {item.title}
+              </h2>
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
 
-      {/* Styles */}
+      {/* Custom Styles */}
       <style jsx>{`
         .prev-btn,
         .next-btn {
@@ -111,6 +116,13 @@ const Swiperspo: React.FC = () => {
 
         .next-btn {
           right: 5px;
+        }
+
+        @media (max-width: 640px) {
+          .prev-btn,
+          .next-btn {
+            display: none !important;
+          }
         }
       `}</style>
     </div>
