@@ -10,8 +10,8 @@ export const ROUTES = {
   ACCOUNT_PROFILE: '/account/profile',
   ORDERS: '/orders',
   ORDER_DETAIL: (id: string) => `/orders/${id}`,
-  AUTH_LOGIN: '/auth/login',
-  AUTH_REGISTER: '/auth/register',
+  AUTH_LOGIN: '/auth/signin',
+  AUTH_REGISTER: '/auth/signup',
   AUTH_LOGOUT: '/auth/logout',
 } as const;
 
