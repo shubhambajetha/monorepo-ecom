@@ -7,7 +7,7 @@ import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperType } from 'swiper';
 import { AnimatePresence, motion } from 'framer-motion';
-import 'swiper/css';
+
 
 const AUTOPLAY_DURATION_MS = 10_000;
 

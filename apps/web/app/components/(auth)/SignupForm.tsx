@@ -227,7 +227,7 @@ export default function SignupForm() {
         {/* Footer */}
         <p className="text-center text-sm text-gray-500">
           Already have an account?{' '}
-          <Link href="/login" className="text-emerald-600 font-medium">
+          <Link href="/auth/signin" className="text-emerald-600 font-medium">
             Sign in
           </Link>
         </p>
