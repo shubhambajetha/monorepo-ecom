@@ -34,6 +34,19 @@ a {
   text-decoration: none;
 }
 
+.auth-fade-up {
+  animation: auth-fade-up 520ms ease-out both;
+}
+
+.auth-float {
+  animation: auth-float 10s ease-in-out infinite;
+}
+
+.auth-float-slow {
+  animation-delay: -3s;
+  animation-duration: 13s;
+}
+
 .imgDark {
   display: none;
 }
@@ -48,5 +61,26 @@ a {
   }
   .imgDark {
     display: unset;
+  }
+}
+
+@keyframes auth-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes auth-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0);
   }
 }
