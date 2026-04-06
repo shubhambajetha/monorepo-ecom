@@ -4,8 +4,8 @@ import React, { useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperType } from 'swiper';
 import { Navigation } from 'swiper/modules';
-import { h1 } from 'framer-motion/client';
-
+import 'swiper/css';
+import 'swiper/css/navigation';
 type SlideItem = {
   img: string;
   title: string;

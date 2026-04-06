@@ -172,13 +172,6 @@ export default function SignupForm() {
               Remember me
             </span>
           </label>
-
-          <Link
-            href="/forgot-password"
-            className="text-xs text-emerald-600 font-medium hover:text-emerald-700 hover:underline underline-offset-2 transition-colors"
-          >
-            Forgot password?
-          </Link>
         </div>
 
         {/* Button */}

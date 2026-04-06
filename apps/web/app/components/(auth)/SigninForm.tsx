@@ -120,7 +120,7 @@ export default function SignupForm() {
           </label>
 
           <Link
-            href="/forgot-password"
+            href="/auth/forgetpassword"
             className="text-xs text-emerald-600 font-medium hover:text-emerald-700 hover:underline underline-offset-2 transition-colors"
           >
             Forgot password?
