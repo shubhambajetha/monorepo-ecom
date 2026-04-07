@@ -12,6 +12,7 @@ import {
   ShoppingBagIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 const navItems = ['New & Featured', 'Men', 'Women', 'Kids', 'Jordan'] as const;
 type NavItem = (typeof navItems)[number];
@@ -60,17 +61,13 @@ export default function Header() {
               Join Us
             </a>
             <span className="text-gray-400">|</span>
-            <a href="#" className="hover:underline">
-              Sign In
-            </a>
+            <Link href={'/auth/signin'}>Signin</Link>
           </div>
         </div>
       )}
 
-  
       <nav className="border-b border-gray-200/80">
         <div className="mx-auto hidden h-[66px] w-full max-w-[1440px] items-center px-8 lg:grid lg:grid-cols-[auto_1fr_auto]">
-        
           <Image
             src="/nike-logo.svg"
             alt="Nike"
@@ -80,7 +77,6 @@ export default function Header() {
             priority
           />
 
-         
           {searchOpen ? (
             <div className="col-span-2 relative flex items-center justify-center">
               <div className="flex h-[44px] w-full max-w-[900px] items-center rounded-full bg-gray-100 px-6">
