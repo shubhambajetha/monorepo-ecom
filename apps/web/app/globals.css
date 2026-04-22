@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* Theme variables */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -12,75 +13,26 @@
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+/* Base reset (minimal and safe) */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Base body styles */
 body {
   color: var(--foreground);
   background: var(--background);
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
+/* Links */
 a {
   color: inherit;
   text-decoration: none;
-}
-
-.auth-fade-up {
-  animation: auth-fade-up 520ms ease-out both;
-}
-
-.auth-float {
-  animation: auth-float 10s ease-in-out infinite;
-}
-
-.auth-float-slow {
-  animation-delay: -3s;
-  animation-duration: 13s;
-}
-
-.imgDark {
-  display: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-
-  .imgLight {
-    display: none;
-  }
-  .imgDark {
-    display: unset;
-  }
-}
-
-@keyframes auth-fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes auth-float {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(0, -14px, 0);
-  }
 }

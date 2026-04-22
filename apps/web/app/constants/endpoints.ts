@@ -1,3 +1,4 @@
-export const API_ENDPOINTS  = {
-  SIGNUP: "/auth/signup",
+export const API_ENDPOINTS = {
+  SIGNIN: '/auth/signin',
+  SIGNUP: '/auth/signup',
 } as const;

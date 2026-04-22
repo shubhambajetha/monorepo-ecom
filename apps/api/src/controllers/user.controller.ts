@@ -52,7 +52,6 @@ export const signupUser = async (req: Request, res: Response) => {
         message: 'Required fields missing',
       });
     }
-
     const normalizedEmail = String(email).trim().toLowerCase();
 
     const isAlreadyRegistered = await prisma.user.findUnique({
@@ -83,12 +82,14 @@ export const signupUser = async (req: Request, res: Response) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        role: user.role,
+        // role: user.role,
       },
     });
-  } catch {
+  } catch (error) {
+    console.error('FULL ERROR:', error);
+
     return res.status(500).json({
-      error: 'Failed to create user',
+      error: error instanceof Error ? error.message : 'Failed to create user',
     });
   }
 };

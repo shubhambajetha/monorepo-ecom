@@ -2,46 +2,31 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Eye, EyeOff, Mail} from 'lucide-react';
+import { Eye, EyeOff, Mail } from 'lucide-react';
 
-export default function SignupForm() {
+export default function SigninForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-
-  const getPasswordStrength = (val: string) => {
-    let score = 0;
-    if (val.length >= 8) score++;
-    if (/[A-Z]/.test(val)) score++;
-    if (/[0-9]/.test(val)) score++;
-    if (/[^A-Za-z0-9]/.test(val)) score++;
-    return score;
-  };
-
-  const strengthScore = getPasswordStrength(password);
-
-  const strengthColor = (index: number) => {
-    if (index >= strengthScore) return 'bg-gray-200';
-    if (strengthScore === 1) return 'bg-red-400';
-    if (strengthScore === 2) return 'bg-amber-400';
-    if (strengthScore === 3) return 'bg-emerald-400';
-    return 'bg-emerald-600';
-  };
-
   const inputClass =
-    'w-full h-12 rounded-full  px-4 pr-12 text-sm text-gray-900 !px-6 placeholder:!px-3 text-gray-500 outline-none  transition-all duration-200 border border-gray-300 hover:border-gray-400';
+    'w-full h-12 rounded-full px-4 pr-12 text-sm text-gray-900 !px-6 placeholder:!px-3 text-gray-500 outline-none transition-all duration-200 border border-gray-300 hover:border-gray-400';
 
   return (
-    <section className="min-h-screen flex items-center justify-center p-6 bg-gray-50 font-[Sora,sans-serif]">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-100 !p-10 sm:!p-6 space-y-10 ">
+    <section className="min-h-screen mx-auto flex items-center justify-center p-6 bg-gray-50 font-[Sora,sans-serif]">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-100 !p-10 sm:!p-6 space-y-10">
         <div className="text-center space-y-3 !mb-2">
-          <h1 className="text-3xl font-semibold text-gray-900 tracking-tight">
-            Create your account
-          </h1>
-          <p className="text-sm text-gray-500  mx-auto flex item-center justify-center leading-relaxed">
-            Join now for a faster, smarter experience and manage everything in one place
+          <div className="flex items-center justify-center">
+            <img
+              className="aspect-[3/2] object-cover h-36"
+              src="/homepage/signin.jpg"
+              alt="signin"
+            />
+          </div>
+          <h1 className="text-3xl font-semibold tracking-tight text-gray-900">Welcome back</h1>
+          <p className="mx-auto flex justify-center text-sm leading-relaxed text-gray-500">
+            Sign in to manage your orders, wishlist, and account details in one place.
           </p>
         </div>
 
@@ -66,7 +51,7 @@ export default function SignupForm() {
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
-              placeholder="Create password"
+              placeholder="Enter your password"
               className={inputClass}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -79,16 +64,7 @@ export default function SignupForm() {
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
-
-          {password.length > 0 && (
-            <div className="flex gap-1 mt-1">
-              {[0, 1, 2, 3].map((i) => (
-                <div key={i} className={`h-1 flex-1 rounded ${strengthColor(i)}`} />
-              ))}
-            </div>
-          )}
         </div>
-
 
         {/* Remember */}
         <div className="flex items-center justify-between mt-2">
@@ -129,7 +105,7 @@ export default function SignupForm() {
 
         {/* Button */}
         <button className="w-full h-12 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold flex items-center justify-center gap-4 !mt-3 !mb-2 transition">
-          Create account
+          Sign in
         </button>
 
         {/* Divider */}
@@ -172,9 +148,9 @@ export default function SignupForm() {
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-500">
-          new to here login?{' '}
+          New here?{' '}
           <Link href="/auth/signup" className="text-emerald-600 font-medium">
-            Sign Up
+            Create an account
           </Link>
         </p>
       </div>

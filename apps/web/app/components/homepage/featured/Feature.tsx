@@ -6,7 +6,7 @@ const Feature = () => {
       <h1 className="text-2xl sm:text-3xl md:text-2xl font-semibold text-gray-900 pb-12">
         Featured
       </h1>
-      <div className="mt-px grid grid-cols-12 md:grid-cols-12">
+      <div className="mt-px grid grid-cols-12 md:grid-cols-12 ">
         <div className="col-span-6 cursor-pointer aspect-ration">
           <img src="/homepage/homepage1.png" className="block h-auto w-full object-cover" />
         </div>
