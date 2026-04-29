@@ -30,7 +30,7 @@ const spotlightItems = [
 
 const Spotlight = () => {
   return (
-    <section className="max-w-[1440px] mx-auto py-10 h-[500px]">
+    <section className="max-w-[1550px] mx-auto py-10 h-[500px]">
       <div className="text-center">
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight uppercase mb-3">
           SPOTLIGHT
@@ -40,10 +40,10 @@ const Spotlight = () => {
           Iconic styles engineered with innovation—built to push your performance further.
         </p>
       </div>
-      <div className="grid justify-center gap-1 grid-cols-[repeat(4,auto)] sm:grid-cols-[repeat(6,auto)] md:grid-cols-[repeat(8,auto)] mt-2 ">
+      <div className="grid justify-center gap-1 grid-cols-[repeat(4,auto)] sm:grid-cols-[repeat(6,auto)] md:grid-cols-[repeat(8,auto)] mt-2">
         {spotlightItems.map((item) => (
           <button key={item.id} className="flex flex-col items-center justify-center group">
-            <ProductImage src={item.img} alt={item.label} />
+            <ProductImage  src={item.img} alt={item.label} />
           </button>
         ))}
       </div>
