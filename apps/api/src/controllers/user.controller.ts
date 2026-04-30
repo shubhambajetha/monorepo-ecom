@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../config/prisma';
-
+import { Role } from '@prisma/client';
 const ACCESS_TOKEN_EXPIRES_IN = '15m';
 const REFRESH_TOKEN_EXPIRES_IN = '7d';
 const REFRESH_TOKEN_COOKIE = 'refreshToken';
@@ -19,7 +19,7 @@ const getRefreshTokenCookieOptions = () => ({
   maxAge: REFRESH_TOKEN_MAX_AGE,
 });
 
-const signAccessToken = (userId: string, role: string) => {
+const signAccessToken = (userId: string, role: Role) => {
   const accessTokenSecret = getAccessTokenSecret();
 
   if (!accessTokenSecret) {
@@ -72,6 +72,7 @@ export const signupUser = async (req: Request, res: Response) => {
         firstName: String(firstName).trim(),
         lastName: lastName ? String(lastName).trim() : null,
         password: hashedPassword,
+        role: Role.USER,
       },
     });
 
@@ -82,7 +83,7 @@ export const signupUser = async (req: Request, res: Response) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        // role: user.role,
+        role: user.role,
       },
     });
   } catch (error) {
@@ -183,6 +184,9 @@ export const refreshTokenHandler = async (req: Request, res: Response) => {
 
     const newRefreshToken = signRefreshToken(user.id);
     const newAccessToken = signAccessToken(user.id, user.role);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
     await prisma.user.update({
       where: { id: user.id },
