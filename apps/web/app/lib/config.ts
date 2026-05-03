@@ -1,1 +1,4 @@
-export const API_BASE = process.env.NEXT_PUBLIC_API_BASE?.trim() ?? '';
+export const config = {
+  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE,
+  timeoutMs: 15000,
+};
