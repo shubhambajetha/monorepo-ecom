@@ -1,0 +1,12 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import dotenv from "dotenv";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const apiRoot = path.resolve(__dirname, "..", "..");
+const workspaceRoot = path.resolve(apiRoot, "..", "..");
+
+dotenv.config({ path: path.resolve(workspaceRoot, ".env"), quiet: true });
+dotenv.config({ path: path.resolve(apiRoot, ".env"), override: true, quiet: true });
+

@@ -101,8 +101,9 @@ const signAccessToken = (userId: string, role: Role): string => {
       issuer: 'auth-service',
     });
   } catch (err) {
-    console.error('[Auth] Failed to sign access token:', err instanceof Error ? err.message : err);
-    throw new Error('Token generation failed');
+    const errorMessage = err instanceof Error ? err.message : 'Token generation failed';
+    console.error('[Auth] Failed to sign access token:', errorMessage);
+    throw new Error(errorMessage);
   }
 };
 
@@ -114,8 +115,9 @@ const signRefreshToken = (userId: string): string => {
       issuer: 'auth-service',
     });
   } catch (err) {
-    console.error('[Auth] Failed to sign refresh token:', err instanceof Error ? err.message : err);
-    throw new Error('Token generation failed');
+    const errorMessage = err instanceof Error ? err.message : 'Token generation failed';
+    console.error('[Auth] Failed to sign refresh token:', errorMessage);
+    throw new Error(errorMessage);
   }
 };
 
@@ -287,15 +289,17 @@ export const signinUser = async (req: Request, res: Response): Promise<Response>
       accessToken = signAccessToken(user.id, user.role);
       refreshToken = signRefreshToken(user.id);
     } catch (tokenErr) {
+      const errorMessage =
+        tokenErr instanceof Error ? tokenErr.message : 'Token generation failed';
       console.error(
         '[Auth] Token generation failed:',
-        tokenErr instanceof Error ? tokenErr.message : tokenErr
+        errorMessage
       );
       return sendError(
         res,
         500,
         'Authentication failed. Please try again.',
-        'Token generation failed'
+        errorMessage
       );
     }
 
