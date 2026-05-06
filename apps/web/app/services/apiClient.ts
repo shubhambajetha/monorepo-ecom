@@ -1,7 +1,9 @@
-import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig, Canceler } from 'axios';
+import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { config } from '../lib/config';
 
-const REFRESH_TOKEN_ENDPOINT = '/auth/refresh';
+import { endpoints } from '@/app/constants/endpoint';
+
+const REFRESH_TOKEN_ENDPOINT = endpoints.auth.refresh;
 const REFRESH_TIMEOUT_MS = 10000;
 const JWT_EXPIRY_BUFFER_MS = 30000; // Refresh 30s before actual expiry
 const MAX_RETRY_ATTEMPTS = 3;
@@ -274,7 +276,7 @@ const tokenStorage = new TokenStorage();
 const api: AxiosInstance = axios.create({
   baseURL: config.apiBaseUrl,
   timeout: config.timeoutMs || 30000,
-  withCredentials: true, // HttpOnly cookies automatically included
+  withCredentials: true, 
   headers: {
     'Content-Type': 'application/json',
   },

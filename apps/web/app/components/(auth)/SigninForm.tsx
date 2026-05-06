@@ -3,12 +3,38 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Eye, EyeOff, Mail } from 'lucide-react';
+import { signin } from '@/app/services';
 
 export default function SigninForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleSignin = async () => {
+    if (isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setErrorMessage('');
+
+    try {
+      const response = await signin({
+        email,
+        password,
+      });
+
+      console.log('Login success:', response);
+    } catch (error) {
+      console.error('Signin error:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Unable to sign in');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const inputClass =
     'w-full h-12 rounded-full px-4 pr-12 text-sm text-gray-900 !px-6 placeholder:!px-3 text-gray-500 outline-none transition-all duration-200 border border-gray-300 hover:border-gray-400';
@@ -104,10 +130,14 @@ export default function SigninForm() {
         </div>
 
         {/* Button */}
-        <button className="w-full h-12 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold flex items-center justify-center gap-4 !mt-3 !mb-2 transition">
-          Sign in
+        <button
+          onClick={handleSignin}
+          disabled={isSubmitting}
+          className="w-full h-12 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold flex items-center justify-center gap-4 !mt-3 !mb-2 transition"
+        >
+          {isSubmitting ? 'Signing in...' : 'Sign in'}
         </button>
-
+        {errorMessage ? <p className="text-sm text-red-500">{errorMessage}</p> : null}
         {/* Divider */}
         <div className="flex items-center gap-3">
           <div className="flex-1 h-px bg-gray-200" />

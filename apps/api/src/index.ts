@@ -7,7 +7,12 @@ import routes from "./routes/index.js";
 
 const app = express();
 
-app.use(cors());
+const corsOrigin = process.env.CORS_ORIGIN || process.env.FRONTEND_URL || "http://localhost:3000";
+
+app.use(cors({
+  origin: corsOrigin,
+  credentials: true,
+}));
 app.use(cookieParser());
 app.use(express.json());
 

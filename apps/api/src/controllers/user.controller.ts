@@ -4,8 +4,6 @@ import jwt from 'jsonwebtoken';
 import { prisma } from '../config/prisma';
 import { Role } from '@prisma/client';
 
-
-
 const ACCESS_TOKEN_EXPIRES_IN = '15m';
 const REFRESH_TOKEN_EXPIRES_IN = '7d';
 const REFRESH_TOKEN_COOKIE = 'refreshToken';
@@ -14,7 +12,6 @@ const BCRYPT_ROUNDS = 10;
 const MIN_PASSWORD_LENGTH = 8;
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
-
 
 interface JWTPayload {
   userId: string;
@@ -36,7 +33,6 @@ interface UserData {
   role: Role;
 }
 
-
 const getAccessTokenSecret = (): string => {
   const secret = process.env.JWT_ACCESS_SECRET || process.env.JWT_SECRET;
   if (!secret) {
@@ -44,7 +40,6 @@ const getAccessTokenSecret = (): string => {
   }
   return secret;
 };
-
 
 const getRefreshTokenSecret = (): string => {
   const secret = process.env.JWT_REFRESH_SECRET;
@@ -54,7 +49,6 @@ const getRefreshTokenSecret = (): string => {
   return secret;
 };
 
-
 const getRefreshTokenCookieOptions = () => ({
   httpOnly: true,
   secure: process.env.NODE_ENV === 'production',
@@ -62,7 +56,6 @@ const getRefreshTokenCookieOptions = () => ({
   path: '/',
   maxAge: REFRESH_TOKEN_MAX_AGE,
 });
-
 
 function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -95,7 +88,6 @@ function isValidFirstName(firstName: string): boolean {
   return Boolean(firstName && firstName.trim().length > 0 && firstName.trim().length <= 100);
 }
 
-
 function isValidLastName(lastName: string | undefined): boolean {
   if (!lastName) return true;
   return lastName.trim().length <= 100;
@@ -114,7 +106,6 @@ const signAccessToken = (userId: string, role: Role): string => {
   }
 };
 
-
 const signRefreshToken = (userId: string): string => {
   try {
     const secret = getRefreshTokenSecret();
@@ -128,13 +119,7 @@ const signRefreshToken = (userId: string): string => {
   }
 };
 
-
-function sendSuccess<T>(
-  res: Response,
-  statusCode: number,
-  message: string,
-  data?: T
-): Response {
+function sendSuccess<T>(res: Response, statusCode: number, message: string, data?: T): Response {
   return res.status(statusCode).json({
     success: true,
     message,
@@ -142,12 +127,7 @@ function sendSuccess<T>(
   } as ApiResponse<T>);
 }
 
-function sendError(
-  res: Response,
-  statusCode: number,
-  message: string,
-  error?: string
-): Response {
+function sendError(res: Response, statusCode: number, message: string, error?: string): Response {
   return res.status(statusCode).json({
     success: false,
     message,
@@ -155,16 +135,18 @@ function sendError(
   } as ApiResponse);
 }
 
-
-
 export const signupUser = async (req: Request, res: Response): Promise<Response> => {
   const startTime = Date.now();
 
   try {
     const { firstName, lastName, email, password, passwordConfirm } = req.body;
     // Check required fields
-    if (!firstName || !email || !password) {
-      return sendError(res, 400, 'Missing required fields: firstName, email, password');
+    if (!firstName || !email || !password || !passwordConfirm) {
+      return sendError(
+        res,
+        400,
+        'Missing required fields: firstName, email, password, passwordConfirm'
+      );
     }
 
     // Validate first name
@@ -194,8 +176,6 @@ export const signupUser = async (req: Request, res: Response): Promise<Response>
       return sendError(res, 400, 'Passwords do not match');
     }
 
-  
-
     const existingUser = await prisma.user.findUnique({
       where: { email: normalizedEmail },
       select: { id: true }, // Only select ID for performance
@@ -206,7 +186,6 @@ export const signupUser = async (req: Request, res: Response): Promise<Response>
       return sendError(res, 409, 'Email already registered');
     }
 
-   
     const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
     const user = await prisma.user.create({
@@ -246,12 +225,7 @@ export const signupUser = async (req: Request, res: Response): Promise<Response>
       duration: `${Date.now() - startTime}ms`,
     });
 
-    return sendError(
-      res,
-      500,
-      'Registration failed. Please try again later.',
-      errorMessage
-    );
+    return sendError(res, 500, 'Registration failed. Please try again later.', errorMessage);
   }
 };
 
@@ -265,9 +239,7 @@ export const signinUser = async (req: Request, res: Response): Promise<Response>
   try {
     const { email, password } = req.body;
 
-    // =====================================================================
-    // INPUT VALIDATION
-    // =====================================================================
+    
 
     if (!email || !password) {
       return sendError(res, 400, 'Email and password are required');
@@ -278,7 +250,6 @@ export const signinUser = async (req: Request, res: Response): Promise<Response>
     if (!isValidEmail(normalizedEmail)) {
       return sendError(res, 401, 'Invalid credentials');
     }
-
 
     const user = await prisma.user.findUnique({
       where: { email: normalizedEmail },
@@ -293,13 +264,11 @@ export const signinUser = async (req: Request, res: Response): Promise<Response>
     });
 
     if (!user) {
-
       console.warn('[Auth] Login attempt with non-existent email', {
         email: normalizedEmail,
       });
       return sendError(res, 401, 'Invalid credentials');
     }
-
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -311,10 +280,6 @@ export const signinUser = async (req: Request, res: Response): Promise<Response>
       return sendError(res, 401, 'Invalid credentials');
     }
 
-    // =====================================================================
-    // GENERATE TOKENS
-    // =====================================================================
-
     let accessToken: string;
     let refreshToken: string;
 
@@ -322,13 +287,17 @@ export const signinUser = async (req: Request, res: Response): Promise<Response>
       accessToken = signAccessToken(user.id, user.role);
       refreshToken = signRefreshToken(user.id);
     } catch (tokenErr) {
-      console.error('[Auth] Token generation failed:', tokenErr instanceof Error ? tokenErr.message : tokenErr);
-      return sendError(res, 500, 'Authentication failed. Please try again.', 'Token generation failed');
+      console.error(
+        '[Auth] Token generation failed:',
+        tokenErr instanceof Error ? tokenErr.message : tokenErr
+      );
+      return sendError(
+        res,
+        500,
+        'Authentication failed. Please try again.',
+        'Token generation failed'
+      );
     }
-
-    // =====================================================================
-    // STORE REFRESH TOKEN IN DB & SET COOKIE
-    // =====================================================================
 
     try {
       await prisma.user.update({
@@ -336,15 +305,14 @@ export const signinUser = async (req: Request, res: Response): Promise<Response>
         data: { refreshToken },
       });
     } catch (dbErr) {
-      console.error('[Auth] Failed to store refresh token:', dbErr instanceof Error ? dbErr.message : dbErr);
+      console.error(
+        '[Auth] Failed to store refresh token:',
+        dbErr instanceof Error ? dbErr.message : dbErr
+      );
       return sendError(res, 500, 'Login failed. Please try again.');
     }
 
     res.cookie(REFRESH_TOKEN_COOKIE, refreshToken, getRefreshTokenCookieOptions());
-
-    // =====================================================================
-    // LOG & RESPOND
-    // =====================================================================
 
     console.info('[Auth] User signed in successfully', {
       userId: user.id,
@@ -352,21 +320,16 @@ export const signinUser = async (req: Request, res: Response): Promise<Response>
       duration: `${Date.now() - startTime}ms`,
     });
 
-    return sendSuccess<{ accessToken: string; user: UserData }>(
-      res,
-      200,
-      'Login successful',
-      {
-        accessToken,
-        user: {
-          id: user.id,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          role: user.role,
-        },
-      }
-    );
+    return sendSuccess<{ accessToken: string; user: UserData }>(res, 200, 'Login successful', {
+      accessToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      },
+    });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Login failed';
     console.error('[Auth] Signin error:', {
@@ -374,37 +337,19 @@ export const signinUser = async (req: Request, res: Response): Promise<Response>
       duration: `${Date.now() - startTime}ms`,
     });
 
-    return sendError(
-      res,
-      500,
-      'Login failed. Please try again later.',
-      errorMessage
-    );
+    return sendError(res, 500, 'Login failed. Please try again later.', errorMessage);
   }
 };
 
-
-/**
- * REFRESH: Issue new access token using refresh token
- * POST /auth/refresh
- */
 export const refreshTokenHandler = async (req: Request, res: Response): Promise<Response> => {
   const startTime = Date.now();
 
   try {
-    // =====================================================================
-    // GET REFRESH TOKEN FROM COOKIE
-    // =====================================================================
-
     const refreshToken = req.cookies?.[REFRESH_TOKEN_COOKIE];
 
     if (!refreshToken) {
       return sendError(res, 401, 'No refresh token provided');
     }
-
-    // =====================================================================
-    // VERIFY REFRESH TOKEN
-    // =====================================================================
 
     let decoded: JWTPayload;
 
@@ -412,14 +357,11 @@ export const refreshTokenHandler = async (req: Request, res: Response): Promise<
       const secret = getRefreshTokenSecret();
       decoded = jwt.verify(refreshToken, secret) as JWTPayload;
     } catch (verifyErr) {
-      const errorMessage = verifyErr instanceof Error ? verifyErr.message : 'Token verification failed';
+      const errorMessage =
+        verifyErr instanceof Error ? verifyErr.message : 'Token verification failed';
       console.warn('[Auth] Refresh token verification failed:', errorMessage);
       return sendError(res, 401, 'Invalid or expired refresh token');
     }
-
-    // =====================================================================
-    // VALIDATE REFRESH TOKEN IN DATABASE
-    // =====================================================================
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
@@ -445,17 +387,12 @@ export const refreshTokenHandler = async (req: Request, res: Response): Promise<
       console.warn('[Auth] Refresh token mismatch - possible token reuse attack', {
         userId: user.id,
       });
-      // Invalidate all tokens for this user (security measure)
       await prisma.user.update({
         where: { id: user.id },
         data: { refreshToken: null },
       });
       return sendError(res, 401, 'Invalid refresh token');
     }
-
-    // =====================================================================
-    // GENERATE NEW TOKENS
-    // =====================================================================
 
     let newAccessToken: string;
     let newRefreshToken: string;
@@ -464,13 +401,12 @@ export const refreshTokenHandler = async (req: Request, res: Response): Promise<
       newAccessToken = signAccessToken(user.id, user.role);
       newRefreshToken = signRefreshToken(user.id);
     } catch (tokenErr) {
-      console.error('[Auth] Token generation failed during refresh:', tokenErr instanceof Error ? tokenErr.message : tokenErr);
+      console.error(
+        '[Auth] Token generation failed during refresh:',
+        tokenErr instanceof Error ? tokenErr.message : tokenErr
+      );
       return sendError(res, 500, 'Token generation failed');
     }
-
-    // =====================================================================
-    // UPDATE REFRESH TOKEN IN DATABASE (Token Rotation)
-    // =====================================================================
 
     try {
       await prisma.user.update({
@@ -478,31 +414,25 @@ export const refreshTokenHandler = async (req: Request, res: Response): Promise<
         data: { refreshToken: newRefreshToken },
       });
     } catch (dbErr) {
-      console.error('[Auth] Failed to update refresh token:', dbErr instanceof Error ? dbErr.message : dbErr);
+      console.error(
+        '[Auth] Failed to update refresh token:',
+        dbErr instanceof Error ? dbErr.message : dbErr
+      );
       return sendError(res, 500, 'Token refresh failed');
     }
 
     // Set new refresh token cookie
     res.cookie(REFRESH_TOKEN_COOKIE, newRefreshToken, getRefreshTokenCookieOptions());
 
-    // =====================================================================
-    // LOG & RESPOND
-    // =====================================================================
-
     console.info('[Auth] Token refreshed successfully', {
       userId: user.id,
       duration: `${Date.now() - startTime}ms`,
     });
 
-    return sendSuccess<{ accessToken: string; expiresIn: number }>(
-      res,
-      200,
-      'Token refreshed',
-      {
-        accessToken: newAccessToken,
-        expiresIn: 15 * 60, // 15 minutes in seconds
-      }
-    );
+    return sendSuccess<{ accessToken: string; expiresIn: number }>(res, 200, 'Token refreshed', {
+      accessToken: newAccessToken,
+      expiresIn: 15 * 60, // 15 minutes in seconds
+    });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Token refresh failed';
     console.error('[Auth] Refresh token error:', {
@@ -510,28 +440,15 @@ export const refreshTokenHandler = async (req: Request, res: Response): Promise<
       duration: `${Date.now() - startTime}ms`,
     });
 
-    return sendError(
-      res,
-      500,
-      'Token refresh failed. Please login again.',
-      errorMessage
-    );
+    return sendError(res, 500, 'Token refresh failed. Please login again.', errorMessage);
   }
 };
 
-/**
- * LOGOUT: Invalidate refresh token and clear cookies
- * POST /auth/logout
- */
 export const logoutUser = async (req: Request, res: Response): Promise<Response> => {
   const startTime = Date.now();
 
   try {
     const refreshToken = req.cookies?.[REFRESH_TOKEN_COOKIE];
-
-    // =====================================================================
-    // INVALIDATE REFRESH TOKEN IN DATABASE
-    // =====================================================================
 
     if (refreshToken) {
       try {
@@ -547,14 +464,13 @@ export const logoutUser = async (req: Request, res: Response): Promise<Response>
           });
         }
       } catch (dbErr) {
-        console.error('[Auth] Failed to invalidate refresh token:', dbErr instanceof Error ? dbErr.message : dbErr);
+        console.error(
+          '[Auth] Failed to invalidate refresh token:',
+          dbErr instanceof Error ? dbErr.message : dbErr
+        );
         // Continue with logout even if DB update fails
       }
     }
-
-    // =====================================================================
-    // CLEAR REFRESH TOKEN COOKIE
-    // =====================================================================
 
     res.clearCookie(REFRESH_TOKEN_COOKIE, getRefreshTokenCookieOptions());
 

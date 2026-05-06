@@ -2,17 +2,20 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { ArrowRight, Eye, EyeOff, Mail, User } from 'lucide-react';
+import { Eye, EyeOff, Mail, User } from 'lucide-react';
+import { signup } from '@/app/services';
 
 export default function SignupForm() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordConfirm, setpasswordConfirm] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const getPasswordStrength = (val: string) => {
     let score = 0;
@@ -33,6 +36,31 @@ export default function SignupForm() {
     return 'bg-emerald-600';
   };
 
+  const handlesignup = async () => {
+    if (isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setErrorMessage('');
+
+    try {
+      const response = await signup({
+        firstName,
+        lastName,
+        email,
+        password,
+        passwordConfirm,
+      });
+
+      console.log('Signup success:', response);
+    } catch (error) {
+      console.error('Signup error:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Unable to create account');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   const inputClass =
     'w-full h-12 rounded-full  px-4 pr-12 text-sm text-gray-900 !px-6 placeholder:!px-3 text-gray-500 outline-none  transition-all duration-200 border border-gray-300 hover:border-gray-400';
 
@@ -138,8 +166,8 @@ export default function SignupForm() {
               type={showConfirmPassword ? 'text' : 'password'}
               placeholder="Confirm password"
               className={inputClass}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={passwordConfirm}
+              onChange={(e) => setpasswordConfirm(e.target.value)}
             />
             <button
               type="button"
@@ -182,9 +210,14 @@ export default function SignupForm() {
         </div>
 
         {/* Button */}
-        <button className="w-full h-12 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold flex items-center justify-center gap-4 !mt-3 !mb-2 transition">
-          Create account
+        <button
+          onClick={handlesignup}
+          disabled={isSubmitting}
+          className="w-full h-12 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold flex items-center justify-center gap-4 !mt-3 !mb-2 transition"
+        >
+          {isSubmitting ? 'Creating account...' : 'Create account'}
         </button>
+        {errorMessage ? <p className="text-sm text-red-500">{errorMessage}</p> : null}
 
         {/* Divider */}
         <div className="flex items-center gap-3">

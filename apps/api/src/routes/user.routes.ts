@@ -10,7 +10,7 @@ const router = Router();
 
 router.post("/signup", signupUser);
 router.post("/signin", signinUser);
-router.post("/refresh-token", refreshTokenHandler);
+router.post("/refresh", refreshTokenHandler);
 router.post("/logout", logoutUser);
 
 export default router;

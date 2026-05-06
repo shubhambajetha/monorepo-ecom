@@ -6,7 +6,7 @@ import NewArival from './components/homepage/newarrival/NewArival';
 
 export default function Home() {
   return (
-    <main className="">
+    <main>
       <Homebar />
       <Swiperspo />
       <Feature />
