@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Eye, EyeOff, Mail, User } from 'lucide-react';
 import { signup } from '@/app/services';
+import { useRouter } from 'next/navigation';
 
 export default function SignupForm() {
   const [firstName, setFirstName] = useState('');
@@ -16,6 +17,7 @@ export default function SignupForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter();
 
   const getPasswordStrength = (val: string) => {
     let score = 0;
@@ -52,8 +54,8 @@ export default function SignupForm() {
         password,
         passwordConfirm,
       });
-
       console.log('Signup success:', response);
+      router.push('/');
     } catch (error) {
       console.error('Signup error:', error);
       setErrorMessage(error instanceof Error ? error.message : 'Unable to create account');

@@ -1,19 +1,11 @@
 import { AxiosError } from 'axios';
+import { ZodError } from 'zod';
+import { signinSchema, signupSchema, type SigninInput, type SignupInput } from '@repo/shared';
 import { endpoints } from '@/app/constants/endpoint';
 import api, { setAuthToken } from '../apiClient';
 
-export type SignupPayload = {
-  firstName: string;
-  lastName?: string;
-  email: string;
-  password: string;
-  passwordConfirm: string;
-};
-
-export type SigninPayload = {
-  email: string;
-  password: string;
-};
+export type SignupPayload = SignupInput;
+export type SigninPayload = SigninInput;
 
 type ApiSuccessResponse<T> = {
   success: boolean;
@@ -21,6 +13,8 @@ type ApiSuccessResponse<T> = {
   data: T;
   error?: string;
 };
+
+type ApiResponseBody<T> = ApiSuccessResponse<T> | T;
 
 type ApiErrorResponse = {
   message?: string;
@@ -40,7 +34,24 @@ export type SigninResponse = {
   user: UserResponse;
 };
 
+function unwrapApiData<T>(responseBody: ApiResponseBody<T>): T {
+  if (
+    responseBody &&
+    typeof responseBody === 'object' &&
+    'success' in responseBody &&
+    'data' in responseBody
+  ) {
+    return responseBody.data as T;
+  }
+
+  return responseBody as T;
+}
+
 function getErrorMessage(error: unknown, fallbackMessage: string): string {
+  if (error instanceof ZodError) {
+    return error.issues[0]?.message || fallbackMessage;
+  }
+
   if (error instanceof AxiosError) {
     const responseData = error.response?.data as ApiErrorResponse | undefined;
 
@@ -61,8 +72,12 @@ function getErrorMessage(error: unknown, fallbackMessage: string): string {
 
 export async function signup(payload: SignupPayload): Promise<UserResponse> {
   try {
-    const response = await api.post<ApiSuccessResponse<UserResponse>>(endpoints.auth.signup, payload);
-    return response.data.data;
+    const validatedPayload = signupSchema.parse(payload);
+    const response = await api.post<ApiResponseBody<UserResponse>>(
+      endpoints.auth.signup,
+      validatedPayload
+    );
+    return unwrapApiData(response.data);
   } catch (error) {
     throw new Error(getErrorMessage(error, 'Signup failed'));
   }
@@ -70,9 +85,14 @@ export async function signup(payload: SignupPayload): Promise<UserResponse> {
 
 export async function signin(payload: SigninPayload): Promise<SigninResponse> {
   try {
-    const response = await api.post<ApiSuccessResponse<SigninResponse>>(endpoints.auth.signin, payload);
-    setAuthToken(response.data.data.accessToken);
-    return response.data.data;
+    const validatedPayload = signinSchema.parse(payload);
+    const response = await api.post<ApiResponseBody<SigninResponse>>(
+      endpoints.auth.signin,
+      validatedPayload
+    );
+    const data = unwrapApiData(response.data);
+    setAuthToken(data.accessToken);
+    return data;
   } catch (error) {
     throw new Error(getErrorMessage(error, 'Login failed'));
   }

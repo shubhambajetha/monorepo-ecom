@@ -4,8 +4,11 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Eye, EyeOff, Mail } from 'lucide-react';
 import { signin } from '@/app/services';
+import { useRouter } from 'next/navigation';
 
 export default function SigninForm() {
+  // const router
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -28,14 +31,17 @@ export default function SigninForm() {
       });
 
       console.log('Login success:', response);
+      // redirect after successful login
+      // router.replace('/dashboard');
+      router.push('/');
     } catch (error) {
       console.error('Signin error:', error);
+
       setErrorMessage(error instanceof Error ? error.message : 'Unable to sign in');
     } finally {
       setIsSubmitting(false);
     }
   };
-
   const inputClass =
     'w-full h-12 rounded-full px-4 pr-12 text-sm text-gray-900 !px-6 placeholder:!px-3 text-gray-500 outline-none transition-all duration-200 border border-gray-300 hover:border-gray-400';
 

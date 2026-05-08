@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { config } from '../lib/config';
+import { config, getApiBaseUrl } from '../lib/config';
 
 import { endpoints } from '@/app/constants/endpoint';
 
@@ -14,6 +14,15 @@ interface RefreshTokenResponse {
   accessToken: string;
   expiresIn?: number; // in seconds
 }
+
+interface ApiSuccessResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+  error?: string;
+}
+
+type ApiResponseBody<T> = ApiSuccessResponse<T> | T;
 
 interface RequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
@@ -274,7 +283,7 @@ class TokenStorage {
 const tokenStorage = new TokenStorage();
 
 const api: AxiosInstance = axios.create({
-  baseURL: config.apiBaseUrl,
+  baseURL: getApiBaseUrl(),
   timeout: config.timeoutMs || 30000,
   withCredentials: true, 
   headers: {
@@ -453,8 +462,8 @@ async function performTokenRefresh(): Promise<string> {
   const signal = tokenManager.getAbortSignal();
 
   try {
-    const response = await axios.post<RefreshTokenResponse>(
-      `${config.apiBaseUrl}${REFRESH_TOKEN_ENDPOINT}`,
+    const response = await axios.post<ApiResponseBody<RefreshTokenResponse>>(
+      `${getApiBaseUrl()}${REFRESH_TOKEN_ENDPOINT}`,
       {},
       {
         withCredentials: true, // HttpOnly cookies
@@ -463,12 +472,14 @@ async function performTokenRefresh(): Promise<string> {
       }
     );
 
-    if (!response.data?.accessToken) {
+    const data = unwrapApiData(response.data);
+
+    if (!data?.accessToken) {
       throw new Error('No access token in refresh response');
     }
 
     // Store token with expiry info if available
-    tokenStorage.setAccessToken(response.data.accessToken, response.data.expiresIn);
+    tokenStorage.setAccessToken(data.accessToken, data.expiresIn);
 
     console.debug('[API] Token refreshed successfully');
     authEventEmitter.emit({
@@ -476,7 +487,7 @@ async function performTokenRefresh(): Promise<string> {
       timestamp: Date.now(),
     });
 
-    return response.data.accessToken;
+    return data.accessToken;
   } catch (err) {
     console.error('[API] Token refresh request failed:', err);
 
@@ -519,6 +530,19 @@ function isNetworkError(error: AxiosError): boolean {
       error.code === 'ERR_NETWORK' ||
       error.message === 'Network Error')
   );
+}
+
+function unwrapApiData<T>(responseBody: ApiResponseBody<T>): T {
+  if (
+    responseBody &&
+    typeof responseBody === 'object' &&
+    'success' in responseBody &&
+    'data' in responseBody
+  ) {
+    return responseBody.data as T;
+  }
+
+  return responseBody as T;
 }
 
 /**

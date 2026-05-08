@@ -3,15 +3,13 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../config/prisma';
 import { Role } from '@prisma/client';
+import { signinSchema, signupSchema } from '@repo/shared';
 
 const ACCESS_TOKEN_EXPIRES_IN = '15m';
 const REFRESH_TOKEN_EXPIRES_IN = '7d';
 const REFRESH_TOKEN_COOKIE = 'refreshToken';
 const REFRESH_TOKEN_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 const BCRYPT_ROUNDS = 10;
-const MIN_PASSWORD_LENGTH = 8;
-const MAX_LOGIN_ATTEMPTS = 5;
-const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
 interface JWTPayload {
   userId: string;
@@ -57,42 +55,6 @@ const getRefreshTokenCookieOptions = () => ({
   maxAge: REFRESH_TOKEN_MAX_AGE,
 });
 
-function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email) && email.length <= 255;
-}
-
-/**
- * Validate password strength
- */
-function isValidPassword(password: string): string | null {
-  if (!password || password.length < MIN_PASSWORD_LENGTH) {
-    return `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
-  }
-  if (!/[A-Z]/.test(password)) {
-    return 'Password must contain at least one uppercase letter';
-  }
-  if (!/[a-z]/.test(password)) {
-    return 'Password must contain at least one lowercase letter';
-  }
-  if (!/[0-9]/.test(password)) {
-    return 'Password must contain at least one number';
-  }
-  return null;
-}
-
-/**
- * Validate first name
- */
-function isValidFirstName(firstName: string): boolean {
-  return Boolean(firstName && firstName.trim().length > 0 && firstName.trim().length <= 100);
-}
-
-function isValidLastName(lastName: string | undefined): boolean {
-  if (!lastName) return true;
-  return lastName.trim().length <= 100;
-}
-
 const signAccessToken = (userId: string, role: Role): string => {
   try {
     const secret = getAccessTokenSecret();
@@ -137,46 +99,20 @@ function sendError(res: Response, statusCode: number, message: string, error?: s
   } as ApiResponse);
 }
 
+function getValidationMessage(issues: Array<{ message: string }>): string {
+  return issues[0]?.message || 'Invalid request data';
+}
+
 export const signupUser = async (req: Request, res: Response): Promise<Response> => {
   const startTime = Date.now();
 
   try {
-    const { firstName, lastName, email, password, passwordConfirm } = req.body;
-    // Check required fields
-    if (!firstName || !email || !password || !passwordConfirm) {
-      return sendError(
-        res,
-        400,
-        'Missing required fields: firstName, email, password, passwordConfirm'
-      );
+    const validation = signupSchema.safeParse(req.body);
+    if (!validation.success) {
+      return sendError(res, 400, getValidationMessage(validation.error.issues));
     }
 
-    // Validate first name
-    if (!isValidFirstName(firstName)) {
-      return sendError(res, 400, 'Invalid firstName (1-100 characters required)');
-    }
-
-    // Validate last name (optional)
-    if (!isValidLastName(lastName)) {
-      return sendError(res, 400, 'Invalid lastName (max 100 characters)');
-    }
-
-    // Validate email format
-    const normalizedEmail = String(email).trim().toLowerCase();
-    if (!isValidEmail(normalizedEmail)) {
-      return sendError(res, 400, 'Invalid email format');
-    }
-
-    // Validate password
-    const passwordError = isValidPassword(password);
-    if (passwordError) {
-      return sendError(res, 400, passwordError);
-    }
-
-    // Validate password confirmation
-    if (password !== passwordConfirm) {
-      return sendError(res, 400, 'Passwords do not match');
-    }
+    const { firstName, lastName, email: normalizedEmail, password } = validation.data;
 
     const existingUser = await prisma.user.findUnique({
       where: { email: normalizedEmail },
@@ -193,8 +129,8 @@ export const signupUser = async (req: Request, res: Response): Promise<Response>
     const user = await prisma.user.create({
       data: {
         email: normalizedEmail,
-        firstName: firstName.trim(),
-        lastName: lastName ? lastName.trim() : null,
+        firstName,
+        lastName: lastName ?? null,
         password: hashedPassword,
         role: Role.USER,
       },
@@ -239,19 +175,13 @@ export const signinUser = async (req: Request, res: Response): Promise<Response>
   const startTime = Date.now();
 
   try {
-    const { email, password } = req.body;
+    const validation = signinSchema.safeParse(req.body);
 
-    
-
-    if (!email || !password) {
-      return sendError(res, 400, 'Email and password are required');
+    if (!validation.success) {
+      return sendError(res, 400, getValidationMessage(validation.error.issues));
     }
 
-    const normalizedEmail = String(email).trim().toLowerCase();
-
-    if (!isValidEmail(normalizedEmail)) {
-      return sendError(res, 401, 'Invalid credentials');
-    }
+    const { email: normalizedEmail, password } = validation.data;
 
     const user = await prisma.user.findUnique({
       where: { email: normalizedEmail },
@@ -289,18 +219,9 @@ export const signinUser = async (req: Request, res: Response): Promise<Response>
       accessToken = signAccessToken(user.id, user.role);
       refreshToken = signRefreshToken(user.id);
     } catch (tokenErr) {
-      const errorMessage =
-        tokenErr instanceof Error ? tokenErr.message : 'Token generation failed';
-      console.error(
-        '[Auth] Token generation failed:',
-        errorMessage
-      );
-      return sendError(
-        res,
-        500,
-        'Authentication failed. Please try again.',
-        errorMessage
-      );
+      const errorMessage = tokenErr instanceof Error ? tokenErr.message : 'Token generation failed';
+      console.error('[Auth] Token generation failed:', errorMessage);
+      return sendError(res, 500, 'Authentication failed. Please try again.', errorMessage);
     }
 
     try {
@@ -386,7 +307,6 @@ export const refreshTokenHandler = async (req: Request, res: Response): Promise<
       return sendError(res, 401, 'User not found');
     }
 
-    // Validate refresh token matches what's stored (token rotation security)
     if (user.refreshToken !== refreshToken) {
       console.warn('[Auth] Refresh token mismatch - possible token reuse attack', {
         userId: user.id,
