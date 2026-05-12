@@ -26,7 +26,7 @@ const SingleCart: React.FC<SingleCartProps> = ({
       <div className="relative overflow-hidden" style={{ height: '260px' }}>
         {/* Fake image placeholder */}
         <div
-          className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${bgColor} transition-transform duration-400 group-hover:scale-105`}
+          className={`w-full h-full h-120 flex items-center justify-center bg-gradient-to-br ${bgColor} transition-transform duration-400 group-hover:scale-105`}
         >
           <ShirtIcon size={80} className="text-white opacity-30" />
         </div>
