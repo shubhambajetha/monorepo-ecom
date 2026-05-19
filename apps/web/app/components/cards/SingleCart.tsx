@@ -21,7 +21,7 @@ const SingleCart: React.FC<SingleCartProps> = ({
   const [liked, setLiked] = useState(false);
 
   return (
-    <div className="group mx-2 bg-white w-full sm:w-[350px] mb-10 rounded-sm overflow-hidden cursor-pointer">
+    <div className="group mx-3 bg-white w-full sm:w-[370px] mb-10 rounded-sm overflow-hidden cursor-pointer">
       {/* Image Area */}
       <div className="relative overflow-hidden" style={{ height: '260px' }}>
         {/* Fake image placeholder */}
