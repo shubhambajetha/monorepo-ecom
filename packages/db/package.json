@@ -19,6 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^10.4.0",
     "@prisma/client": "^7.4.2",
     "prisma": "^7.4.2"
   },

@@ -24,3 +24,59 @@ model User {
   updatedAt    DateTime @updatedAt
 }
 
+model Category {
+  id            String        @id @default(cuid())
+  name          String        @unique
+  slug          String        @unique
+  image         String?
+  subcategories Subcategory[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Subcategory {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String       @unique
+  image       String?
+  categoryId  String
+  category    Category     @relation(fields: [categoryId], references: [id])
+  collections Collection[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Collection {
+  id            String      @id @default(cuid())
+  name          String
+  slug          String      @unique
+  bannerImage   String?
+  subcategoryId String
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+  products      Product[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Product {
+  id            String     @id @default(cuid())
+  title         String
+  slug          String     @unique
+  description   String
+  brand         String
+  sku           String     @unique
+  price         Float
+  discountPrice Float?
+  stock         Int
+  thumbnail     String
+  images        String[]
+  sizes         String[]
+  colors        String[]
+  rating        Float      @default(0)
+  isFeatured    Boolean    @default(false)
+  isActive      Boolean    @default(true)
+  collectionId  String
+  collection    Collection @relation(fields: [collectionId], references: [id])
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
