@@ -12,6 +12,9 @@
     }
   },
   "scripts": {
+    "prisma": "pnpm exec prisma",
+    "migrate:dev": "pnpm exec prisma migrate dev",
+    "db:seed": "pnpm exec prisma db seed",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ./node_modules/typescript/lib/tsc.js"
   },
@@ -20,10 +23,13 @@
   "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
+    "@prisma/adapter-pg": "^7.4.2",
     "@prisma/client": "^7.4.2",
+    "bcrypt": "^6.0.0",
     "prisma": "^7.4.2"
   },
   "devDependencies": {
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
 }

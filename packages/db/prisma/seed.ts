@@ -1,7 +1,16 @@
+import 'dotenv/config';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient, Role } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
-const prisma = new PrismaClient();
+const connectionString = process.env['DATABASE_URL'];
+
+if (!connectionString) {
+  throw new Error('DATABASE_URL is not set for Prisma seed');
+}
+
+const adapter = new PrismaPg({ connectionString });
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   const hashedPassword = await bcrypt.hash('admin123', 10);
@@ -10,7 +19,12 @@ async function main() {
     where: {
       email: 'admin@gmail.com',
     },
-    update: {},
+    update: {
+      firstName: 'Admin',
+      lastName: 'User',
+      password: hashedPassword,
+      role: Role.ADMIN,
+    },
     create: {
       firstName: 'Admin',
       lastName: 'User',
