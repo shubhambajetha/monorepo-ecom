@@ -20,7 +20,7 @@ const ProductCard = () => {
         <div
           className={`
             overflow-hidden transition-all duration-300 scroll-behavior:smooth;
-            ${filtersVisible ? 'w-full lg:w-64 opacity-100' : 'w-0 opacity-0'}
+            ${filtersVisible ? 'w-full lg:w-64 opacity-100' : 'w-0 opacity-0 hidden lg:block'}
           `}
         >
           {filtersVisible && <FilterOption />}
@@ -31,9 +31,9 @@ const ProductCard = () => {
           <div
             className={`
               grid gap-4
-              grid-cols-1
+              grid-cols-2
               sm:grid-cols-2
-              ${filtersVisible ? 'lg:grid-cols-3' : 'lg:grid-cols-3 xl:grid-cols-3'}
+              ${filtersVisible ? 'lg:grid-cols-3' : 'lg:grid-cols-3 xl:grid-cols-3 '}
             `}
           >
             <SingleCart />
@@ -45,7 +45,6 @@ const ProductCard = () => {
             <SingleCart />
             <SingleCart />
             <SingleCart />
-          
           </div>
         </div>
       </div>
