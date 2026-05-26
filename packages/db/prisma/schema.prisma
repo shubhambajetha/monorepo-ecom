@@ -46,6 +46,8 @@ model Subcategory {
   updatedAt   DateTime     @updatedAt
 }
 
+
+
 model Collection {
   id            String      @id @default(cuid())
   name          String
