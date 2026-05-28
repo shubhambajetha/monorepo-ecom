@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { useState } from 'react';
 
 import {
@@ -16,11 +16,15 @@ import {
   HiOutlineBolt,
   HiOutlineChevronRight,
 } from 'react-icons/hi2';
+import { ReactNode } from 'react';
 
 type NavItem = {
   label: string;
-  icon: JSX.Element;
+  icon: ReactNode;
   hasChevron?: boolean;
+  children?: {
+    label: string;
+  }[];
 };
 
 const iconClass = 'w-[18px] h-[18px]';
@@ -31,30 +35,35 @@ const mainNavItems: NavItem[] = [
     icon: <HiOutlineHome className={iconClass} />,
     hasChevron: true,
   },
-  {
-    label: 'Product',
-    icon: <HiOutlineCube className={iconClass} />,
-    hasChevron: true,
-  },
+  // {
+  //   label: 'Product',
+  //   icon: <HiOutlineCube className={iconClass} />,
+  //   hasChevron: true,
+  // },
   {
     label: 'Category',
     icon: <HiOutlineSquares2X2 className={iconClass} />,
     hasChevron: true,
+    children: [{ label: 'All Category' }, { label: 'Add Category' }],
+ 
   },
   {
-    label: 'Attributes',
+    label: 'Sub Category',
     icon: <HiOutlineTag className={iconClass} />,
     hasChevron: true,
+    children: [{ label: 'All Category' }, { label: 'Add Category' }],
   },
   {
-    label: 'Order',
+    label: 'collections',
     icon: <HiOutlineClipboardDocumentList className={iconClass} />,
     hasChevron: true,
+    children: [{ label: 'All collections' }, { label: 'Add Collection' }],
   },
   {
-    label: 'Users',
+    label: 'product',
     icon: <HiOutlineUsers className={iconClass} />,
     hasChevron: true,
+    children: [{ label: 'All Product ' }, { label: 'Add Product' }],
   },
   {
     label: 'Store Setting',
@@ -84,6 +93,8 @@ const supportItems: NavItem[] = [
 export default function SideBar() {
   const [collapsed, setCollapsed] = useState(false);
   const [active, setActive] = useState('Ecommerce');
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
   return (
     <aside
       className={`
@@ -128,6 +139,8 @@ export default function SideBar() {
             active={active === item.label}
             collapsed={collapsed}
             onClick={() => setActive(item.label)}
+            openDropdown={openDropdown}
+            setOpenDropdown={setOpenDropdown}
           />
         ))}
 
@@ -146,6 +159,8 @@ export default function SideBar() {
             active={active === item.label}
             collapsed={collapsed}
             onClick={() => setActive(item.label)}
+            openDropdown={openDropdown}
+            setOpenDropdown={setOpenDropdown}
           />
         ))}
       </nav>
@@ -158,51 +173,68 @@ type NavRowProps = {
   active: boolean;
   collapsed: boolean;
   onClick: () => void;
+  openDropdown: string | null;
+  setOpenDropdown: React.Dispatch<React.SetStateAction<string | null>>;
 };
+function NavRow({ item, active, collapsed, onClick, openDropdown, setOpenDropdown }: NavRowProps) {
+  const isOpen = openDropdown === item.label;
 
-function NavRow({ item, active, collapsed, onClick }: NavRowProps) {
+  const handleDropdown = () => {
+    if (item.children) {
+      setOpenDropdown(isOpen ? null : item.label);
+    }
+
+    onClick();
+  };
+
   return (
-    <div
-      onClick={onClick}
-      className={`
-        group relative flex items-center gap-[11px] cursor-pointer my-px
-        transition-colors duration-150 overflow-hidden whitespace-nowrap
-        ${collapsed ? 'justify-center px-0 py-[10px]' : 'px-[18px] py-[9px]'}
-        ${
-          active
-            ? 'bg-orange-500/[0.13] text-orange-400'
-            : 'text-[#7c8494] hover:bg-white/[0.05] hover:text-[#c8d0e0]'
-        }
-      `}
-    >
-      {active && (
-        <span className="absolute left-0 top-[5px] bottom-[5px] w-[3px] bg-orange-500 rounded-r-[3px]" />
-      )}
+    <div>
+      <div
+        onClick={handleDropdown}
+        className={`
+          group relative flex items-center gap-[11px] cursor-pointer my-px
+          transition-colors duration-150 overflow-hidden whitespace-nowrap
+          ${collapsed ? 'justify-center px-0 py-[10px]' : 'px-[18px] py-[9px]'}
+          ${
+            active
+              ? 'bg-orange-500/[0.13] text-orange-400'
+              : 'text-[#7c8494] hover:bg-white/[0.05] hover:text-[#c8d0e0]'
+          }
+        `}
+      >
+        {active && (
+          <span className="absolute left-0 top-[5px] bottom-[5px] w-[3px] bg-orange-500 rounded-r-[3px]" />
+        )}
 
-      <span className="flex-shrink-0 flex items-center justify-center w-[18px] h-[18px]">
-        {item.icon}
-      </span>
-
-      {!collapsed && <span className="flex-1 text-[13px] font-medium">{item.label}</span>}
-
-      {!collapsed && item.hasChevron && (
-        <span className="opacity-35 flex-shrink-0">
-          <HiOutlineChevronRight className="w-[13px] h-[13px]" />
+        <span className="flex-shrink-0 flex items-center justify-center w-[18px] h-[18px]">
+          {item.icon}
         </span>
-      )}
 
-      {collapsed && (
-        <span
-          className="
-          pointer-events-none absolute left-full ml-[10px]
-          bg-[#2a2e38] text-[#e0e5ef] text-xs font-medium
-          px-[10px] py-[5px] rounded-[7px] whitespace-nowrap
-          shadow-[0_4px_14px_rgba(0,0,0,0.35)] z-50
-          opacity-0 group-hover:opacity-100 transition-opacity duration-150
-        "
-        >
-          {item.label}
-        </span>
+        {!collapsed && <span className="flex-1 text-[13px] font-medium">{item.label}</span>}
+
+        {!collapsed && item.hasChevron && (
+          <span
+            className={`opacity-35 flex-shrink-0 transition-transform duration-300 ${
+              isOpen ? 'rotate-90' : ''
+            }`}
+          >
+            <HiOutlineChevronRight className="w-[13px] h-[13px]" />
+          </span>
+        )}
+      </div>
+
+      {/* Dropdown */}
+      {isOpen && item.children && !collapsed && (
+        <div className="ml-[45px] mt-1 flex flex-col gap-2">
+          {item.children.map((child) => (
+            <div
+              key={child.label}
+              className="text-[13px] text-[#9ca3af] hover:text-white cursor-pointer"
+            >
+              {child.label}
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
