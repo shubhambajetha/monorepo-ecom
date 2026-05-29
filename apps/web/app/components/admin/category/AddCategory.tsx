@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 
 const AddCategory = () => {
   const [category, setCategory] = useState('');
   const [slug, setSlug] = useState('');
+  const [image, setImage] = useState<File | null>(null);
 
   const handleCategoryName = (value: string) => {
     setCategory(value);
@@ -73,6 +74,7 @@ const AddCategory = () => {
             <input
               type="file"
               id="image"
+              onChange={(e) => setImage(e.target.files?.[0] || null)}
               className="block w-full text-sm text-gray-600
               file:mr-4 file:rounded-lg file:border-0
               file:bg-black file:px-4 file:py-2

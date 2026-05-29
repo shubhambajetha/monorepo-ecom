@@ -47,7 +47,6 @@ model Subcategory {
 }
 
 
-
 model Collection {
   id            String      @id @default(cuid())
   name          String
