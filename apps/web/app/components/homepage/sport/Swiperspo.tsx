@@ -36,7 +36,7 @@ const Swiperspo: React.FC = () => {
         {/* Header */}
         <div className="flex items-end justify-between mb-9">
           <h2 className="text-4xl md:text-5xl font-extrabold uppercase tracking-tight leading-none text-brand-ink">
-            Shop by <span className="text-brand-accent">Sport</span>
+            Shop by <span className="text-brand-accent">Featured</span>
           </h2>
           <a
             href="#"
