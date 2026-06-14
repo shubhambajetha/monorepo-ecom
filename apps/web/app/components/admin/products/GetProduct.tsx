@@ -184,7 +184,7 @@ const stockBadge = (stock: number) => {
   return { label: `${stock} in stock`, cls: 'bg-green-50 text-green-700 border-green-100' };
 };
 
-// ── Component ──────────────────────────────────────────────────────────────
+
 const GetProduct = () => {
   const [search, setSearch] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('newest');
@@ -265,7 +265,7 @@ const GetProduct = () => {
   const toggleActive = (id: string) =>
     setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, isActive: !p.isActive } : p)));
 
-  // Stats
+
   const stats = useMemo(
     () => ({
       total: products.length,
@@ -279,7 +279,7 @@ const GetProduct = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-[1450px] mx-auto px-4 sm:px-6 py-8">
-        {/* ── Header ── */}
+    
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-sm text-gray-400 mb-1">

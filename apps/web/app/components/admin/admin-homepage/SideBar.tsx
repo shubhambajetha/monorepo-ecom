@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
 
 import {
   HiOutlineHome,
@@ -24,6 +25,7 @@ type NavItem = {
   hasChevron?: boolean;
   children?: {
     label: string;
+    path: string;
   }[];
 };
 
@@ -44,26 +46,61 @@ const mainNavItems: NavItem[] = [
     label: 'Category',
     icon: <HiOutlineSquares2X2 className={iconClass} />,
     hasChevron: true,
-    children: [{ label: 'All Category' }, { label: 'Add Category' }],
- 
+    children: [
+      {
+        label: 'All Category',
+        path: '/admin/allcategory',
+      },
+      {
+        label: 'Add Category',
+        path: '/admin/create-category',
+      },
+    ],
   },
   {
     label: 'Sub Category',
     icon: <HiOutlineTag className={iconClass} />,
     hasChevron: true,
-    children: [{ label: 'All Category' }, { label: 'Add Category' }],
+    children: [
+      {
+        label: 'sub category',
+        path: '/admin/subcategory',
+      },
+      {
+        label: 'get all category',
+        path: '/admin/getallsub',
+      },
+    ],
   },
   {
     label: 'collections',
     icon: <HiOutlineClipboardDocumentList className={iconClass} />,
     hasChevron: true,
-    children: [{ label: 'All collections' }, { label: 'Add Collection' }],
+    children: [
+      {
+        label: 'All collections',
+        path: '/admin/getcollection',
+      },
+      {
+        label: 'Add Collection',
+        path: '/admin/collection',
+      },
+    ],
   },
   {
     label: 'product',
     icon: <HiOutlineUsers className={iconClass} />,
     hasChevron: true,
-    children: [{ label: 'All Product ' }, { label: 'Add Product' }],
+    children: [
+      {
+        label: 'All Product',
+        path: '/admin/product',
+      },
+      {
+        label: 'Add Product',
+        path: 'admin/getproduct',
+      },
+    ],
   },
   {
     label: 'Store Setting',
@@ -225,14 +262,15 @@ function NavRow({ item, active, collapsed, onClick, openDropdown, setOpenDropdow
 
       {/* Dropdown */}
       {isOpen && item.children && !collapsed && (
-        <div className="ml-[45px] mt-1 flex flex-col gap-2">
+        <div className="ml-[45px] mt-1 flex flex-col gap-2 text-slate-200">
           {item.children.map((child) => (
-            <div
+            <Link
               key={child.label}
+              href={child.path}
               className="text-[13px] text-[#9ca3af] hover:text-white cursor-pointer"
             >
               {child.label}
-            </div>
+            </Link>
           ))}
         </div>
       )}
