@@ -1,11 +1,11 @@
 import "./config/env.js";
-import express from "express";
+import express, { type Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import routes from "./routes/index.js";
 
-const app = express();
+const app: Express = express();
 
 const corsOrigin = process.env.CORS_ORIGIN || process.env.FRONTEND_URL || "http://localhost:3000";
 

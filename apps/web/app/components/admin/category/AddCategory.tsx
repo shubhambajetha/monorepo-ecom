@@ -3,12 +3,12 @@
 import React, { use, useState } from 'react';
 
 const AddCategory = () => {
-  const [category, setCategory] = useState('');
+  const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
   const [image, setImage] = useState<File | null>(null);
 
   const handleCategoryName = (value: string) => {
-    setCategory(value);
+    setName(value);
 
     const generatedSlug = value
       .toLowerCase()
@@ -40,7 +40,7 @@ const AddCategory = () => {
             <input
               type="text"
               id="category"
-              value={category}
+              value={name}
               onChange={(e) => handleCategoryName(e.target.value)}
               placeholder="Enter category name"
               className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-black/10 focus:border-black transition"

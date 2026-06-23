@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, type Router as ExpressRouter } from "express";
 import {
   logoutUser,
   refreshTokenHandler,
@@ -6,7 +6,7 @@ import {
   signupUser,
 } from "../controllers/user.controller.js";
 
-const router = Router();
+const router: ExpressRouter = Router();
 
 router.post("/signup", signupUser);
 router.post("/signin", signinUser);
