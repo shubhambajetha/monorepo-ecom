@@ -12,6 +12,8 @@ import {
   ShoppingBagIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+
 
 const navItems = ['New & Featured', 'Men', 'Women', 'Kids', 'Jordan'] as const;
 type NavItem = (typeof navItems)[number];
@@ -23,7 +25,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [recentSearches] = useState(defaultRecentSearches);
-
+  
   const closeMenuTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearMenuCloseTimer = () => {
@@ -47,7 +49,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-white">
+    <header className="fixed inset-x-0 top-0 z-50 bg-white ">
       {/* TOP BAR */}
       {!searchOpen && (
         <div className="bg-[#f5f5f5]">
@@ -60,27 +62,24 @@ export default function Header() {
               Join Us
             </a>
             <span className="text-gray-400">|</span>
-            <a href="#" className="hover:underline">
-              Sign In
-            </a>
+            <Link href={'/auth/signin'}>Signin</Link>
           </div>
         </div>
       )}
 
-  
       <nav className="border-b border-gray-200/80">
         <div className="mx-auto hidden h-[66px] w-full max-w-[1440px] items-center px-8 lg:grid lg:grid-cols-[auto_1fr_auto]">
-        
-          <Image
-            src="/nike-logo.svg"
-            alt="Nike"
-            width={80}
-            height={30}
-            className="h-10 w-22"
-            priority
-          />
+          <Link href="/">
+            <Image
+              src="/nike-logo.svg"
+              alt="Nike"
+              width={80}
+              height={30}
+              className="h-10 w-22"
+              priority
+            />
+          </Link>
 
-         
           {searchOpen ? (
             <div className="col-span-2 relative flex items-center justify-center">
               <div className="flex h-[44px] w-full max-w-[900px] items-center rounded-full bg-gray-100 px-6">
