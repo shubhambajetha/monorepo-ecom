@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { prisma } from '../config/prisma';
 
+interface CollectionParams {
+  id: string;
+}
+
 export const createCollection = async (req: Request, res: Response) => {
   try {
     const { name, slug, subcategoryId } = req.body;
@@ -13,7 +17,7 @@ export const createCollection = async (req: Request, res: Response) => {
 
     if (existingSlug) {
       return res.status(400).json({
-        status: false,
+        success: false,
         message: 'Collection slug already exists',
       });
     }
@@ -24,39 +28,32 @@ export const createCollection = async (req: Request, res: Response) => {
 
     if (!subcategory) {
       return res.status(404).json({
-        status: false,
+        success: false,
         message: 'Subcategory not found',
       });
     }
 
-    const collection = await prisma.collection.create({
+    const newCollection = await prisma.collection.create({
       data: { name, slug, bannerImage, subcategoryId },
     });
 
     return res.status(201).json({
-      status: true,
+      success: true,
       message: 'Collection created successfully',
-      data: collection,
+      data: newCollection,
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
-      status: false,
+      success: false,
       message: error instanceof Error ? error.message : 'Internal Server Error',
     });
   }
 };
 
-export const getCollection = async (req: Request, res: Response) => {
+export const getCollection = async (req: Request<CollectionParams>, res: Response) => {
   try {
-    const id = req.params.id as string;
-
-    if (!id) {
-      return res.status(400).json({
-        // fix: was 200
-        status: false,
-        message: 'Invalid collection id',
-      });
-    }
+    const { id } = req.params;
 
     const collection = await prisma.collection.findUnique({
       where: { id },
@@ -64,97 +61,170 @@ export const getCollection = async (req: Request, res: Response) => {
 
     if (!collection) {
       return res.status(404).json({
-        status: false,
+        success: false,
         message: 'Collection not found',
       });
     }
 
     return res.status(200).json({
-      status: true,
+      success: true,
       message: 'Collection fetched successfully',
       data: collection,
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
-      // fix: was 400
-      status: false,
+      success: false,
       message: error instanceof Error ? error.message : 'Internal Server Error',
     });
   }
 };
 
-export const updateCollection = async (req: Request, res: Response) => {
+export const getAllCollections = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id as string;
+    const collections = await prisma.collection.findMany({
+      include: { subcategory: true },
+    });
 
-    if (!id) {
-      return res.status(400).json({
-        status: false,
-        message: 'Invalid collection id',
+    return res.status(200).json({
+      success: true,
+      message: 'Collections fetched successfully',
+      data: collections,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal Server Error',
+    });
+  }
+};
+
+export const getCollectionWithProducts = async (req: Request<CollectionParams>, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const collection = await prisma.collection.findUnique({
+      where: { id },
+      include: {
+        products: true, // your relation name in schema
+      },
+    });
+
+    if (!collection) {
+      return res.status(404).json({
+        success: false,
+        message: 'Collection not found',
       });
     }
 
+    return res.status(200).json({
+      success: true,
+      message: 'Collection with products fetched successfully',
+      data: collection,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal Server Error',
+    });
+  }
+};
+
+export const updateCollection = async (req: Request<CollectionParams>, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { name, slug, subcategoryId } = req.body;
+
     const existingCollection = await prisma.collection.findUnique({
-      // fix: added await, was querying by subcategoryId
       where: { id },
     });
 
     if (!existingCollection) {
       return res.status(404).json({
-        status: false,
+        success: false,
         message: 'Collection not found',
       });
     }
 
-    const { name, slug, subcategoryId } = req.body;
-
-    // fix: slug conflict check was missing entirely
-    if (slug) {
-      const existingSlug = await prisma.collection.findFirst({
+    // Check slug conflict only if slug is being changed
+    if (slug && slug !== existingCollection.slug) {
+      const slugConflict = await prisma.collection.findFirst({
         where: { slug, NOT: { id } },
       });
 
-      if (existingSlug) {
+      if (slugConflict) {
         return res.status(400).json({
-          status: false,
+          success: false,
           message: 'Collection slug already exists',
         });
       }
     }
 
-    // fix: subcategory validation was missing entirely
-    if (subcategoryId) {
+    // Validate new subcategoryId only if it is being changed
+    if (subcategoryId && subcategoryId !== existingCollection.subcategoryId) {
       const subcategory = await prisma.subcategory.findUnique({
         where: { id: subcategoryId },
       });
 
       if (!subcategory) {
         return res.status(404).json({
-          status: false,
+          success: false,
           message: 'Subcategory not found',
         });
       }
     }
 
-    // fix: image handling was missing entirely
+    // Keep old image if no new file is uploaded
     const bannerImage = req.file
       ? `/uploads/collection/${req.file.filename}`
       : existingCollection.bannerImage;
 
-    // fix: actual update call was missing entirely
     const updatedCollection = await prisma.collection.update({
       where: { id },
       data: { name, slug, subcategoryId, bannerImage },
     });
 
     return res.status(200).json({
-      status: true,
+      success: true,
       message: 'Collection updated successfully',
       data: updatedCollection,
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
-      status: false,
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal Server Error',
+    });
+  }
+};
+
+export const deleteCollection = async (req: Request<CollectionParams>, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const collection = await prisma.collection.findUnique({
+      where: { id },
+    });
+
+    if (!collection) {
+      return res.status(404).json({
+        success: false,
+        message: 'Collection not found',
+      });
+    }
+
+    await prisma.collection.delete({ where: { id } });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Collection deleted successfully',
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
       message: error instanceof Error ? error.message : 'Internal Server Error',
     });
   }
