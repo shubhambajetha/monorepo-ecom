@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { prisma } from '../config/prisma';
+import { prisma } from '../../config/prisma';
 import { Role } from '@prisma/client';
 import { signinSchema, signupSchema } from '@repo/shared';
 
