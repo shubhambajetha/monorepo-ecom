@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../config/prisma';
 
 interface CollectionParams {
-  id: string;
+  id?: string;
 }
 
-export const createCollection = async (req: Request, res: Response) => {
+export const createCollection = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, slug, subcategoryId } = req.body;
 
@@ -19,6 +19,7 @@ export const createCollection = async (req: Request, res: Response) => {
       return res.status(400).json({
         success: false,
         message: 'Collection slug already exists',
+
       });
     }
 
@@ -43,15 +44,11 @@ export const createCollection = async (req: Request, res: Response) => {
       data: newCollection,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
-export const getCollection = async (req: Request<CollectionParams>, res: Response) => {
+export const getCollection = async (req: Request<CollectionParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
 
@@ -72,15 +69,11 @@ export const getCollection = async (req: Request<CollectionParams>, res: Respons
       data: collection,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
-export const getAllCollections = async (req: Request, res: Response) => {
+export const getAllCollections = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const collections = await prisma.collection.findMany({
       include: { subcategory: true },
@@ -92,15 +85,11 @@ export const getAllCollections = async (req: Request, res: Response) => {
       data: collections,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
-export const getCollectionWithProducts = async (req: Request<CollectionParams>, res: Response) => {
+export const getCollectionWithProducts = async (req: Request<CollectionParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
 
@@ -124,15 +113,11 @@ export const getCollectionWithProducts = async (req: Request<CollectionParams>, 
       data: collection,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
-export const updateCollection = async (req: Request<CollectionParams>, res: Response) => {
+export const updateCollection = async (req: Request<CollectionParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const { name, slug, subcategoryId } = req.body;
@@ -158,6 +143,7 @@ export const updateCollection = async (req: Request<CollectionParams>, res: Resp
         return res.status(400).json({
           success: false,
           message: 'Collection slug already exists',
+          
         });
       }
     }
@@ -192,15 +178,11 @@ export const updateCollection = async (req: Request<CollectionParams>, res: Resp
       data: updatedCollection,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
-export const deleteCollection = async (req: Request<CollectionParams>, res: Response) => {
+export const deleteCollection = async (req: Request<CollectionParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
 
@@ -222,10 +204,6 @@ export const deleteCollection = async (req: Request<CollectionParams>, res: Resp
       message: 'Collection deleted successfully',
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };

@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import routes from "./routes/index.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 const app: Express = express();
 
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 
 // API routes
 app.use("/api/v1", routes);
+app.use(errorHandler);
 
 // START SERVER
 const PORT = process.env.PORT || 4000;

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../config/prisma.js';
 import { getPagination } from '../../helpers/pagination.js';
 import { buildProductWhereClause, type ProductQueryParams } from '../../helpers/productFilter.js';
@@ -37,7 +37,7 @@ const parseArray = (value: any): string[] => {
 /**
  * Create a new Product
  */
-export const createProduct = async (req: Request, res: Response) => {
+export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {
       title,
@@ -107,11 +107,7 @@ export const createProduct = async (req: Request, res: Response) => {
       data: newProduct,
     });
   } catch (error) {
-    console.error('Error creating product:', error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
@@ -120,7 +116,8 @@ export const createProduct = async (req: Request, res: Response) => {
  */
 export const getAllProducts = async (
   req: Request<{}, {}, {}, ProductQueryParams & { sortBy?: string; page?: string; limit?: string }>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const { page, limit, skip } = getPagination(req.query);
@@ -150,18 +147,14 @@ export const getAllProducts = async (
       },
     });
   } catch (error) {
-    console.error('Error fetching products:', error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
 /**
  * Get a single product by ID
  */
-export const getProduct = async (req: Request<ProductParams>, res: Response) => {
+export const getProduct = async (req: Request<ProductParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const product = await prisma.product.findUnique({
@@ -179,18 +172,14 @@ export const getProduct = async (req: Request<ProductParams>, res: Response) => 
       data: product,
     });
   } catch (error) {
-    console.error('Error fetching product details:', error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
 /**
  * Update a product
  */
-export const updateProduct = async (req: Request<ProductParams>, res: Response) => {
+export const updateProduct = async (req: Request<ProductParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const {
@@ -275,18 +264,14 @@ export const updateProduct = async (req: Request<ProductParams>, res: Response) 
       data: updatedProduct,
     });
   } catch (error) {
-    console.error('Error updating product:', error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
 /**
  * Delete a product
  */
-export const deleteProduct = async (req: Request<ProductParams>, res: Response) => {
+export const deleteProduct = async (req: Request<ProductParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const product = await prisma.product.findUnique({ where: { id } });
@@ -302,11 +287,7 @@ export const deleteProduct = async (req: Request<ProductParams>, res: Response) 
       message: 'Product deleted successfully',
     });
   } catch (error) {
-    console.error('Error deleting product:', error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
@@ -314,7 +295,7 @@ export const deleteProduct = async (req: Request<ProductParams>, res: Response) 
  * Get distinct filter parameters (brands, colors, sizes, collections, categories, and price ranges)
  * for building front-end filter bars.
  */
-export const getProductFilters = async (req: Request, res: Response) => {
+export const getProductFilters = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const [products, collections] = await Promise.all([
       prisma.product.findMany({
@@ -369,10 +350,6 @@ export const getProductFilters = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error('Error fetching filter details:', error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };

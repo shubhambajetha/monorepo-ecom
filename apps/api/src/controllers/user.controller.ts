@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { prisma } from '../../config/prisma';
+import { prisma } from '../config/prisma';
 import { Role } from '@prisma/client';
 import { signinSchema, signupSchema } from '@repo/shared';
 
@@ -155,6 +155,7 @@ export const signupUser = async (req: Request, res: Response): Promise<Response>
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
+      
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Failed to register user';

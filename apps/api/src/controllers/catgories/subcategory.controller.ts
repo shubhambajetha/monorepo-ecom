@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../config/prisma';
 
 interface SubCategoryParams {
-  id: string;
+  id?: string;
 }
 
-export const createSubCategory = async (req: Request, res: Response) => {
+export const createSubCategory = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, slug, categoryId } = req.body;
 
@@ -43,15 +43,11 @@ export const createSubCategory = async (req: Request, res: Response) => {
       data: newSubCategory,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
-export const getSubCategory = async (req: Request<SubCategoryParams>, res: Response) => {
+export const getSubCategory = async (req: Request<SubCategoryParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
 
@@ -72,15 +68,11 @@ export const getSubCategory = async (req: Request<SubCategoryParams>, res: Respo
       data: subcategory,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
-export const getAllSubCategories = async (req: Request, res: Response) => {
+export const getAllSubCategories = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const subcategories = await prisma.subcategory.findMany({
       include: { category: true },
@@ -92,17 +84,14 @@ export const getAllSubCategories = async (req: Request, res: Response) => {
       data: subcategories,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
 export const getSubCategoryWithCollections = async (
   req: Request<SubCategoryParams>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const { id } = req.params;
@@ -127,15 +116,11 @@ export const getSubCategoryWithCollections = async (
       data: subcategory,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
-export const updateSubCategory = async (req: Request<SubCategoryParams>, res: Response) => {
+export const updateSubCategory = async (req: Request<SubCategoryParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const { name, slug, categoryId } = req.body;
@@ -195,15 +180,11 @@ export const updateSubCategory = async (req: Request<SubCategoryParams>, res: Re
       data: updatedSubCategory,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
-export const deleteSubCategory = async (req: Request<SubCategoryParams>, res: Response) => {
+export const deleteSubCategory = async (req: Request<SubCategoryParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
 
@@ -225,10 +206,6 @@ export const deleteSubCategory = async (req: Request<SubCategoryParams>, res: Re
       message: 'Subcategory deleted successfully',
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
