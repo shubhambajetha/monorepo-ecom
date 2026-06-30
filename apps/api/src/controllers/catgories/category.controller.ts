@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../config/prisma';
 
 interface CategoryParams {
-  id: string;
+  id?: string;
 }
 
-export const createCategory = async (req: Request, res: Response) => {
+export const createCategory = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, slug } = req.body;
 
@@ -32,15 +32,11 @@ export const createCategory = async (req: Request, res: Response) => {
       data: newCategory,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
-export const getCategory = async (req: Request<CategoryParams>, res: Response) => {
+export const getCategory = async (req: Request<CategoryParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
 
@@ -61,15 +57,11 @@ export const getCategory = async (req: Request<CategoryParams>, res: Response) =
       data: category,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
-export const getAllCategories = async (req: Request, res: Response) => {
+export const getAllCategories = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const categories = await prisma.category.findMany();
 
@@ -79,15 +71,11 @@ export const getAllCategories = async (req: Request, res: Response) => {
       data: categories,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
-export const updateCategory = async (req: Request<CategoryParams>, res: Response) => {
+export const updateCategory = async (req: Request<CategoryParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const { name, slug } = req.body;
@@ -116,15 +104,11 @@ export const updateCategory = async (req: Request<CategoryParams>, res: Response
       data: updatedCategory,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };
 
-export const deleteCategory = async (req: Request<CategoryParams>, res: Response) => {
+export const deleteCategory = async (req: Request<CategoryParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
 
@@ -148,10 +132,6 @@ export const deleteCategory = async (req: Request<CategoryParams>, res: Response
       message: 'Category deleted successfully',
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: error instanceof Error ? error.message : 'Internal Server Error',
-    });
+    next(error);
   }
 };

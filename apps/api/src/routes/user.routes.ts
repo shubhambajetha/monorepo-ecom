@@ -4,7 +4,7 @@ import {
   refreshTokenHandler,
   signinUser,
   signupUser,
-} from "../controllers/auth/user.controller.js";
+} from "../controllers/user.controller.js";
 
 const router: ExpressRouter = Router();
 

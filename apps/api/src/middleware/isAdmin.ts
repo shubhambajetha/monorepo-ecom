@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { success } from 'zod';
+
 
 const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   if (!req.user) {
@@ -9,7 +9,7 @@ const isAdmin = (req: Request, res: Response, next: NextFunction) => {
     });
   }
 
-  if (req.user.role !== 'Admin') {
+  if (req.user.role !== 'ADMIN') {
     return res.status(403).json({
       success: false,
       message: 'Forbidden. Admin access required.',
