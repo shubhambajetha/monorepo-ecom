@@ -2,7 +2,8 @@
 import localFont from 'next/font/local';
 import AppShell from '@/app/components/layout/AppShell';
 import './globals.css';
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import ReactQueryProvider from '@/provider/ReactQueryProvider';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -28,9 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <QueryClient client={queryClient}>
+         <ReactQueryProvider>
           <AppShell>{children}</AppShell>
-        </QueryClient>
+        </ReactQueryProvider>
       </body>
     </html>
   );
