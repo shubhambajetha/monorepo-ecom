@@ -76,7 +76,7 @@ export default function Homebar() {
     setActiveIndex(newIndex);
 
     // Pause all videos
-    videoRefs.current.forEach((video) => video?.pause());
+    // videoRefs.current.forEach((video) => video?.pause());
 
     // Play active video if exists
     const activeVideo = videoRefs.current[newIndex];
