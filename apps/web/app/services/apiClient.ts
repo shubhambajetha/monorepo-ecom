@@ -37,6 +37,109 @@ interface JWTPayload {
   [key: string]: any;
 }
 
+type UnknownRecord = Record<string, unknown>;
+
+export type ApiError = Error & {
+  status?: number;
+  code?: string;
+  details?: unknown;
+};
+
+function asRecord(value: unknown): UnknownRecord | null {
+  if (!value || typeof value !== 'object') {
+    return null;
+  }
+
+  return value as UnknownRecord;
+}
+
+function extractMessage(payload: unknown): string | null {
+  if (typeof payload === 'string' && payload.trim().length > 0) {
+    return payload;
+  }
+
+  const record = asRecord(payload);
+  if (!record) {
+    return null;
+  }
+
+  const directMessageKeys = ['message', 'error', 'detail'];
+  for (const key of directMessageKeys) {
+    const value = record[key];
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value;
+    }
+  }
+
+  const directErrors = asRecord(record.errors);
+  if (directErrors) {
+    for (const value of Object.values(directErrors)) {
+      if (Array.isArray(value)) {
+        const firstMessage = value.find(
+          (item) => typeof item === 'string' && item.trim().length > 0
+        );
+        if (typeof firstMessage === 'string') {
+          return firstMessage;
+        }
+      }
+
+      if (typeof value === 'string' && value.trim().length > 0) {
+        return value;
+      }
+    }
+  }
+
+  const nestedData = asRecord(record.data);
+  if (!nestedData) {
+    return null;
+  }
+
+  for (const key of directMessageKeys) {
+    const value = nestedData[key];
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value;
+    }
+  }
+
+  const nestedErrors = asRecord(nestedData.errors);
+  if (!nestedErrors) {
+    return null;
+  }
+
+  for (const value of Object.values(nestedErrors)) {
+    if (Array.isArray(value)) {
+      const firstMessage = value.find((item) => typeof item === 'string' && item.trim().length > 0);
+      if (typeof firstMessage === 'string') {
+        return firstMessage;
+      }
+    }
+
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value;
+    }
+  }
+
+  return null;
+}
+
+export function normalizeApiError(error: unknown): ApiError {
+  if (axios.isAxiosError(error)) {
+    const axiosError = error as AxiosError<unknown>;
+    const apiError = new Error(
+      extractMessage(axiosError.response?.data) ?? axiosError.message ?? 'Request failed'
+    ) as ApiError;
+
+    apiError.status = axiosError.response?.status;
+    apiError.code = axiosError.code;
+    apiError.details = axiosError.response?.data;
+    return apiError;
+  }
+  if (error instanceof Error) {
+    return error as ApiError;
+  }
+  return new Error('Unknown request error') as ApiError;
+}
+
 type AuthEventListener = (event: AuthEvent) => void;
 
 interface AuthEvent {
@@ -285,7 +388,7 @@ const tokenStorage = new TokenStorage();
 const api: AxiosInstance = axios.create({
   baseURL: getApiBaseUrl(),
   timeout: config.timeoutMs || 30000,
-  withCredentials: true, 
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -574,4 +677,5 @@ export function onAuthEvent(listener: AuthEventListener): () => void {
 }
 
 export default api;
-export { TokenRefreshManager, tokenManager, TokenStorage, tokenStorage, authEventEmitter };
+export const apiClient = api;
+export { TokenRefreshManager, tokenManager, TokenStorage, tokenStorage, authEventEmitter,};
