@@ -19,7 +19,6 @@ export const metadata: Metadata = {
   description: 'an ecomrse site ',
 };
 
-const queryClient = new QueryClient();
 
 export default function RootLayout({
   children,
