@@ -10,7 +10,7 @@ export const createCategory = async (payload: CategoryPayload): Promise<ApiRespo
       payload
     );
 
-    return response.data;
+    return response?.data;
   } catch (error) {
     throw normalizeApiError(error);
   }
@@ -21,7 +21,7 @@ export const getAllCategories = async (): Promise<ApiResponse<Category[]>> => {
     const response = await apiClient.get<ApiResponse<Category[]>>(
       endpoints.category.getallcategory
     );
-    return response.data;
+    return response?.data;
   } catch (error) {
     throw normalizeApiError(error);
   }
@@ -30,7 +30,7 @@ export const getAllCategories = async (): Promise<ApiResponse<Category[]>> => {
 export const getCategoryById = async (id: number): Promise<ApiResponse<Category>> => {
   try {
     const response = await apiClient.get<ApiResponse<Category>>(endpoints.category.getcategory(id));
-    return response.data;
+    return response?.data;
   } catch (error) {
     throw normalizeApiError(error);
   }
@@ -46,7 +46,7 @@ export const updateCategory = async (
       payload
     );
 
-    return response.data;
+    return response?.data;
   } catch (error) {
     throw normalizeApiError(error);
   }
@@ -57,7 +57,7 @@ export const deletecategory = async (id: number): Promise<ApiResponse<null>> => 
     const response = await apiClient.delete<ApiResponse<null>>(
       endpoints.category.deletecategory(id)
     );
-    return response.data;
+    return response?.data;
   } catch (error) {
     throw normalizeApiError(error);
   }
