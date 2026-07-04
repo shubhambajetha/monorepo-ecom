@@ -6,6 +6,6 @@ export default function useGetcategory(id:number){
         queryKey:["getcat",id],
         queryFn:()=>getCategoryById(id),
         enabled :!!id
-    })
+    });
 }
 

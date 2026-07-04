@@ -39,9 +39,9 @@ router.put('/categories/:id', upload.single('image'), updateCategory);
 router.delete('/categories/:id', deleteCategory);
 
 // Subcategories
-router.post('/subcategories', upload.single('image'), createSubCategory);
-router.put('/subcategories/:id', upload.single('image'), updateSubCategory);
-router.delete('/subcategories/:id', deleteSubCategory);
+  router.post('/subcategories', upload.single('image'), createSubCategory);
+  router.put('/subcategories/:id', upload.single('image'), updateSubCategory);
+  router.delete('/subcategories/:id', deleteSubCategory);
 
 // Collections
 router.post('/collections', upload.single('bannerImage'), createCollection);
