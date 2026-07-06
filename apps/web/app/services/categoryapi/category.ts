@@ -1,13 +1,14 @@
 import { endpoints } from '@/app/constants/endpoint';
 import { Category, CategoryPayload } from '@/app/types/category/categorytype';
 import { ApiResponse } from '@/app/utils/api';
+import { createCategoryFormData, updateCategoryFormData } from '@/app/utils/categories/formData';
 import { apiClient, normalizeApiError } from '../apiClient';
 
 export const createCategory = async (payload: CategoryPayload): Promise<ApiResponse<Category>> => {
   try {
     const response = await apiClient.post<ApiResponse<Category>>(
       endpoints.category.createcategory,
-      payload
+      createCategoryFormData(payload)
     );
 
     return response?.data;
@@ -43,7 +44,7 @@ export const updateCategory = async (
   try {
     const response = await apiClient.put<ApiResponse<Category>>(
       endpoints.category.updatecategory(id),
-      payload
+      updateCategoryFormData(payload)
     );
 
     return response?.data;

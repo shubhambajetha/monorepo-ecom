@@ -1,7 +1,7 @@
 export interface CategoryPayload {
   name: string;
   slug: string;
-  image: File;
+  image?: File | null;
 }
 
 export interface Category {

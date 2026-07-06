@@ -1,8 +1,8 @@
 import { subcateCategory, subcategoryPayload } from '@/app/types/subcatgory/subcategorytype';
 import { ApiResponse } from '@/app/utils/api';
-import api, { apiClient, normalizeApiError } from '../apiClient';
+import { apiClient, normalizeApiError } from '../apiClient';
 import { endpoints } from '@/app/constants/endpoint';
-import { CategoryScale } from 'chart.js';
+import { createSubCategoryFormData, updateSubCategoryFormData } from '@/app/utils/categories/formData';
 
 export const createsubcat = async (
   payload: subcategoryPayload
@@ -10,7 +10,7 @@ export const createsubcat = async (
   try {
     const response = await apiClient.post<ApiResponse<subcateCategory>>(
       endpoints.subcategory.createsubcategory,
-      payload
+      createSubCategoryFormData(payload)
     );
     return response?.data;
   } catch (error) {
@@ -47,7 +47,7 @@ export const getupdatesubcat = async (
   try {
     const response = await apiClient.put<ApiResponse<subcateCategory>>(
       endpoints.subcategory.updatesubcategory(id),
-      payload
+      updateSubCategoryFormData(payload)
     );
     return response?.data;
   } catch (error) {

@@ -1,6 +1,7 @@
 import { endpoints } from '@/app/constants/endpoint';
 import { Collection, CollectionPayload } from '@/app/types/collection/collectiontype';
 import { ApiResponse } from '@/app/utils/api';
+import { createCollectionFormData, updateCollectionFormData } from '@/app/utils/categories/formData';
 import { apiClient, normalizeApiError } from '../apiClient';
 
 export const createCollection = async (
@@ -9,7 +10,7 @@ export const createCollection = async (
   try {
     const response = await apiClient.post<ApiResponse<Collection>>(
       endpoints.collection.createcollection,
-      payload
+      createCollectionFormData(payload)
     );
 
     return response.data;
@@ -49,7 +50,7 @@ export const updateCollection = async (
   try {
     const response = await apiClient.put<ApiResponse<Collection>>(
       endpoints.collection.updatecollection(id),
-      payload
+      updateCollectionFormData(payload)
     );
 
     return response.data;

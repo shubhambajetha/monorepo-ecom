@@ -7,7 +7,16 @@ interface CollectionParams {
 
 export const createCollection = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name, slug, subcategoryId } = req.body;
+    const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
+    const slug = typeof req.body?.slug === 'string' ? req.body.slug.trim() : '';
+    const subcategoryId = typeof req.body?.subcategoryId === 'string' ? req.body.subcategoryId.trim() : '';
+
+    if (!name || !slug || !subcategoryId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Collection name, slug, and subcategoryId are required',
+      });
+    }
 
     const bannerImage = req.file ? `/uploads/collection/${req.file.filename}` : null;
 
@@ -120,7 +129,9 @@ export const getCollectionWithProducts = async (req: Request<CollectionParams>, 
 export const updateCollection = async (req: Request<CollectionParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const { name, slug, subcategoryId } = req.body;
+    const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
+    const slug = typeof req.body?.slug === 'string' ? req.body.slug.trim() : '';
+    const subcategoryId = typeof req.body?.subcategoryId === 'string' ? req.body.subcategoryId.trim() : '';
 
     const existingCollection = await prisma.collection.findUnique({
       where: { id },
@@ -169,7 +180,12 @@ export const updateCollection = async (req: Request<CollectionParams>, res: Resp
 
     const updatedCollection = await prisma.collection.update({
       where: { id },
-      data: { name, slug, subcategoryId, bannerImage },
+      data: {
+        ...(name ? { name } : {}),
+        ...(slug ? { slug } : {}),
+        ...(subcategoryId ? { subcategoryId } : {}),
+        ...(bannerImage ? { bannerImage } : {}),
+      },
     });
 
     return res.status(200).json({

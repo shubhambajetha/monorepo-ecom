@@ -1,7 +1,8 @@
 export interface subcategoryPayload {
   name: string;
   slug: string;
-  image: File;
+  categoryId: string;
+  image?: File | null;
 }
 
 export interface subcateCategory {
