@@ -16,7 +16,7 @@ const parseBool = (value: any): boolean | undefined => {
   return undefined;
 };
 
-// Helper to parse array fields (sizes, colors) from multipart/form-data
+
 const parseArray = (value: any): string[] => {
   if (!value) return [];
   if (Array.isArray(value)) return value;

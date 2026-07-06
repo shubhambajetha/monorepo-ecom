@@ -7,7 +7,15 @@ interface CategoryParams {
 
 export const createCategory = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name, slug } = req.body;
+    const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
+    const slug = typeof req.body?.slug === 'string' ? req.body.slug.trim() : '';
+
+    if (!name || !slug) {
+      return res.status(400).json({
+        success: false,
+        message: 'Category name and slug are required',
+      });
+    }
 
     const image = req.file ? `/uploads/categories/${req.file.filename}` : null;
 
@@ -78,7 +86,8 @@ export const getAllCategories = async (req: Request, res: Response, next: NextFu
 export const updateCategory = async (req: Request<CategoryParams>, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const { name, slug } = req.body;
+    const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
+    const slug = typeof req.body?.slug === 'string' ? req.body.slug.trim() : '';
 
     const existingCategory = await prisma.category.findUnique({
       where: { id },
@@ -90,12 +99,15 @@ export const updateCategory = async (req: Request<CategoryParams>, res: Response
         message: 'Category not found',
       });
     }
-    // Keep old image if no new file is uploaded
     const image = req.file ? `/uploads/categories/${req.file.filename}` : existingCategory.image;
 
     const updatedCategory = await prisma.category.update({
       where: { id },
-      data: { name, slug, image },
+      data: {
+        ...(name ? { name } : {}),
+        ...(slug ? { slug } : {}),
+        ...(image ? { image } : {}),
+      },
     });
 
     return res.status(200).json({

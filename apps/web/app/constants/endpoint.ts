@@ -19,4 +19,18 @@ export const endpoints = {
     updatesubcategory: (id: number) => `/admincate/subcategories/${id}`,
     deletesubcategory: (id: number) => `/admincate/subcategories/${id}`,
   },
+  collection: {
+    createcollection: '/admincate/collections',
+    getallcollection: '/usercate/collections',
+    getcollection: (id: number) => `/usercate/collections/${id}`,
+    updatecollection: (id: number) => `/admincate/collections/${id}`,
+    deletecollection: (id: number) => `/admincate/collections/${id}`,
+  },
+  product: {
+    createproduct: '/products',
+    getallproducts: '/products',
+    getproduct: (id: number) => `/products/${id}`,
+    updateproduct: (id: number) => `/products/${id}`,
+    deleteproduct: (id: number) => `/products/${id}`,
+  },
 } as const;

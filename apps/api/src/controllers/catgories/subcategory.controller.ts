@@ -7,7 +7,16 @@ interface SubCategoryParams {
 
 export const createSubCategory = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name, slug, categoryId } = req.body;
+    const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
+    const slug = typeof req.body?.slug === 'string' ? req.body.slug.trim() : '';
+    const categoryId = typeof req.body?.categoryId === 'string' ? req.body.categoryId.trim() : '';
+
+    if (!name || !slug || !categoryId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Subcategory name, slug, and categoryId are required',
+      });
+    }
 
     const image = req.file ? `/uploads/subCategory/${req.file.filename}` : null;
 
@@ -47,7 +56,11 @@ export const createSubCategory = async (req: Request, res: Response, next: NextF
   }
 };
 
-export const getSubCategory = async (req: Request<SubCategoryParams>, res: Response, next: NextFunction) => {
+export const getSubCategory = async (
+  req: Request<SubCategoryParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
 
@@ -120,10 +133,16 @@ export const getSubCategoryWithCollections = async (
   }
 };
 
-export const updateSubCategory = async (req: Request<SubCategoryParams>, res: Response, next: NextFunction) => {
+export const updateSubCategory = async (
+  req: Request<SubCategoryParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
-    const { name, slug, categoryId } = req.body;
+    const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
+    const slug = typeof req.body?.slug === 'string' ? req.body.slug.trim() : '';
+    const categoryId = typeof req.body?.categoryId === 'string' ? req.body.categoryId.trim() : '';
 
     const existingSubCategory = await prisma.subcategory.findUnique({
       where: { id },
@@ -171,7 +190,12 @@ export const updateSubCategory = async (req: Request<SubCategoryParams>, res: Re
 
     const updatedSubCategory = await prisma.subcategory.update({
       where: { id },
-      data: { name, slug, categoryId, image },
+      data: {
+        ...(name ? { name } : {}),
+        ...(slug ? { slug } : {}),
+        ...(categoryId ? { categoryId } : {}),
+        ...(image ? { image } : {}),
+      },
     });
 
     return res.status(200).json({
@@ -184,7 +208,11 @@ export const updateSubCategory = async (req: Request<SubCategoryParams>, res: Re
   }
 };
 
-export const deleteSubCategory = async (req: Request<SubCategoryParams>, res: Response, next: NextFunction) => {
+export const deleteSubCategory = async (
+  req: Request<SubCategoryParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
 

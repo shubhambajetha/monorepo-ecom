@@ -400,6 +400,18 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
   async (config: RequestConfig) => {
     try {
+      const requestConfig = config as InternalAxiosRequestConfig & {
+        data?: unknown;
+        headers?: Record<string, unknown>;
+      };
+
+      if (requestConfig.data instanceof FormData) {
+        const headers = requestConfig.headers ?? {};
+        delete headers['Content-Type'];
+        delete headers['content-type'];
+        requestConfig.headers = headers;
+      }
+
       // Pre-emptive token refresh if close to expiry
       if (tokenStorage.shouldRefreshToken() && !tokenManager.isCurrentlyRefreshing()) {
         console.debug('[API] Token close to expiry, pre-emptive refresh');
