@@ -47,7 +47,11 @@ export const createSubCategory = async (req: Request, res: Response, next: NextF
   }
 };
 
-export const getSubCategory = async (req: Request<SubCategoryParams>, res: Response, next: NextFunction) => {
+export const getSubCategory = async (
+  req: Request<SubCategoryParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
 
@@ -120,7 +124,11 @@ export const getSubCategoryWithCollections = async (
   }
 };
 
-export const updateSubCategory = async (req: Request<SubCategoryParams>, res: Response, next: NextFunction) => {
+export const updateSubCategory = async (
+  req: Request<SubCategoryParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const { name, slug, categoryId } = req.body;
@@ -184,7 +192,11 @@ export const updateSubCategory = async (req: Request<SubCategoryParams>, res: Re
   }
 };
 
-export const deleteSubCategory = async (req: Request<SubCategoryParams>, res: Response, next: NextFunction) => {
+export const deleteSubCategory = async (
+  req: Request<SubCategoryParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
 

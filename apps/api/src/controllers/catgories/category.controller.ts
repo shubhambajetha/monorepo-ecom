@@ -90,7 +90,6 @@ export const updateCategory = async (req: Request<CategoryParams>, res: Response
         message: 'Category not found',
       });
     }
-    // Keep old image if no new file is uploaded
     const image = req.file ? `/uploads/categories/${req.file.filename}` : existingCategory.image;
 
     const updatedCategory = await prisma.category.update({
