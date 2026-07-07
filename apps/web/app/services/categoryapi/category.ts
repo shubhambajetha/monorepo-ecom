@@ -63,3 +63,5 @@ export const deletecategory = async (id: number): Promise<ApiResponse<null>> => 
     throw normalizeApiError(error);
   }
 };
+
+// test all the requie report 

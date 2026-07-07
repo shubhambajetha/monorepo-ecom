@@ -1,3 +1,5 @@
-export const createProduct = async() =>{
+import { Product } from "@/types/product";
+
+export const createProduct = async(payload:Product) =>{
 
 }

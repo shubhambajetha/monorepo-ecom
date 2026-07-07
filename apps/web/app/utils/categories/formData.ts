@@ -1,5 +1,6 @@
 import { CategoryPayload } from '@/app/types/category/categorytype';
 import { CollectionPayload } from '@/app/types/collection/collectiontype';
+import { ProductPayload } from '@/app/types/product/productype';
 import { subcategoryPayload } from '@/app/types/subcatgory/subcategorytype';
 
 const appendTextField = (formData: FormData, key: string, value: unknown): void => {
@@ -76,3 +77,10 @@ export const updateCollectionFormData = (payload: CollectionPayload): FormData =
 
   return formData;
 };
+
+
+export const createProductFormData = (payload:ProductPayload): FormData =>{
+  const formData = new FormData();
+
+  appendTextField(FormData, '')
+}
