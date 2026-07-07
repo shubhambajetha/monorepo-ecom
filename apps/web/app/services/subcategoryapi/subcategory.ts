@@ -42,7 +42,7 @@ export const getallsubcat = async (): Promise<ApiResponse<subcateCategory>> => {
 
 export const getupdatesubcat = async (
   id: number,
-  payload: subcateCategory
+  payload: subcategoryPayload
 ): Promise<ApiResponse<subcateCategory>> => {
   try {
     const response = await apiClient.put<ApiResponse<subcateCategory>>(

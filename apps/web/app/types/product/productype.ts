@@ -1,4 +1,4 @@
-import { Collection } from "../collection/collectiontype";
+import { Collection } from '../collection/collectiontype';
 
 export interface Product {
   id: string;
@@ -18,7 +18,6 @@ export interface Product {
   isFeatured: boolean;
   isActive: boolean;
   collectionId: string;
-  collection?: Collection;
   createdAt: string;
   updatedAt: string;
 }
@@ -32,8 +31,8 @@ export interface ProductPayload {
   price: number;
   discountPrice?: number;
   stock: number;
-  thumbnail: File | string;
-  images: (File | string)[];
+  thumbnail?: File | string | null;
+  images?: (File | string | null)[];
   sizes: string[];
   colors: string[];
   isFeatured?: boolean;
