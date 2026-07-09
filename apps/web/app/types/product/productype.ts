@@ -1,3 +1,4 @@
+import { pagination } from '@/app/utils/presponce/pagination';
 import { Collection } from '../collection/collectiontype';
 
 export interface Product {
@@ -20,6 +21,30 @@ export interface Product {
   collectionId: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface PaginatedResponse<T> {
+  success: boolean;
+  message: string;
+  data: T[];
+  pagination: pagination;
+}
+
+export interface ProductQueryParams {
+  subcategoryId?: string;
+  collectionId?: string;
+  brand?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  inStock?: string;
+  isFeatured?: string;
+  size?: string;
+  color?: string;
+  search?: string;
+  isActive?: string;
+  sortBy?: string;
+  page?: string;
+  limit?: string;
 }
 
 export interface ProductPayload {

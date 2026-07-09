@@ -16,7 +16,6 @@ const parseBool = (value: any): boolean | undefined => {
   return undefined;
 };
 
-
 const parseArray = (value: any): string[] => {
   if (!value) return [];
   if (Array.isArray(value)) return value;
@@ -154,7 +153,11 @@ export const getAllProducts = async (
 /**
  * Get a single product by ID
  */
-export const getProduct = async (req: Request<ProductParams>, res: Response, next: NextFunction) => {
+export const getProduct = async (
+  req: Request<ProductParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const product = await prisma.product.findUnique({
@@ -179,7 +182,11 @@ export const getProduct = async (req: Request<ProductParams>, res: Response, nex
 /**
  * Update a product
  */
-export const updateProduct = async (req: Request<ProductParams>, res: Response, next: NextFunction) => {
+export const updateProduct = async (
+  req: Request<ProductParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const {
@@ -271,7 +278,11 @@ export const updateProduct = async (req: Request<ProductParams>, res: Response, 
 /**
  * Delete a product
  */
-export const deleteProduct = async (req: Request<ProductParams>, res: Response, next: NextFunction) => {
+export const deleteProduct = async (
+  req: Request<ProductParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const product = await prisma.product.findUnique({ where: { id } });
