@@ -7,7 +7,7 @@ export default function useCreateCategory() {
     mutationFn: createCategory,
     onSuccess: () => {
       querclinet.invalidateQueries({
-        queryKey: ['create'],
+        queryKey: ['categories'],
       });
     },
     onError: (error: any) => {

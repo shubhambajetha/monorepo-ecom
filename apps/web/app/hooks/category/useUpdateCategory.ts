@@ -7,7 +7,7 @@ export default function useUpdateCategory(id: number) {
     mutationFn: (payload) => updateCategory(id, payload),
     onSuccess: () => {
       queryClinet.invalidateQueries({
-        queryKey: ['updatecate'],
+        queryKey: ['categories'],
       });
     },
   });

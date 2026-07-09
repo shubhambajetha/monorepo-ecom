@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export default function useGetCollection(id: number) {
   return useQuery({
-    queryKey: ['collection', id],
+    queryKey: ['collections', id],
     queryFn: () => getCollectionById(id),
     enabled: !!id,
   });

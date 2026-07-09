@@ -9,7 +9,7 @@ export const useUpdateProduct = (id: number) => {
     updateProduct(id, payload),
     onSuccess:()=>{
         queryclient.invalidateQueries({
-            queryKey:["udpdateproduct"]
+            queryKey:["products"]
         })
     }
   });

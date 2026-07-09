@@ -1,9 +1,9 @@
-import GetAllSubcat from "@/app/components/admin/subcategory/GetAllSubcat";
+import { getallsubcat } from "@/app/services/subcategoryapi/subcategory";
 import { useQuery } from "@tanstack/react-query";
 
 export default function useGetAllSubCategory(){
     return useQuery({
-        queryKey:["usegetallsubcate"],
-        queryFn:GetAllSubcat,
+        queryKey:["subcategories"],
+        queryFn:getallsubcat,
     });
 }

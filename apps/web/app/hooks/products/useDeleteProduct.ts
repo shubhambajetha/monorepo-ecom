@@ -9,7 +9,7 @@ export const useDeleteProduct = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["getproduct"],
+        queryKey: ["products"],
       });
     },
   });

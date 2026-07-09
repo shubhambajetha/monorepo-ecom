@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function useGetAllCategory(){
     return useQuery({
-        queryKey:["getallcat"],
+        queryKey:["categories"],
         queryFn:getAllCategories
     })
 }

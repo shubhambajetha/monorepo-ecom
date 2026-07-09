@@ -8,7 +8,7 @@ export default function useCreateSubCategory() {
     mutationFn: createsubcat,
     onSuccess: () => {
       queryclient.invalidateQueries({
-        queryKey: ['createsubcat'],
+        queryKey: ['subcategories'],
       });
     },
     onError:(error:any)=>{
