@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export default function useGetSubCategory(id: number) {
   return useQuery({
-    queryKey: ['getsubcate'],
+    queryKey: ['subcategories', id],
     queryFn: () => getsubcat(id),
     enabled: !!id,
   });

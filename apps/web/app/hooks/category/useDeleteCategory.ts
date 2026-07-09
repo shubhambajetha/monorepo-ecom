@@ -7,7 +7,7 @@ export default function useDeleteCategory(id:number){
         mutationFn:()=>deletecategory(id),
         onSuccess:()=>{
             QueryClient.invalidateQueries({
-                queryKey:["deletecate"],
+                queryKey:["categories"],
             });
         },
     });

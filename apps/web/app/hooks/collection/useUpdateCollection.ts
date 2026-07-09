@@ -10,7 +10,7 @@ export default function useUpdateCollection(id: number) {
       updateCollection(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['collection', id],
+        queryKey: ['collections'],
       });
     },
 

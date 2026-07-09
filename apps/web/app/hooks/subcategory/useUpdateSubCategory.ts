@@ -7,7 +7,7 @@ export default function useUpdateSubCategory(id:number){
         mutationFn:(payload) => getupdatesubcat(id, payload),
         onSuccess: ()=>{
             queryClinet.invalidateQueries({
-                queryKey:["updatesubcate"]
+                queryKey:["subcategories"]
             })
         }
         
