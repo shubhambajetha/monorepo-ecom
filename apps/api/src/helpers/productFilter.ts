@@ -18,7 +18,7 @@ export interface ProductQueryParams {
 /**
  * Builds the Prisma where clause for filtering products.
  */
-export const buildProductWhereClause = async (
+export const  buildProductWhereClause = async (
   query: ProductQueryParams
 ): Promise<Prisma.ProductWhereInput> => {
   const {

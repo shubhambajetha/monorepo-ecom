@@ -64,4 +64,3 @@ export const deletecategory = async (id: number): Promise<ApiResponse<null>> => 
   }
 };
 
-// test all the requie report 
