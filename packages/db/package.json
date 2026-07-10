@@ -18,9 +18,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ./node_modules/typescript/lib/tsc.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
     "@prisma/adapter-pg": "^7.4.2",
