@@ -244,22 +244,4 @@ export const deleteSubCategory = async (
   }
 };
 
-export const getFeaturedSubCategories = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const featured = await prisma.subcategory.findMany({
-      where: {
-        isFeatured: true,
-      },
-      include: {
-        category: true,
-      },
-    });
 
-    return res.status(200).json({
-      success: true,
-      data: featured,
-    });
-  } catch (error) {
-    next(error);
-  }
-};

@@ -76,10 +76,9 @@ model Product {
   rating        Float      @default(0)
   isFeatured    Boolean    @default(false)
   isActive      Boolean    @default(true)
+  isSpotlight   Boolean    @default(true)
   collectionId  String
   collection    Collection @relation(fields: [collectionId], references: [id])
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 }
-
-
