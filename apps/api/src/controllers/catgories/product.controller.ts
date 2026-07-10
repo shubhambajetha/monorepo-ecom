@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { prisma } from '../../config/prisma.js';
-import { getPagination } from '../../helpers/pagination.js';
-import { buildProductWhereClause, type ProductQueryParams } from '../../helpers/productFilter.js';
-import { getProductOrderBy } from '../../helpers/productSorting.js';
-import { productInclude } from '../../helpers/productInclude.js';
+import { prisma } from '../../config/prisma';
+import { getPagination } from '../../helpers/pagination';
+import { buildProductWhereClause, type ProductQueryParams } from '../../helpers/productFilter';
+import { getProductOrderBy } from '../../helpers/productSorting';
+import { productInclude } from '../../helpers/productInclude';
 
 interface ProductParams {
   id?: string;

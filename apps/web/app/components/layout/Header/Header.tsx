@@ -102,7 +102,7 @@ export default function Header() {
           ) : (
             <>
               {/* CENTER NAV */}
-              <div className="flex justify-start px-6 bg-grey-200 border rounded-full gap-8 text-[15px] font-medium">
+              <div className="flex justify-start px-6 bg-grey-200 gap-8 text-[15px] font-medium">
                 {navItems.map((item) => (
                   <div
                     key={item}
