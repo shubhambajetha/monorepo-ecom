@@ -364,3 +364,19 @@ export const getProductFilters = async (req: Request, res: Response, next: NextF
     next(error);
   }
 };
+
+export const getfeaturedproduct = async (req: Request, res: Response, next: NextFunction) => {
+  let isFeature = await prisma.product.findMany({
+    where: {
+      isFeatured: true,
+    },
+    include: {
+      collection: true,
+    },
+  });
+  return res.status(200).json({
+    message: 'product isFeatured find sucessfully',
+    success: true,
+    data: isFeature,
+  });
+};

@@ -11,6 +11,7 @@
     "check-types": "next typegen && node ./node_modules/typescript/lib/tsc.js --noEmit"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.4.0",
     "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^2.2.0",
     "@repo/shared": "workspace:*",

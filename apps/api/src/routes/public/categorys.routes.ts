@@ -1,12 +1,14 @@
 import { Router, type Router as ExpressRouter } from 'express';
 import {
   getAllProducts,
+  getfeaturedproduct,
   getProduct,
   getProductFilters,
 } from '../../controllers/catgories/product.controller';
 import { getAllCategories, getCategory } from '../../controllers/catgories/category.controller';
 import {
   getAllSubCategories,
+  getFeaturedSubCategories,
   getSubCategory,
 } from '../../controllers/catgories/subcategory.controller';
 import {
@@ -26,6 +28,7 @@ router.get('/categories/:id', getCategory);
 // Subcategories
 router.get('/subcategories', getAllSubCategories);
 router.get('/subcategories/:id', getSubCategory);
+router.get('/subcategory/featured', getFeaturedSubCategories);
 
 // Collections
 router.get('/collections', getAllCollections);
@@ -34,6 +37,6 @@ router.get('/collections/:id', getCollection);
 // Products
 router.get('/products', getAllProducts);
 router.get('/products/:id', getProduct);
+router.get('/product/featured', getfeaturedproduct);
 
-
-export default router
+export default router;
