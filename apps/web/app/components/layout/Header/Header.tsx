@@ -14,8 +14,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
-
-const navItems = ['New & Featured', 'Men', 'Women', 'Kids', 'Jordan'] as const;
+const navItems = ['Men', 'Women'] as const;
 type NavItem = (typeof navItems)[number];
 
 const defaultRecentSearches = ["Nike Men's NAC Dri-FIT Woven Training Trousers"];
@@ -25,7 +24,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [recentSearches] = useState(defaultRecentSearches);
-  
+
   const closeMenuTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearMenuCloseTimer = () => {
@@ -103,7 +102,7 @@ export default function Header() {
           ) : (
             <>
               {/* CENTER NAV */}
-              <div className="flex justify-center gap-8 text-[15px] font-medium">
+              <div className="flex justify-start px-6 bg-grey-200 border rounded-full gap-8 text-[15px] font-medium">
                 {navItems.map((item) => (
                   <div
                     key={item}

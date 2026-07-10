@@ -9,6 +9,7 @@ export const createSubCategory = async (req: Request, res: Response, next: NextF
   try {
     const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
     const slug = typeof req.body?.slug === 'string' ? req.body.slug.trim() : '';
+    const isFeatured = req.body.isFeatured === true || req.body.isFeatured === 'true';
     const categoryId = typeof req.body?.categoryId === 'string' ? req.body.categoryId.trim() : '';
 
     if (!name || !slug || !categoryId) {
@@ -43,7 +44,7 @@ export const createSubCategory = async (req: Request, res: Response, next: NextF
     }
 
     const newSubCategory = await prisma.subcategory.create({
-      data: { name, slug, categoryId, image },
+      data: { name, slug, categoryId, image, isFeatured },
     });
 
     return res.status(201).json({
@@ -63,7 +64,6 @@ export const getSubCategory = async (
 ) => {
   try {
     const { id } = req.params;
-
     const subcategory = await prisma.subcategory.findUnique({
       where: { id },
     });
@@ -142,12 +142,17 @@ export const updateSubCategory = async (
     const { id } = req.params;
     const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
     const slug = typeof req.body?.slug === 'string' ? req.body.slug.trim() : '';
+
     const categoryId = typeof req.body?.categoryId === 'string' ? req.body.categoryId.trim() : '';
 
     const existingSubCategory = await prisma.subcategory.findUnique({
       where: { id },
     });
 
+    const isFeatured =
+      req.body.isFeatured !== undefined
+        ? req.body.isFeatured === true || req.body.isFeatured === 'true'
+        : existingSubCategory!.isFeatured;
     if (!existingSubCategory) {
       return res.status(404).json({
         success: false,
@@ -195,6 +200,7 @@ export const updateSubCategory = async (
         ...(slug ? { slug } : {}),
         ...(categoryId ? { categoryId } : {}),
         ...(image ? { image } : {}),
+        isFeatured,
       },
     });
 
@@ -232,6 +238,26 @@ export const deleteSubCategory = async (
     return res.status(200).json({
       success: true,
       message: 'Subcategory deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getFeaturedSubCategories = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const featured = await prisma.subcategory.findMany({
+      where: {
+        isFeatured: true,
+      },
+      include: {
+        category: true,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: featured,
     });
   } catch (error) {
     next(error);
