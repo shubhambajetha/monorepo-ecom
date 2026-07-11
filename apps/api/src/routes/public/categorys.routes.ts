@@ -8,7 +8,6 @@ import {
 import { getAllCategories, getCategory } from '../../controllers/catgories/category.controller';
 import {
   getAllSubCategories,
-  getFeaturedSubCategories,
   getSubCategory,
 } from '../../controllers/catgories/subcategory.controller';
 import {
@@ -28,7 +27,6 @@ router.get('/categories/:id', getCategory);
 // Subcategories
 router.get('/subcategories', getAllSubCategories);
 router.get('/subcategories/:id', getSubCategory);
-router.get('/subcategory/featured', getFeaturedSubCategories);
 
 // Collections
 router.get('/collections', getAllCollections);

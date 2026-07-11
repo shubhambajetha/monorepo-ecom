@@ -41,4 +41,21 @@ export const getHomelatestproduct = async (req: Request, res: Response, next: Ne
   }
 };
 
-
+export const getHomeSportlight = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const sportlight = await prisma.product.findMany({
+      where: {
+        isFeatured: true,
+      },
+      take: 12,
+      include: productInclude,
+    });
+    return res.status(200).json({
+      status: true,
+      message: 'sportlight fetched sucessfullly',
+      data: sportlight,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
