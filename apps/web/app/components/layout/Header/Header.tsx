@@ -206,14 +206,15 @@ export default function Header() {
 
           <div className="space-y-6 text-lg font-medium">
             {navItems.map((item) => (
-              <button
+              <Link
                 key={item}
+                href={`/${item.toLowerCase()}`} 
                 className="flex w-full justify-between"
                 onClick={() => setMobileOpen(false)}
               >
                 {item}
                 <ChevronRightIcon className="w-5 h-5" />
-              </button>
+              </Link>
             ))}
           </div>
         </Dialog.Panel>

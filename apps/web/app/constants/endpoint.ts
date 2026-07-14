@@ -27,10 +27,15 @@ export const endpoints = {
     deletecollection: (id: number) => `/admincate/collections/${id}`,
   },
   product: {
-    createproduct: '/products',
-    getallproducts: '/products',
-    getproduct: (id: number) => `/products/${id}`,
-    updateproduct: (id: number) => `/products/${id}`,
-    deleteproduct: (id: number) => `/products/${id}`,
+    createproduct: '/admincate/products',
+    getallproducts: '/usercate/products',
+    getproduct: (id: number) => `usercate/products/${id}`,
+    updateproduct: (id: number) => `admincate/products/${id}`,
+    deleteproduct: (id: number) => `admincate/products/${id}`,
+  },
+  homepage: {
+    homecollection: 'homecate/homedata/categories',
+    homenewarived: 'homecate/homedata/newarrival',
+    homespotlight: 'homecate/homedata/sportlight',
   },
 } as const;
