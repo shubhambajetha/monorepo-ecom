@@ -23,7 +23,9 @@ export const createproduct = async (payload: ProductPayload): Promise<ApiRespons
 
 export const getproduct = async (id: number): Promise<ApiResponse<Product>> => {
   try {
-    const response = await apiClient.get<ApiResponse<Product>>(endpoints.product.getproduct(id));
+    const response = await apiClient.get<ApiResponse<Product>>(
+      endpoints.product.getproduct(id)
+    );
     return response?.data;
   } catch (error) {
     throw normalizeApiError(error);

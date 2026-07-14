@@ -1,17 +1,7 @@
-import Homebar from '@/app/components/home-carousel/Homebar';
-import Feature from './components/homepage/featured/Feature';
-import Swiperspo from './components/homepage/sport/Swiperspo';
-import Sportlight from './components/homepage/spotlight/sportlight';
-import NewArival from './components/homepage/newarrival/NewArival';
+import HomeData from './HomeData';
 
-export default function Home() {
-  return (
-    <main>
-      <Homebar />
-      {/* <Swiperspo /> */}
-      <Feature />
-      <NewArival/>
-      <Sportlight />
-    </main>
-  );
+export default async function Page({ params }: { params: Promise<{ category: string }> }) {
+  const { category } = await params;
+
+  return <HomeData category={category} />;
 }
