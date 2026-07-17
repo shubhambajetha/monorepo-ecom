@@ -1,6 +1,9 @@
 export type ApiResponse<T> = {
-  data: T;
-  status: number;
+  data?: T;
+  success?: boolean;
+  message?: string;
+  error?: string;
+  status?: number;
 };
 
 export async function getHealthcheck(): Promise<ApiResponse<{ ok: boolean }>> {

@@ -11,6 +11,23 @@ export function getApiBaseUrl(): string {
   return apiBaseUrl;
 }
 
+export function getApiOrigin(): string {
+  return getApiBaseUrl().replace(/\/api\/v\d+$/, '');
+}
+
+export function resolveApiAssetUrl(assetPath?: string | null): string | undefined {
+  if (!assetPath) {
+    return undefined;
+  }
+
+  if (/^https?:\/\//i.test(assetPath)) {
+    return assetPath;
+  }
+
+  const normalizedPath = assetPath.startsWith('/') ? assetPath : `/${assetPath}`;
+  return `${getApiOrigin()}${normalizedPath}`;
+}
+
 export const config = {
   apiBaseUrl,
   timeoutMs: 15000,

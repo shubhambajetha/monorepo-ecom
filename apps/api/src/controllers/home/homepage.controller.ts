@@ -1,6 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../config/prisma';
-import { productInclude } from '../../helpers/productInclude';
+
+function getCollectionBanner(slug: string, bannerImage?: string | null): string {
+  if (bannerImage) {
+    return bannerImage;
+  }
+
+  return `https://picsum.photos/seed/${encodeURIComponent(slug)}-banner/1200/600`;
+}
 
 export const getHomeCollections = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -17,7 +24,15 @@ export const getHomeCollections = async (req: Request, res: Response, next: Next
       take: 12,
     });
 
-    res.status(200).json(collections);
+    const normalizedCollections = collections.map((collection) => ({
+      ...collection,
+      bannerImage: getCollectionBanner(collection.slug, collection.bannerImage),
+    }));
+
+    res.status(200).json({
+      message: 'collection fetched sucessfully',
+      data: normalizedCollections,
+    });
   } catch (error) {
     next(error);
   }
@@ -25,7 +40,7 @@ export const getHomeCollections = async (req: Request, res: Response, next: Next
 
 export const getHomelatestproduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { category } = req.params;
+    const { category } = req.query;
 
     const newArrival = await prisma.product.findMany({
       where: {
@@ -37,10 +52,15 @@ export const getHomelatestproduct = async (req: Request, res: Response, next: Ne
           },
         },
       },
+      select: {
+        id: true,
+        title: true,
+        thumbnail: true,
+      },
       orderBy: {
         createdAt: 'desc',
       },
-      take: 12,
+      take: 8,
       // include: productInclude,
     });
 
@@ -55,7 +75,7 @@ export const getHomelatestproduct = async (req: Request, res: Response, next: Ne
 
 export const getHomeSportlight = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { category } = req.params;
+    const { category } = req.query;
 
     const spotlight = await prisma.product.findMany({
       where: {
@@ -69,7 +89,6 @@ export const getHomeSportlight = async (req: Request, res: Response, next: NextF
         isSpotlight: true,
       },
       take: 12,
-      // include: productInclude,
     });
 
     return res.status(200).json({
