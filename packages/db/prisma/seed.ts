@@ -81,6 +81,10 @@ function generateImages(seedText: string, count = 4): string[] {
   );
 }
 
+function generateCollectionBanner(seedText: string): string {
+  return `https://picsum.photos/seed/${encodeURIComponent(seedText)}-banner/1200/600`;
+}
+
 // ---------------------------------------------
 // Seed: Admin user
 // ---------------------------------------------
@@ -148,7 +152,7 @@ async function seedCatalog() {
           data: {
             name: col.name,
             slug: col.slug,
-            bannerImage: (col as { bannerImage?: string }).bannerImage,
+            bannerImage: (col as { bannerImage?: string }).bannerImage ?? generateCollectionBanner(col.slug),
             subcategoryId: subcategory.id,
           },
         });

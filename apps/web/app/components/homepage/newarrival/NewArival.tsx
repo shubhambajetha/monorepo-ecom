@@ -6,23 +6,13 @@ import type { Swiper as SwiperType } from 'swiper';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import { spotlight } from '@/app/types/home/hometype';
 
-type SlideItem = {
-  img: string;
-  title: string;
-  tag: string;
-};
+interface NewArrivalProps {
+  data: spotlight[];
+}
 
-const items: SlideItem[] = [
-  { img: '/swiperimg/slide3.png', title: 'Training', tag: 'Performance' },
-  { img: '/swiperimg/slide3.png', title: 'Running', tag: 'Endurance' },
-  { img: '/swiperimg/slide4.png', title: 'Sportswear', tag: 'Style' },
-  { img: '/swiperimg/slide5.png', title: 'Cricket', tag: 'Classic' },
-  { img: '/swiperimg/slide6.png', title: 'Football', tag: 'Team Sport' },
-  { img: '/swiperimg/slide1.png', title: 'Basketball', tag: 'Street' },
-];
-
-const NewArival: React.FC = () => {
+const NewArival = ({ data }: NewArrivalProps) => {
   const swiperRef = useRef<SwiperType | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
@@ -102,13 +92,13 @@ const NewArival: React.FC = () => {
           }}
           loop={false}
         >
-          {items.map((item, i) => (
+          {data.map((item, i) => (
             <SwiperSlide key={i}>
               <a href="#" className="group block">
                 {/* Image */}
                 <div className="relative overflow-hidden rounded-sm bg-brand-surface aspect-[3/4]">
                   <img
-                    src={item.img}
+                    src={item.thumbnail}
                     alt={item.title}
                     loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"

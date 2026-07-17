@@ -2,6 +2,7 @@ import "./config/env";
 import express, { type Express } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 import routes from "./routes/index";
 import { errorHandler } from "./middleware/errorHandler";
@@ -16,6 +17,7 @@ app.use(cors({
 }));
 app.use(cookieParser());
 app.use(express.json());
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // Health check
 app.get("/", (req, res) => {

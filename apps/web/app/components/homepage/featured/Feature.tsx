@@ -1,15 +1,15 @@
+import { homecollection } from '@/app/types/home/hometype';
+import Image from 'next/image';
 import React from 'react';
 
-const categories = [
-  { src: '/homepage/homepage1.png', title: 'T-Shirts' },
-  { src: '/homepage/homepage2.png', title: 'Shirts' },
-  { src: '/homepage/homepage3.png', title: 'Polos' },
-  { src: '/homepage/homepage4.png', title: 'Hoodies' },
-  { src: '/homepage/homepage4.png', title: 'Joggers' },
-  { src: '/homepage/homepage4.png', title: 'Shorts' },
+const fallbackBanners = [
+  '/homepage/homepage1.png',
+  '/homepage/homepage2.png',
+  '/homepage/homepage3.png',
+  '/homepage/homepage4.png',
 ];
 
-const Feature = () => {
+const Feature = ({ data }: { data: homecollection[] }) => {
   return (
     <section className="bg-brand-surface py-14 px-4">
       {/* Grid */}
@@ -23,20 +23,20 @@ const Feature = () => {
 
         <div className="max-w-[1220px] mx-auto ">
           <div className="grid grid-cols-3 md:grid-cols-3 lg:gap-6 gap-2 sm:px-3">
-            {categories.map((item, i) => (
-              <a key={i} href="#" className="group cursor-pointer">
-                {/* Image */}
+            {data.map((item, index) => (
+              <a key={item.id} href="#" className="group cursor-pointer">
                 <div className="overflow-hidden bg-gray-100">
-                  <img
-                    src={item.src}
-                    alt={item.title}
-                    className="block w-full h-auto object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                  <Image
+                    src={item.bannerImage! ?? fallbackBanners[index % fallbackBanners.length ]}
+                    alt={item.name}
+                    width={1200}
+                    height={600}
+                    className="block aspect-[2/1] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                   />
                 </div>
 
-                {/* Title below image — exactly like reference */}
                 <h3 className="mt-4 text-xl md:text-2xl font-medium uppercase tracking-widest text-black group-hover:text-red-600 transition-colors duration-200">
-                  {item.title}
+                  {item.name}
                 </h3>
               </a>
             ))}
