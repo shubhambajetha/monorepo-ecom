@@ -13,6 +13,7 @@ import {
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const navItems = ['Men', 'Women'] as const;
 type NavItem = (typeof navItems)[number];
@@ -20,6 +21,7 @@ type NavItem = (typeof navItems)[number];
 const defaultRecentSearches = ["Nike Men's NAC Dri-FIT Woven Training Trousers"];
 
 export default function Header() {
+  const pathname = usePathname();
   const [hover, setHover] = useState<NavItem | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -103,25 +105,30 @@ export default function Header() {
             <>
               {/* CENTER NAV */}
               <div className="flex justify-start px-6 bg-grey-200 gap-8 text-[15px] font-medium">
-                {navItems.map((item) => (
-                  <div
-                    key={item}
-                    onMouseEnter={() => setHover(item)}
-                    onMouseLeave={() => setHover(null)}
-                    className="relative"
-                  >
-                    <button className="relative pb-2">
-                      {item}
+                {navItems.map((item) => {
+                  const isActive = pathname === `/${item.toLowerCase()}`;
+                  return (
+                    <div
+                      key={item}
+                      onMouseEnter={() => setHover(item)}
+                      onMouseLeave={() => setHover(null)}
+                      className="relative"
+                    >
+                      <Link href={`/${item.toLowerCase()}`}>
+                        <button className="relative pb-2">
+                          {item}
 
-                      <motion.div
-                        layoutId="underline"
-                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-black"
-                        initial={false}
-                        animate={{ opacity: hover === item ? 1 : 0 }}
-                      />
-                    </button>
-                  </div>
-                ))}
+                          <motion.div
+                            layoutId="underline"
+                            className="absolute bottom-0 left-0 right-0 h-[2px] bg-black"
+                            initial={false}
+                            animate={{ opacity: (hover === item || isActive) ? 1 : 0 }}
+                          />
+                        </button>
+                      </Link>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* RIGHT ACTIONS */}
@@ -205,17 +212,22 @@ export default function Header() {
           </div>
 
           <div className="space-y-6 text-lg font-medium">
-            {navItems.map((item) => (
-              <Link
-                key={item}
-                href={`/${item.toLowerCase()}`} 
-                className="flex w-full justify-between"
-                onClick={() => setMobileOpen(false)}
-              >
-                {item}
-                <ChevronRightIcon className="w-5 h-5" />
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname === `/${item.toLowerCase()}`;
+              return (
+                <Link
+                  key={item}
+                  href={`/${item.toLowerCase()}`}
+                  className={`flex w-full justify-between transition-colors ${
+                    isActive ? 'text-black font-semibold' : 'text-gray-500 hover:text-black'
+                  }`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {item}
+                  <ChevronRightIcon className="w-5 h-5" />
+                </Link>
+              );
+            })}
           </div>
         </Dialog.Panel>
       </Dialog>
