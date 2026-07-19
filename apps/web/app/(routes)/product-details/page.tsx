@@ -1,10 +1,10 @@
-import ProductCard from '@/app/components/product-listing/ProductCard';
-const page = () => {
+import AllDetils from '@/app/components/product-deatails/AllDetils';
+
+
+export default function Page() {
   return (
     <div>
-      <ProductCard />
+      <AllDetils/>
     </div>
   );
-};
-
-export default page;
+}
