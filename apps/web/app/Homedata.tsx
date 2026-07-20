@@ -11,7 +11,7 @@ export default async function HomeData({ category }: { category: string }) {
   return (
     <>
       <Homebar />
-      <Feature data={data.collection} />
+      <Feature category={category} data={data.collection} />
       <NewArival data={data.newarrival} />
       <Sportlight data={data.spotlight} />
     </>
