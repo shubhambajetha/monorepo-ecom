@@ -1,4 +1,5 @@
-import HomeData from '@/app/HomeData';
+import HomeData from "@/app/Homedata";
+
 
 export default async function Page({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params;

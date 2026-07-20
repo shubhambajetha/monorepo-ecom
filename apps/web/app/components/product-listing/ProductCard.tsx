@@ -7,6 +7,7 @@ import TopBar from './TopBar';
 
 const ProductCard = () => {
   const [filtersVisible, setFiltersVisible] = useState(true);
+  
 
   return (
     <div className="py-2 mx-2">
