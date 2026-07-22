@@ -1,3 +1,5 @@
+import ProductCard from '@/app/components/product-listing/ProductCard';
+
 type Prop = {
   params: Promise<{
     category: string;
@@ -6,10 +8,7 @@ type Prop = {
 };
 
 export default async function Page({ params }: Prop) {
-  
-  return (
-    <>
-     
-    </>
-  );
+  const { category, collection } = await params;
+
+  return <ProductCard category={category} collection={collection} />;
 }

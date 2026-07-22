@@ -55,7 +55,7 @@ const Feature = ({ category, data }: FeaturedProps) => {
               <Link href={`/${category}/${item.slug}`} className="group block">
                 <div className="overflow-hidden bg-gray-100">
                   <Image
-                    src={item.bannerImage || fallbackBanners[index % fallbackBanners.length]}
+                    src={item.bannerImage || fallbackBanners[index % fallbackBanners.length]!}
                     alt={item.name}
                     width={1200}
                     height={600}
