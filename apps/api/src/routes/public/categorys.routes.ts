@@ -13,6 +13,8 @@ import {
 import {
   getAllCollections,
   getCollection,
+  getProductsByCollection,
+  subcollection,
 } from '../../controllers/catgories/collection.controller';
 
 const router: ExpressRouter = Router();
@@ -31,6 +33,8 @@ router.get('/subcategories/:id', getSubCategory);
 // Collections
 router.get('/collections', getAllCollections);
 router.get('/collections/:id', getCollection);
+router.get('/subcollection',subcollection)
+router.get('/subproduct',getProductsByCollection)
 
 // Products
 router.get('/products', getAllProducts);

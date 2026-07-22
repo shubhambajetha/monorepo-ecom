@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../config/prisma';
+import { getSubCategoryWithCollections } from './subcategory.controller';
+import { success } from 'zod';
 
 interface CollectionParams {
   id?: string;
@@ -9,7 +11,8 @@ export const createCollection = async (req: Request, res: Response, next: NextFu
   try {
     const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
     const slug = typeof req.body?.slug === 'string' ? req.body.slug.trim() : '';
-    const subcategoryId = typeof req.body?.subcategoryId === 'string' ? req.body.subcategoryId.trim() : '';
+    const subcategoryId =
+      typeof req.body?.subcategoryId === 'string' ? req.body.subcategoryId.trim() : '';
 
     if (!name || !slug || !subcategoryId) {
       return res.status(400).json({
@@ -28,7 +31,6 @@ export const createCollection = async (req: Request, res: Response, next: NextFu
       return res.status(400).json({
         success: false,
         message: 'Collection slug already exists',
-
       });
     }
 
@@ -57,7 +59,11 @@ export const createCollection = async (req: Request, res: Response, next: NextFu
   }
 };
 
-export const getCollection = async (req: Request<CollectionParams>, res: Response, next: NextFunction) => {
+export const getCollection = async (
+  req: Request<CollectionParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
 
@@ -98,7 +104,11 @@ export const getAllCollections = async (req: Request, res: Response, next: NextF
   }
 };
 
-export const getCollectionWithProducts = async (req: Request<CollectionParams>, res: Response, next: NextFunction) => {
+export const getCollectionWithProducts = async (
+  req: Request<CollectionParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
 
@@ -126,12 +136,84 @@ export const getCollectionWithProducts = async (req: Request<CollectionParams>, 
   }
 };
 
-export const updateCollection = async (req: Request<CollectionParams>, res: Response, next: NextFunction) => {
+
+export const subcollection = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { subcategory } = req.query;
+
+    const collection = await prisma.collection.findMany({
+      where: {
+        subcategory: {
+          slug: subcategory as string,
+        },
+      },
+      include: {
+        subcategory: true,
+      },
+    });
+
+    return res.status(200).json({
+      success:true,
+      data:collection,
+    });
+  } catch (error){
+    next(error);
+  }
+};
+
+export const getProductsByCollection = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { category, collection } = req.query;
+
+    if (!category || !collection) {
+      return res.status(400).json({
+        success: false,
+        message: "Category and collection are required",
+      });
+    }
+
+    const products = await prisma.product.findMany({
+      where: {
+        collection: {
+          slug: collection as string,
+          subcategory: {
+            category: {
+              slug: category as string,
+            },
+          },
+        },
+        isActive: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Products fetched successfully",
+      data: products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateCollection = async (
+  req: Request<CollectionParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
     const slug = typeof req.body?.slug === 'string' ? req.body.slug.trim() : '';
-    const subcategoryId = typeof req.body?.subcategoryId === 'string' ? req.body.subcategoryId.trim() : '';
+    const subcategoryId =
+      typeof req.body?.subcategoryId === 'string' ? req.body.subcategoryId.trim() : '';
 
     const existingCollection = await prisma.collection.findUnique({
       where: { id },
@@ -154,7 +236,6 @@ export const updateCollection = async (req: Request<CollectionParams>, res: Resp
         return res.status(400).json({
           success: false,
           message: 'Collection slug already exists',
-          
         });
       }
     }
@@ -198,7 +279,11 @@ export const updateCollection = async (req: Request<CollectionParams>, res: Resp
   }
 };
 
-export const deleteCollection = async (req: Request<CollectionParams>, res: Response, next: NextFunction) => {
+export const deleteCollection = async (
+  req: Request<CollectionParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
 
