@@ -22,7 +22,7 @@ export const endpoints = {
   collection: {
     createcollection: '/admincate/collections',
     getallcollection: '/usercate/collections',
-    getProductsByCollection: '/subcollection',
+    getProductsByCollection: '/usercate/subproduct',
     getcollection: (id: number) => `/usercate/collections/${id}`,
     updatecollection: (id: number) => `/admincate/collections/${id}`,
     deletecollection: (id: number) => `/admincate/collections/${id}`,
@@ -30,13 +30,13 @@ export const endpoints = {
   product: {
     createproduct: '/admincate/products',
     getallproducts: '/usercate/products',
-    getproduct: (id: number) => `usercate/products/${id}`,
-    updateproduct: (id: number) => `admincate/products/${id}`,
-    deleteproduct: (id: number) => `admincate/products/${id}`,
+    getproduct: (id: number) => `/usercate/products/${id}`,
+    updateproduct: (id: number) => `/admincate/products/${id}`,
+    deleteproduct: (id: number) => `/admincate/products/${id}`,
   },
   homepage: {
-    homecollection: 'homecate/homedata/categories',
-    homenewarived: 'homecate/homedata/newarrival',
-    homespotlight: 'homecate/homedata/sportlight',
+    homecollection: '/homecate/homedata/categories',
+    homenewarived: '/homecate/homedata/newarrival',
+    homespotlight: '/homecate/homedata/sportlight',
   },
 } as const;
