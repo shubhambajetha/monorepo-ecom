@@ -1,8 +1,12 @@
 import { endpoints } from '@/app/constants/endpoint';
 import { Collection, CollectionPayload } from '@/app/types/collection/collectiontype';
 import { ApiResponse } from '@/app/utils/api';
-import { createCollectionFormData, updateCollectionFormData } from '@/app/utils/categories/formData';
+import {
+  createCollectionFormData,
+  updateCollectionFormData,
+} from '@/app/utils/categories/formData';
 import { apiClient, normalizeApiError } from '../apiClient';
+import { Product } from '@/app/types/product/productype';
 
 export const createCollection = async (
   payload: CollectionPayload
@@ -35,6 +39,27 @@ export const getCollectionById = async (id: number): Promise<ApiResponse<Collect
   try {
     const response = await apiClient.get<ApiResponse<Collection>>(
       endpoints.collection.getcollection(id)
+    );
+
+    return response.data;
+  } catch (error) {
+    throw normalizeApiError(error);
+  }
+};
+
+export const getProductsByCollection = async (
+  category: string,
+  collection: string
+): Promise<ApiResponse<Product[]>> => {
+  try {
+    const response = await apiClient.get<ApiResponse<Product[]>>(
+      endpoints.collection.getProductsByCollection,
+      {
+        params: {
+          category,
+          collection,
+        },
+      }
     );
 
     return response.data;

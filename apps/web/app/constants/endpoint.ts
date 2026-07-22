@@ -22,6 +22,7 @@ export const endpoints = {
   collection: {
     createcollection: '/admincate/collections',
     getallcollection: '/usercate/collections',
+    getProductsByCollection: '/subcollection',
     getcollection: (id: number) => `/usercate/collections/${id}`,
     updatecollection: (id: number) => `/admincate/collections/${id}`,
     deletecollection: (id: number) => `/admincate/collections/${id}`,
