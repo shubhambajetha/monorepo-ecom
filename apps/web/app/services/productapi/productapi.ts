@@ -1,4 +1,5 @@
 import {
+    getproductslug,
   PaginatedResponse,
   Product,
   ProductPayload,
@@ -23,9 +24,7 @@ export const createproduct = async (payload: ProductPayload): Promise<ApiRespons
 
 export const getproduct = async (id: number): Promise<ApiResponse<Product>> => {
   try {
-    const response = await apiClient.get<ApiResponse<Product>>(
-      endpoints.product.getproduct(id)
-    );
+    const response = await apiClient.get<ApiResponse<Product>>(endpoints.product.getproduct(id));
     return response?.data;
   } catch (error) {
     throw normalizeApiError(error);
@@ -45,6 +44,21 @@ export const getallproduct = async (
     return response?.data;
   } catch (error) {
     throw normalizeApiError(error);
+  }
+};
+
+export const getProductBySlug = async (
+  params?:getproductslug
+): Promise<ApiResponse<Product>> => {
+  try{
+    const response = await apiClient.get(endpoints.product.getproductbyslug,
+      {
+        params
+      }
+    )
+    return response?.data
+  }catch(error){
+    throw normalizeApiError(error)
   }
 };
 

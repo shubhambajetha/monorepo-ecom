@@ -3,29 +3,21 @@ import React, { useState } from 'react';
 import DeliveryDetails from './DeliveryDetails';
 import ProductAccordion from './ProductAccordion';
 
-const ProductDetails = () => {
+
+type Props = {
+  slug: string;
+  category: string;
+  collection: string;
+};
+
+const ProductDetails = ({slug,category,collection}:Props) => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [wishlist, setWishlist] = useState(false);
 
-  const sizes = [
-    { label: 'XS', available: false },
-    { label: 'S', available: true, lowStock: true, stockLeft: 9 },
-    { label: 'M', available: true },
-    { label: 'L', available: true },
-    { label: 'XL', available: true },
-    { label: 'XXL', available: true },
-    { label: 'XXXL', available: true },
-  ];
 
-  const images = [
-    'https://placehold.co/600x750/d1cfc9/6b6b6b?text=Product+Front',
-    'https://placehold.co/600x750/c5c3bd/6b6b6b?text=Product+Side',
-    'https://placehold.co/600x750/b8b5ae/6b6b6b?text=Product+Detail',
-    'https://placehold.co/600x750/cccac4/6b6b6b?text=Product+Back',
-  ];
-
+  
   return (
     <div className="min-h-screen bg-white font-sans">
       {/* Breadcrumb */}
