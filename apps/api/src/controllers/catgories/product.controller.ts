@@ -4,6 +4,7 @@ import { getPagination } from '../../helpers/pagination';
 import { buildProductWhereClause, type ProductQueryParams } from '../../helpers/productFilter';
 import { getProductOrderBy } from '../../helpers/productSorting';
 import { productInclude } from '../../helpers/productInclude';
+import { success } from 'zod';
 
 interface ProductParams {
   id?: string;
@@ -172,6 +173,61 @@ export const getProduct = async (
     return res.status(200).json({
       success: true,
       message: 'Product fetched successfully',
+      data: product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// export product By Slug
+
+export const ProductBySlug = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { category, collection, slug } = req.query;
+
+    if (!category || !collection || !slug) {
+      return res.status(400).json({
+        success: false,
+        message: 'Category, collection and slug are required',
+      });
+    }
+
+    const product = await prisma.product.findFirst({
+      where: {
+        slug: slug as string,
+        isActive: true,
+        collection: {
+          slug: collection as string,
+          subcategory: {
+            category: {
+              slug: category as string,
+            },
+          },
+        },
+      },
+      // include: {
+      //   collection: {
+      //     include: {
+      //       subcategory: {
+      //         include: {
+      //           category: true,
+      //         },
+      //       },
+      //     },
+      //   },
+      // },
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
       data: product,
     });
   } catch (error) {

@@ -64,3 +64,9 @@ export interface ProductPayload {
   isActive?: boolean;
   collectionId: string;
 }
+
+export interface getproductslug{
+  category:string,
+  collection:string,
+  slug:string,
+}

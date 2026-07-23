@@ -1,3 +1,5 @@
+import { getproduct } from "../services/productapi/productapi";
+
 export const endpoints = {
   auth: {
     signup: '/auth/signup',
@@ -30,6 +32,7 @@ export const endpoints = {
   product: {
     createproduct: '/admincate/products',
     getallproducts: '/usercate/products',
+    getproductbyslug:'/usercate/productbyslug',
     getproduct: (id: number) => `/usercate/products/${id}`,
     updateproduct: (id: number) => `/admincate/products/${id}`,
     deleteproduct: (id: number) => `/admincate/products/${id}`,

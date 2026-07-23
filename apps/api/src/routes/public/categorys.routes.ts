@@ -4,6 +4,7 @@ import {
   getfeaturedproduct,
   getProduct,
   getProductFilters,
+  ProductBySlug,
 } from '../../controllers/catgories/product.controller';
 import { getAllCategories, getCategory } from '../../controllers/catgories/category.controller';
 import {
@@ -39,6 +40,7 @@ router.get('/subproduct',getProductsByCollection)
 // Products
 router.get('/products', getAllProducts);
 router.get('/products/:id', getProduct);
+router.get('/productbyslug', ProductBySlug)
 router.get('/product/featured', getfeaturedproduct);
 
 export default router;

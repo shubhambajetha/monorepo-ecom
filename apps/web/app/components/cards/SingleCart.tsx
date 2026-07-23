@@ -20,6 +20,7 @@ export interface SingleCartProps {
     images?: string[];
     slug?: string;
     id?: string;
+    collection?:string
   };
   title?: string;
   category?: string;
@@ -57,12 +58,10 @@ const SingleCart: React.FC<SingleCartProps> = ({
   const displayColors = product?.colors?.length ? product.colors : colors;
   const displaySizes = product?.sizes?.length ? product.sizes : undefined;
 
-  const productUrl = product?.slug
-    ? `/product-details/${product.slug}`
-    : product?.id
-    ? `/product-details?id=${product.id}`
-    : '#';
-
+  const productUrl =
+  product?.category && product?.collection && product?.slug
+    ? `/${product.category}/${product.collection}/${product.slug}`
+    : "#";
   return (
     <div className="group bg-white w-full rounded-sm overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer flex flex-col justify-between">
       <div>
