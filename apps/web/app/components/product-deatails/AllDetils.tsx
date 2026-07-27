@@ -5,10 +5,12 @@ import OtherBought from './OtherBought';
 const AllDetils = () => {
   return (
     <div>
+
+
       <ProductDetails />
-      <div className="mt-3 overflow-hidden">
+      {/* <div className="mt-3 overflow-hidden">
         <OtherBought />
-      </div>
+      </div> */}
     </div>
   );
 };
