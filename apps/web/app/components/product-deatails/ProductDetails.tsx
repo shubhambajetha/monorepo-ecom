@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import DeliveryDetails from './DeliveryDetails';
 import ProductAccordion from './ProductAccordion';
+import { useProductBySlug } from '@/app/hooks/products/useProductBySlug';
 
 
 type Props = {
@@ -11,12 +12,11 @@ type Props = {
 };
 
 const ProductDetails = ({slug,category,collection}:Props) => {
+  
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [wishlist, setWishlist] = useState(false);
-
-
   
   return (
     <div className="min-h-screen bg-white font-sans">
