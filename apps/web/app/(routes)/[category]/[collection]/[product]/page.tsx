@@ -1,28 +1,26 @@
 import ProductDetails from '@/app/components/product-deatails/ProductDetails';
 import { getProductBySlug } from '@/app/services/productapi/productapi';
 
-
 type Props = {
   params: Promise<{
     category: string;
     collection: string;
-    slug: string;
+    product: string;
   }>;
 };
 
 export default async function Page({ params }: Props) {
-  const { category, collection, slug } = await params;
-
+  const { category, collection, product } = await params;
   const productinfo = await getProductBySlug({
     category,
     collection,
-    slug,
+    slug: product,
   });
 
   return (
     <ProductDetails
-      intialdeatils={productinfo}
-      slug={slug}
+      initialDetails={productinfo}
+      slug={product}
       category={category}
       collection={collection}
     />

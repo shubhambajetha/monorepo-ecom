@@ -84,7 +84,7 @@ const ProductCard = ({ category = '', collection = '', initialProducts }: Produc
               {products.map((product) => (
                 <SingleCart
                   key={product.id || product.slug}
-                  product={product}
+                  product={{ ...product, category, collection }}
                 />
               ))}
             </div>
