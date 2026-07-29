@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../config/prisma';
-import { getSubCategoryWithCollections } from './subcategory.controller';
-import { success } from 'zod';
+
 
 interface CollectionParams {
   id?: string;
