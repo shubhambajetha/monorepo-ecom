@@ -4,7 +4,7 @@ import { getPagination } from '../../helpers/pagination';
 import { buildProductWhereClause, type ProductQueryParams } from '../../helpers/productFilter';
 import { getProductOrderBy } from '../../helpers/productSorting';
 import { productInclude } from '../../helpers/productInclude';
-import { success } from 'zod';
+
 
 interface ProductParams {
   id?: string;
@@ -347,7 +347,7 @@ export const deleteProduct = async (
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    await prisma.product.delete({ where: { id } });
+    awai  t prisma.product.delete({ where: { id } });
 
     return res.status(200).json({
       success: true,

@@ -3,6 +3,7 @@ import userRoutes from "./userauth/user.routes";
 import admincategory from './admin/admincategory.route'
 import categorys from './public/categorys.routes'
 import homepage from './public/homepage.routes'
+import cart from './public/cart.routes'
 
 const router: Router = express.Router();
 
@@ -11,5 +12,6 @@ router.use("/auth", userRoutes);
 router.use('/admincate',admincategory)
 router.use('/usercate', categorys)
 router.use('/homecate',homepage)
+router.use('/cart',cart)
 
 export default router;

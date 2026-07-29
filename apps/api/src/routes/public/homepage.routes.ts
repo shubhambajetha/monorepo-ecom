@@ -9,4 +9,5 @@ router.get("/homedata/newarrival/", getHomelatestproduct);
 router.get('/homedata/sportlight/', getHomeSportlight)
 
 
+
 export default router
