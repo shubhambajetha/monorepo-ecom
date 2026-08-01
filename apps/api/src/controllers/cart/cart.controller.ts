@@ -81,9 +81,9 @@ export const getCart = async (req: Request, res: Response, next: NextFunction) =
       where: {
         userId,
       },
-      include: {
-        product: true, // Remove if you don't want product details
-      },
+      // include: {
+      //   product: true, // Remove if you don't want product details
+      // },
     });
 
     return res.status(200).json({
