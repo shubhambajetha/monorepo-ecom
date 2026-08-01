@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../config/prisma';
 
+
 export const createWishlist = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
@@ -165,3 +166,12 @@ export const deleteWishlist = async (
     next(error);
   }
 };
+
+
+export const movetocart = async(req:Request, res:Response, next:NextFunction)=>{
+  try{
+
+  }catch(error){
+    next(error)
+  }
+}

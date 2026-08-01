@@ -347,7 +347,7 @@ export const deleteProduct = async (
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    awai  t prisma.product.delete({ where: { id } });
+    await prisma.product.delete({ where: { id } });
 
     return res.status(200).json({
       success: true,

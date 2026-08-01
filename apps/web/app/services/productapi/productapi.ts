@@ -1,5 +1,5 @@
 import {
-    getproductslug,
+  getproductslug,
   PaginatedResponse,
   Product,
   ProductPayload,
@@ -47,18 +47,28 @@ export const getallproduct = async (
   }
 };
 
-export const getProductBySlug = async (
-  params?:getproductslug
-): Promise<ApiResponse<Product>> => {
-  try{
-    const response = await apiClient.get(endpoints.product.getproductbyslug,
-      {
-        params
-      }
-    )
-    return response?.data
-  }catch(error){
-    throw normalizeApiError(error)
+export const getProductBySlug = async (params?: getproductslug): Promise<ApiResponse<Product>> => {
+  try {
+    const response = await apiClient.get(endpoints.product.getproductbyslug, {
+      params,
+    });
+    return response?.data;
+  } catch (error) {
+    throw normalizeApiError(error);
+  }
+};
+
+export const searchProduct = async (search: string): Promise<PaginatedResponse<Product>> => {
+  try {
+    const response = await apiClient.get(endpoints.product.getallproducts, {
+      params: {
+        search,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw normalizeApiError(error);
   }
 };
 
