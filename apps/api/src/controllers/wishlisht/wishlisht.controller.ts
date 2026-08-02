@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../config/prisma';
 
-
 export const createWishlist = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
@@ -68,11 +67,7 @@ export const createWishlist = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const getWishlist = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const getWishlist = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
 
@@ -88,8 +83,18 @@ export const getWishlist = async (
         userId,
       },
       include: {
-        product: true, // Returns product details
-      },
+        product: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            thumbnail: true,
+            price: true,
+            discountPrice: true,
+            stock: true,
+          },
+        },
+      }, 
       orderBy: {
         createdAt: 'desc',
       },
@@ -105,12 +110,7 @@ export const getWishlist = async (
   }
 };
 
-
-export const deleteWishlist = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const deleteWishlist = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
 
@@ -121,10 +121,7 @@ export const deleteWishlist = async (
       });
     }
 
-    const productId =
-      typeof req.params.productId === 'string'
-        ? req.params.productId.trim()
-        : '';
+    const productId = typeof req.params.productId === 'string' ? req.params.productId.trim() : '';
 
     if (!productId) {
       return res.status(400).json({
@@ -167,11 +164,3 @@ export const deleteWishlist = async (
   }
 };
 
-
-export const movetocart = async(req:Request, res:Response, next:NextFunction)=>{
-  try{
-
-  }catch(error){
-    next(error)
-  }
-}

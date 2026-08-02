@@ -28,7 +28,7 @@ router.get('/get', getCart);
 router.get('/count', countItems);
 
 // Remove single cart item
-router.delete('/:id', removeSingle);
+router.delete('delete/:id', removeSingle);
 
 // Clear entire cart
 router.delete('/clear', clearCart);
