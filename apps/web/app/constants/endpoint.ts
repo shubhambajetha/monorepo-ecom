@@ -1,4 +1,4 @@
-import { getproduct } from "../services/productapi/productapi";
+import { getproduct } from '../services/productapi/productapi';
 
 export const endpoints = {
   auth: {
@@ -32,7 +32,7 @@ export const endpoints = {
   product: {
     createproduct: '/admincate/products',
     getallproducts: '/usercate/products',
-    getproductbyslug:'/usercate/productbyslug',
+    getproductbyslug: '/usercate/productbyslug',
     getproduct: (id: number) => `/usercate/products/${id}`,
     updateproduct: (id: number) => `/admincate/products/${id}`,
     deleteproduct: (id: number) => `/admincate/products/${id}`,
@@ -41,5 +41,17 @@ export const endpoints = {
     homecollection: '/homecate/homedata/categories',
     homenewarived: '/homecate/homedata/newarrival',
     homespotlight: '/homecate/homedata/sportlight',
+  },
+  carts: {
+    createcart: '/create',
+    getcart: '/getcart',
+    countcart: '/countcart',
+    deletecart: (id: string) => `delete/${id}`,
+    clearcart: '/clear',
+  },
+  wishlists: {
+    create: '/create',
+    get: '/get',
+    delete: (productId: string) => `/delete/${productId}`,
   },
 } as const;
