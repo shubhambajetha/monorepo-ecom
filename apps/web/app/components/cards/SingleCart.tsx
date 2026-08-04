@@ -5,6 +5,9 @@ import { Heart, ShirtIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Product } from '@/app/types/product/productype';
 import { resolveApiAssetUrl } from '@/app/lib/config';
+import useGetWishlisht from '@/app/hooks/wishlisht/useGetWishlist';
+import { createWishlist } from '@/app/services/wishlistapi/wishlistApi.ts';
+import useCreateWishlist from '@/app/hooks/wishlisht/useCreateWishlist';
 
 export interface SingleCartProps {
   product?: Partial<Product> & {
@@ -20,70 +23,52 @@ export interface SingleCartProps {
     images?: string[];
     slug?: string;
     id?: string;
-    collection?:string
+    collection?: string;
   };
-  title?: string;
-  category?: string;
-  price?: number;
-  originalPrice?: number;
-  colors?: string[];
-  bgColor?: string;
 }
 
-const SingleCart: React.FC<SingleCartProps> = ({
-  product,
-  title = 'Ben 10: Omnitrix',
-  category = 'Oversized T-Shirts',
-  price = 1099,
-  originalPrice = 1399,
-  colors = ['#2563eb', '#000000', '#dc2626', '#16a34a'],
-  bgColor = 'from-[#c9b99a] to-[#a0856a]',
-}) => {
+const SingleCart: React.FC<SingleCartProps> = ({ product }) => {
+  const createwishlist = useCreateWishlist();
+
+  
   const [liked, setLiked] = useState(false);
 
-  const displayTitle = product?.title || title;
-  const displayCategory = product?.brand || (product as any)?.category || category;
+  const displayTitle = product?.title;
+  const displayCategory = product?.brand || (product as any)?.category;
 
   const hasDiscount = Boolean(product?.discountPrice && product.discountPrice < (product.price || 0));
-  const displayPrice = product
-    ? (hasDiscount ? product.discountPrice! : product.price)
-    : price;
-  const displayOriginalPrice = product
-    ? (hasDiscount ? product.price : (product.discountPrice ?? undefined))
-    : originalPrice;
+  const displayPrice = hasDiscount ? product?.discountPrice! : product?.price;
+  const displayOriginalPrice = hasDiscount ? product?.price : (product?.discountPrice ?? undefined);
 
   const rawImage = product?.thumbnail || product?.images?.[0];
   const imageUrl = resolveApiAssetUrl(rawImage) || rawImage;
 
-  const displayColors = product?.colors?.length ? product.colors : colors;
+  const displayColors = product?.colors?.length ? product.colors : undefined;
   const displaySizes = product?.sizes?.length ? product.sizes : undefined;
 
   const productUrl =
-  product?.category && product?.collection && product?.slug
-    ? `/${product.category}/${product.collection}/${product.slug}`
-    : "#";
+    product?.category && product?.collection && product?.slug
+      ? `/${product.category}/${product.collection}/${product.slug}`
+      : '#';
+
   return (
     <div className="group bg-white w-full rounded-sm overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer flex flex-col justify-between">
       <div>
         {/* Image Area */}
         <div className="relative overflow-hidden w-full aspect-[4/5] bg-gray-100">
-          {imageUrl ? (
-            <Link href={productUrl} className="block w-full h-full">
+          <Link href={productUrl} className="block w-full h-full">
+            {imageUrl ? (
               <img
                 src={imageUrl}
                 alt={displayTitle}
                 className="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105"
               />
-            </Link>
-          ) : (
-            <Link href={productUrl} className="block w-full h-full">
-              <div
-                className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${bgColor} transition-transform duration-400 group-hover:scale-105`}
-              >
-                <ShirtIcon size={80} className="text-white opacity-30" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                <ShirtIcon size={80} className="text-white opacity-40" />
               </div>
-            </Link>
-          )}
+            )}
+          </Link>
 
           {/* Wishlist Button */}
           <button
