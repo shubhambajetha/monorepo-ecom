@@ -17,18 +17,14 @@ interface ProductCardProps {
 const ProductCard = ({ category = '', collection = '', initialProducts }: ProductCardProps) => {
   const [filtersVisible, setFiltersVisible] = useState(true);
 
-  const {
-    data,
-    isLoading,
-    isError,
-  } = useGetProductByCollections(category, collection);
+  const { data, isLoading, isError } = useGetProductByCollections(category, collection);
 
   const rawData = initialProducts ?? data;
   const products: Product[] = Array.isArray(rawData)
     ? rawData
     : Array.isArray(rawData?.data)
-    ? rawData.data
-    : [];
+      ? rawData.data
+      : [];
 
   return (
     <div className="py-2 mx-2">
@@ -44,11 +40,7 @@ const ProductCard = ({ category = '', collection = '', initialProducts }: Produc
         <div
           className={`
             overflow-hidden transition-all duration-300
-            ${
-              filtersVisible
-                ? 'w-full lg:w-64 opacity-100'
-                : 'w-0 opacity-0 hidden lg:block'
-            }
+            ${filtersVisible ? 'w-full lg:w-64 opacity-100' : 'w-0 opacity-0 hidden lg:block'}
           `}
         >
           {filtersVisible && <FilterOption />}
@@ -74,11 +66,7 @@ const ProductCard = ({ category = '', collection = '', initialProducts }: Produc
                 grid gap-4
                 grid-cols-2
                 sm:grid-cols-2
-                ${
-                  filtersVisible
-                    ? 'lg:grid-cols-3'
-                    : 'lg:grid-cols-4'
-                }
+                ${filtersVisible ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}
               `}
             >
               {products.map((product) => (
