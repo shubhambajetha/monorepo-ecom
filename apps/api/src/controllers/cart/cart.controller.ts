@@ -15,9 +15,9 @@ export const createCart = async (req: Request, res: Response, next: NextFunction
       });
     }
 
-    const productId = typeof req.body.productId === 'string' ? req.body.productId.trim() : '';
+    const productId = typeof req.params.productId === 'string' ? req.params.productId.trim() : '';
 
-    const quantity = Number(req.body.quantity);
+    const quantity = req.body?.quantity !== undefined ? Number(req.body.quantity) : 1;
 
     if (!productId || !Number.isSafeInteger(quantity) || quantity <= 0) {
       return res.status(400).json({
@@ -132,7 +132,7 @@ export const countItems = async (req: Request, res: Response, next: NextFunction
 export const removeSingle = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
-    const id = typeof req.params.id === 'string' ? req.params.id.trim() : '';
+    const productId = typeof req.params.productId === 'string' ? req.params.productId.trim() : '';
 
     if (!userId) {
       return res.status(401).json({
@@ -141,15 +141,18 @@ export const removeSingle = async (req: Request, res: Response, next: NextFuncti
       });
     }
 
-    if (!id) {
+    if (!productId) {
       return res.status(400).json({
         success: false,
-        message: 'A cart item ID is required',
+        message: 'A product ID is required',
       });
     }
 
     const result = await prisma.cartItem.deleteMany({
-      where: { id, userId },
+      where: {
+        userId,
+        OR: [{ productId }, { id: productId }],
+      },
     });
 
     if (result.count === 0) {

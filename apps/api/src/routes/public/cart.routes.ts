@@ -19,7 +19,7 @@ router.use(authenticate);
  */
 
 // Add item to cart
-router.post('/create', createCart);
+router.post('/create/:productId', createCart);
 
 // Get all cart items
 router.get('/get', getCart);
@@ -28,7 +28,7 @@ router.get('/get', getCart);
 router.get('/count', countItems);
 
 // Remove single cart item
-router.delete('delete/:id', removeSingle);
+router.delete('/delete/:productId', removeSingle);
 
 // Clear entire cart
 router.delete('/clear', clearCart);

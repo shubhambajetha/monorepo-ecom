@@ -1,13 +1,9 @@
 'use client';
-
-import React, { useState } from 'react';
-import { Heart, ShirtIcon } from 'lucide-react';
+import { ShirtIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Product } from '@/app/types/product/productype';
 import { resolveApiAssetUrl } from '@/app/lib/config';
-import useGetWishlisht from '@/app/hooks/wishlisht/useGetWishlist';
-import { createWishlist } from '@/app/services/wishlistapi/wishlistApi.ts';
-import useCreateWishlist from '@/app/hooks/wishlisht/useCreateWishlist';
+import WishLisht from '@/app/common/WishLisht';
 
 export interface SingleCartProps {
   product?: Partial<Product> & {
@@ -28,15 +24,12 @@ export interface SingleCartProps {
 }
 
 const SingleCart: React.FC<SingleCartProps> = ({ product }) => {
-  const createwishlist = useCreateWishlist();
-
-  
-  const [liked, setLiked] = useState(false);
-
   const displayTitle = product?.title;
   const displayCategory = product?.brand || (product as any)?.category;
 
-  const hasDiscount = Boolean(product?.discountPrice && product.discountPrice < (product.price || 0));
+  const hasDiscount = Boolean(
+    product?.discountPrice && product.discountPrice < (product.price || 0)
+  );
   const displayPrice = hasDiscount ? product?.discountPrice! : product?.price;
   const displayOriginalPrice = hasDiscount ? product?.price : (product?.discountPrice ?? undefined);
 
@@ -50,7 +43,7 @@ const SingleCart: React.FC<SingleCartProps> = ({ product }) => {
     product?.category && product?.collection && product?.slug
       ? `/${product.category}/${product.collection}/${product.slug}`
       : '#';
-
+  const WishlistButton = WishLisht;
   return (
     <div className="group bg-white w-full rounded-sm overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer flex flex-col justify-between">
       <div>
@@ -71,23 +64,7 @@ const SingleCart: React.FC<SingleCartProps> = ({ product }) => {
           </Link>
 
           {/* Wishlist Button */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              setLiked(!liked);
-            }}
-            className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-sm transition-transform duration-200 hover:scale-110 z-10"
-            aria-label="Add to wishlist"
-          >
-            <Heart
-              size={16}
-              className={`transition-colors duration-200 ${
-                liked ? 'fill-red-500 stroke-red-500' : 'stroke-gray-400'
-              }`}
-            />
-          </button>
+          {product?.id && <WishlistButton productId={product?.id} />}
         </div>
 
         {/* Info Area */}

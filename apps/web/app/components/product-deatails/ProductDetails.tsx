@@ -5,6 +5,8 @@ import ProductAccordion from './ProductAccordion';
 import { useProductBySlug } from '@/app/hooks/products/useProductBySlug';
 import { ApiResponse } from '@/app/utils/api';
 import { Product } from '@/app/types/product/productype';
+import useCreateCart from '@/app/hooks/cart/useCreateCart';
+import Swal from 'sweetalert2';
 
 type Props = {
   slug: string;
@@ -62,6 +64,7 @@ const ProductDetails = ({ slug, category, collection, initialDetails }: Props) =
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [wishlist, setWishlist] = useState(false);
+  const { mutateAsync: addToCart, isPending: isAddingToCart } = useCreateCart();
 
   if (isLoading && !details) {
     return (
@@ -128,11 +131,10 @@ const ProductDetails = ({ slug, category, collection, initialDetails }: Props) =
                 <button
                   key={img + i}
                   onClick={() => setActiveImage(i)}
-                  className={`w-[80px] h-[100px] overflow-hidden rounded border-2 transition-all duration-200 ${
-                    activeImage === i
-                      ? 'border-gray-900 opacity-100'
-                      : 'border-gray-200 opacity-60 hover:opacity-90'
-                  }`}
+                  className={`w-[80px] h-[100px] overflow-hidden rounded border-2 transition-all duration-200 ${activeImage === i
+                    ? 'border-gray-900 opacity-100'
+                    : 'border-gray-200 opacity-60 hover:opacity-90'
+                    }`}
                 >
                   <img src={img} alt={`View ${i + 1}`} className="w-full h-full object-cover" />
                 </button>
@@ -224,12 +226,11 @@ const ProductDetails = ({ slug, category, collection, initialDetails }: Props) =
                         onClick={() => !outOfStock && setSelectedSize(size)}
                         className={`
                           relative w-[52px] h-[52px] rounded border text-sm font-medium transition-all duration-150
-                          ${
-                            outOfStock
-                              ? 'border-gray-200 text-gray-300 cursor-not-allowed bg-gray-50 line-through'
-                              : selectedSize === size
-                                ? 'border-gray-900 bg-gray-900 text-white shadow-md'
-                                : 'border-gray-300 text-gray-700 hover:border-gray-800 hover:text-gray-900 bg-white'
+                          ${outOfStock
+                            ? 'border-gray-200 text-gray-300 cursor-not-allowed bg-gray-50 line-through'
+                            : selectedSize === size
+                              ? 'border-gray-900 bg-gray-900 text-white shadow-md'
+                              : 'border-gray-300 text-gray-700 hover:border-gray-800 hover:text-gray-900 bg-white'
                           }
                         `}
                       >
@@ -280,18 +281,34 @@ const ProductDetails = ({ slug, category, collection, initialDetails }: Props) =
             {/* CTA Buttons */}
             <div className="flex gap-3 mb-6">
               <button
-                disabled={outOfStock || (details.sizes?.length > 0 && !selectedSize)}
+                disabled={outOfStock || (details.sizes?.length > 0 && !selectedSize) || isAddingToCart}
+                onClick={async () => {
+                  try {
+                    await addToCart({ productId: details.id, quantity });
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Added to Cart',
+                      timer: 1500,
+                      showConfirmButton: false,
+                    });
+                  } catch (err: any) {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Failed',
+                      text: err?.message || 'Failed to add item to cart',
+                    });
+                  }
+                }}
                 className="flex-1 bg-red-600 hover:bg-red-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-4 rounded-md text-sm uppercase tracking-wider transition-all duration-150 shadow-sm hover:shadow-md"
               >
-                {outOfStock ? 'Out of Stock' : 'Add to Cart'}
+                {outOfStock ? 'Out of Stock' : isAddingToCart ? 'Adding...' : 'Add to Cart'}
               </button>
               <button
                 onClick={() => setWishlist(!wishlist)}
                 className={`flex-1 border-2 font-bold py-4 rounded-md text-sm uppercase tracking-wider transition-all duration-150 flex items-center justify-center gap-2
-                  ${
-                    wishlist
-                      ? 'border-red-400 text-red-500 bg-red-50'
-                      : 'border-gray-300 text-gray-700 hover:border-gray-500 bg-white'
+                  ${wishlist
+                    ? 'border-red-400 text-red-500 bg-red-50'
+                    : 'border-gray-300 text-gray-700 hover:border-gray-500 bg-white'
                   }`}
               >
                 <svg

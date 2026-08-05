@@ -4,10 +4,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 export default function useCreateWishlist() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createWishlist,
+    mutationFn: (productId: string) => createWishlist(productId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['createwishlist'],
+        queryKey: ['wishlist'],
       });
     },
   });

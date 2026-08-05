@@ -2,11 +2,14 @@ import { getWishlist, WishlistItem } from "@/app/services/wishlistapi/wishlistAp
 import { ApiResponse } from "@/app/utils/api";
 import { useQuery } from "@tanstack/react-query";
 
-export default function useGetWishlisht(initialData?:ApiResponse<WishlistItem[]>){
-    return useQuery({
-        queryKey:["getwishlist"],
-        queryFn:getWishlist,
-        initialData
-    });
+export function useGetWishlist(initialData?: ApiResponse<WishlistItem[]>) {
+  return useQuery({
+    queryKey: ["wishlist"],
+    queryFn: getWishlist,
+    initialData,
+  });
 }
+
+export default useGetWishlist;
+export { useGetWishlist as useGetWishlisht };
 
