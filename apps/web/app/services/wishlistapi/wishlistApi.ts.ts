@@ -42,12 +42,12 @@ export interface WishlistItem {
  * Add Product to Wishlist
  */
 export const createWishlist = async (
-  payload: WishlistPayload
+  payload: string | WishlistPayload
 ): Promise<ApiResponse<WishlistItem>> => {
   try {
+    const productId = typeof payload === 'string' ? payload : payload.productId;
     const response = await apiClient.post<ApiResponse<WishlistItem>>(
-      endpoints.wishlists.create,
-      payload
+      endpoints.wishlists.create(productId)
     );
 
     return response.data;

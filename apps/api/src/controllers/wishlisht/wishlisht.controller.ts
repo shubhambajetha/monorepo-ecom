@@ -7,15 +7,17 @@ export const createWishlist = async (req: Request, res: Response, next: NextFunc
 
     if (!userId) {
       return res.status(401).json({
+        success: false,
         status: false,
         message: 'Unauthorized',
       });
     }
 
-    const productId = typeof req.body.productId === 'string' ? req.body.productId.trim() : '';
+    const productId = typeof req.params.productId === 'string' ? req.params.productId.trim() : '';
 
     if (!productId) {
       return res.status(400).json({
+        success: false,
         status: false,
         message: 'Product ID is required',
       });
@@ -29,6 +31,7 @@ export const createWishlist = async (req: Request, res: Response, next: NextFunc
 
     if (!product) {
       return res.status(404).json({
+        success: false,
         status: false,
         message: 'Product not found',
       });
@@ -45,6 +48,7 @@ export const createWishlist = async (req: Request, res: Response, next: NextFunc
 
     if (existingWishlist) {
       return res.status(409).json({
+        success: false,
         status: false,
         message: 'Product already exists in wishlist',
       });
@@ -58,6 +62,7 @@ export const createWishlist = async (req: Request, res: Response, next: NextFunc
     });
 
     return res.status(201).json({
+      success: true,
       status: true,
       message: 'Product added to wishlist successfully',
       data: wishlist,
@@ -73,6 +78,7 @@ export const getWishlist = async (req: Request, res: Response, next: NextFunctio
 
     if (!userId) {
       return res.status(401).json({
+        success: false,
         status: false,
         message: 'Unauthorized',
       });
@@ -101,6 +107,7 @@ export const getWishlist = async (req: Request, res: Response, next: NextFunctio
     });
 
     return res.status(200).json({
+      success: true,
       status: true,
       message: 'Wishlist fetched successfully',
       data: wishlist,
@@ -116,6 +123,7 @@ export const deleteWishlist = async (req: Request, res: Response, next: NextFunc
 
     if (!userId) {
       return res.status(401).json({
+        success: false,
         status: false,
         message: 'Unauthorized',
       });
@@ -125,6 +133,7 @@ export const deleteWishlist = async (req: Request, res: Response, next: NextFunc
 
     if (!productId) {
       return res.status(400).json({
+        success: false,
         status: false,
         message: 'Product ID is required',
       });
@@ -141,6 +150,7 @@ export const deleteWishlist = async (req: Request, res: Response, next: NextFunc
 
     if (!wishlistItem) {
       return res.status(404).json({
+        success: false,
         status: false,
         message: 'Product not found in wishlist',
       });
@@ -156,6 +166,7 @@ export const deleteWishlist = async (req: Request, res: Response, next: NextFunc
     });
 
     return res.status(200).json({
+      success: true,
       status: true,
       message: 'Product removed from wishlist successfully',
     });

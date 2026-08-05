@@ -43,15 +43,15 @@ export const endpoints = {
     homespotlight: '/homecate/homedata/sportlight',
   },
   carts: {
-    createcart: '/create',
-    getcart: '/getcart',
-    countcart: '/countcart',
-    deletecart: (id: string) => `delete/${id}`,
-    clearcart: '/clear',
+    createcart: (productId: string) => `/cart/create/${productId}`,
+    getcart: '/cart/get',
+    countcart: '/cart/count',
+    deletecart: (productId: string) => `/cart/delete/${productId}`,
+    clearcart: '/cart/clear',
   },
   wishlists: {
-    create: '/create',
-    get: '/get',
-    delete: (productId: string) => `/delete/${productId}`,
+    create: (productId: string) => `/wishlist/create/${productId}`,
+    get: '/wishlist/get',
+    delete: (productId: string) => `/wishlist/delete/${productId}`,
   },
 } as const;

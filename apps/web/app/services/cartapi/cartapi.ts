@@ -4,7 +4,7 @@ import { endpoints } from '@/app/constants/endpoint';
 
 export interface CartPayload {
   productId: string;
-  quantity: number;
+  quantity?: number;
 }
 
 export interface CartItem {
@@ -28,8 +28,8 @@ export interface ClearCartResponse {
 export const createCart = async (payload: CartPayload): Promise<ApiResponse<CartItem>> => {
   try {
     const response = await apiClient.post<ApiResponse<CartItem>>(
-      endpoints.carts.createcart,
-      payload
+      endpoints.carts.createcart(payload.productId),
+      payload.quantity !== undefined ? { quantity: payload.quantity } : undefined
     );
 
     return response.data;
@@ -67,9 +67,9 @@ export const countCart = async (): Promise<ApiResponse<number>> => {
 /**
  * Delete Single Cart Item
  */
-export const deleteCartItem = async (id: string): Promise<ApiResponse<null>> => {
+export const deleteCartItem = async (productId: string): Promise<ApiResponse<null>> => {
   try {
-    const response = await apiClient.delete<ApiResponse<null>>(endpoints.carts.deletecart(id));
+    const response = await apiClient.delete<ApiResponse<null>>(endpoints.carts.deletecart(productId));
 
     return response.data;
   } catch (error) {
