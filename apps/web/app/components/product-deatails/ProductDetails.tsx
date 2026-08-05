@@ -5,8 +5,8 @@ import ProductAccordion from './ProductAccordion';
 import { useProductBySlug } from '@/app/hooks/products/useProductBySlug';
 import { ApiResponse } from '@/app/utils/api';
 import { Product } from '@/app/types/product/productype';
-import useCreateCart from '@/app/hooks/cart/useCreateCart';
-import Swal from 'sweetalert2';
+import AddToCart from '@/app/common/AddToCart';
+import WishLisht from '@/app/common/WishLisht';
 
 type Props = {
   slug: string;
@@ -63,8 +63,6 @@ const ProductDetails = ({ slug, category, collection, initialDetails }: Props) =
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
-  const [wishlist, setWishlist] = useState(false);
-  const { mutateAsync: addToCart, isPending: isAddingToCart } = useCreateCart();
 
   if (isLoading && !details) {
     return (
@@ -279,54 +277,19 @@ const ProductDetails = ({ slug, category, collection, initialDetails }: Props) =
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex gap-3 mb-6">
-              <button
-                disabled={outOfStock || (details.sizes?.length > 0 && !selectedSize) || isAddingToCart}
-                onClick={async () => {
-                  try {
-                    await addToCart({ productId: details.id, quantity });
-                    Swal.fire({
-                      icon: 'success',
-                      title: 'Added to Cart',
-                      timer: 1500,
-                      showConfirmButton: false,
-                    });
-                  } catch (err: any) {
-                    Swal.fire({
-                      icon: 'error',
-                      title: 'Failed',
-                      text: err?.message || 'Failed to add item to cart',
-                    });
-                  }
-                }}
-                className="flex-1 bg-red-600 hover:bg-red-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-4 rounded-md text-sm uppercase tracking-wider transition-all duration-150 shadow-sm hover:shadow-md"
-              >
-                {outOfStock ? 'Out of Stock' : isAddingToCart ? 'Adding...' : 'Add to Cart'}
-              </button>
-              <button
-                onClick={() => setWishlist(!wishlist)}
-                className={`flex-1 border-2 font-bold py-4 rounded-md text-sm uppercase tracking-wider transition-all duration-150 flex items-center justify-center gap-2
-                  ${wishlist
-                    ? 'border-red-400 text-red-500 bg-red-50'
-                    : 'border-gray-300 text-gray-700 hover:border-gray-500 bg-white'
-                  }`}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-4 h-4"
-                  fill={wishlist ? 'currentColor' : 'none'}
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  />
-                </svg>
-                {wishlist ? 'Wishlisted' : 'Add to Wishlist'}
-              </button>
+            <div className="flex items-center gap-3 mb-6">
+              {details?.id && (
+                <div className="flex-1">
+                  <AddToCart productId={details.id} />
+                </div>
+              )}
+              {details?.id && (
+                <WishLisht
+                  productId={details.id}
+                  className="h-10 px-4 rounded-md border border-gray-300 hover:border-gray-800 text-gray-700 hover:text-red-500 flex items-center justify-center transition-all duration-150 bg-white shadow-sm font-medium text-sm"
+                  showText
+                />
+              )}
             </div>
 
             {/* Share */}
