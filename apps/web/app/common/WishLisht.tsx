@@ -49,15 +49,23 @@ export default function WishLisht({
         timer: 1500,
         showConfirmButton: false,
       });
-    } catch (error) {
+    } catch (error: any) {
       // revert api if is failed
       startTransition(() => {
         setOptimisticWishlist(!nextvalue);
       });
+
+      const isUnauthorized =
+        error?.status === 401 ||
+        error?.message?.includes('Session expired') ||
+        error?.message?.includes('Unauthorized');
+
       Swal.fire({
         icon: 'error',
-        title: 'Failed',
-        text: 'unable to update wishlist',
+        title: isUnauthorized ? 'Login Required' : 'Failed',
+        text: isUnauthorized
+          ? 'Please log in to add items to your wishlist.'
+          : error?.message || 'unable to update wishlist',
       });
     }
   }

@@ -1,159 +1,159 @@
-# Turborepo starter
+# TURBOREPO STARTER
 
-This Turborepo starter is maintained by the Turborepo core team.
+THIS TURBOREPO STARTER IS MAINTAINED BY THE TURBOREPO CORE TEAM.
 
-## Using this example
+## USING THIS EXAMPLE
 
-Run the following command:
+RUN THE FOLLOWING COMMAND:
 
-```sh
-npx create-turbo@latest
+```SH
+NPX CREATE-TURBO@LATEST
 ```
 
-## What's inside?
+## WHAT'S INSIDE?
 
-This Turborepo includes the following packages/apps:
+THIS TURBOREPO INCLUDES THE FOLLOWING PACKAGES/APPS:
 
-### Apps and Packages
+### APPS AND PACKAGES
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `DOCS`: A [NEXT.JS](https://nextjs.org/) APP
+- `WEB`: ANOTHER [NEXT.JS](https://nextjs.org/) APP
+- `@REPO/UI`: A STUB REACT COMPONENT LIBRARY SHARED BY BOTH `WEB` AND `DOCS` APPLICATIONS
+- `@REPO/ESLINT-CONFIG`: `ESLINT` CONFIGURATIONS (INCLUDES `ESLINT-CONFIG-NEXT` AND `ESLINT-CONFIG-PRETTIER`)
+- `@REPO/TYPESCRIPT-CONFIG`: `TSCONFIG.JSON`S USED THROUGHOUT THE MONOREPO
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+EACH PACKAGE/APP IS 100% [TYPESCRIPT](https://www.typescriptlang.org/).
 
-### Utilities
+### UTILITIES
 
-This Turborepo has some additional tools already setup for you:
+THIS TURBOREPO HAS SOME ADDITIONAL TOOLS ALREADY SETUP FOR YOU:
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+- [TYPESCRIPT](https://www.typescriptlang.org/) FOR STATIC TYPE CHECKING
+- [ESLINT](https://eslint.org/) FOR CODE LINTING
+- [PRETTIER](https://prettier.io) FOR CODE FORMATTING
 
-### Build
+### BUILD
 
-To build all apps and packages, run the following command:
+TO BUILD ALL APPS AND PACKAGES, RUN THE FOLLOWING COMMAND:
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+WITH [GLOBAL `TURBO`](https://turborepo.dev/docs/getting-started/installation#global-installation) INSTALLED (RECOMMENDED):
 
-```sh
-cd my-turborepo
-turbo build
+```SH
+CD MY-TURBOREPO
+TURBO BUILD
 ```
 
-Without global `turbo`, use your package manager:
+WITHOUT GLOBAL `TURBO`, USE YOUR PACKAGE MANAGER:
 
-```sh
-cd my-turborepo
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```SH
+CD MY-TURBOREPO
+NPX TURBO BUILD
+YARN DLX TURBO BUILD
+PNPM EXEC TURBO BUILD
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+YOU CAN BUILD A SPECIFIC PACKAGE BY USING A [FILTER](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+WITH [GLOBAL `TURBO`](https://turborepo.dev/docs/getting-started/installation#global-installation) INSTALLED:
 
-```sh
-turbo build --filter=docs
+```SH
+TURBO BUILD --FILTER=DOCS
 ```
 
-Without global `turbo`:
+WITHOUT GLOBAL `TURBO`:
 
-```sh
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+```SH
+NPX TURBO BUILD --FILTER=DOCS
+YARN EXEC TURBO BUILD --FILTER=DOCS
+PNPM EXEC TURBO BUILD --FILTER=DOCS
 ```
 
-### Develop
+### DEVELOP
 
-To develop all apps and packages, run the following command:
+TO DEVELOP ALL APPS AND PACKAGES, RUN THE FOLLOWING COMMAND:
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+WITH [GLOBAL `TURBO`](https://turborepo.dev/docs/getting-started/installation#global-installation) INSTALLED (RECOMMENDED):
 
-```sh
-cd my-turborepo
-turbo dev
+```SH
+CD MY-TURBOREPO
+TURBO DEV
 ```
 
-Without global `turbo`, use your package manager:
+WITHOUT GLOBAL `TURBO`, USE YOUR PACKAGE MANAGER:
 
-```sh
-cd my-turborepo
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+```SH
+CD MY-TURBOREPO
+NPX TURBO DEV
+YARN EXEC TURBO DEV
+PNPM EXEC TURBO DEV
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+YOU CAN DEVELOP A SPECIFIC PACKAGE BY USING A [FILTER](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+WITH [GLOBAL `TURBO`](https://turborepo.dev/docs/getting-started/installation#global-installation) INSTALLED:
 
-```sh
-turbo dev --filter=web
+```SH
+TURBO DEV --FILTER=WEB
 ```
 
-Without global `turbo`:
+WITHOUT GLOBAL `TURBO`:
 
-```sh
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+```SH
+NPX TURBO DEV --FILTER=WEB
+YARN EXEC TURBO DEV --FILTER=WEB
+PNPM EXEC TURBO DEV --FILTER=WEB
 ```
 
-### Remote Caching
+### REMOTE CACHING
 
 > [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+> VERCEL REMOTE CACHE IS FREE FOR ALL PLANS. GET STARTED TODAY AT [VERCEL.COM](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+TURBOREPO CAN USE A TECHNIQUE KNOWN AS [REMOTE CACHING](https://turborepo.dev/docs/core-concepts/remote-caching) TO SHARE CACHE ARTIFACTS ACROSS MACHINES, ENABLING YOU TO SHARE BUILD CACHES WITH YOUR TEAM AND CI/CD PIPELINES.
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+BY DEFAULT, TURBOREPO WILL CACHE LOCALLY. TO ENABLE REMOTE CACHING YOU WILL NEED AN ACCOUNT WITH VERCEL. IF YOU DON'T HAVE AN ACCOUNT YOU CAN [CREATE ONE](https://vercel.com/signup?utm_source=turborepo-examples), THEN ENTER THE FOLLOWING COMMANDS:
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+WITH [GLOBAL `TURBO`](https://turborepo.dev/docs/getting-started/installation#global-installation) INSTALLED (RECOMMENDED):
 
-```sh
-cd my-turborepo
-turbo login
+```SH
+CD MY-TURBOREPO
+TURBO LOGIN
 ```
 
-Without global `turbo`, use your package manager:
+WITHOUT GLOBAL `TURBO`, USE YOUR PACKAGE MANAGER:
 
-```sh
-cd my-turborepo
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```SH
+CD MY-TURBOREPO
+NPX TURBO LOGIN
+YARN EXEC TURBO LOGIN
+PNPM EXEC TURBO LOGIN
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+THIS WILL AUTHENTICATE THE TURBOREPO CLI WITH YOUR [VERCEL ACCOUNT](https://vercel.com/docs/concepts/personal-accounts/overview).
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+NEXT, YOU CAN LINK YOUR TURBOREPO TO YOUR REMOTE CACHE BY RUNNING THE FOLLOWING COMMAND FROM THE ROOT OF YOUR TURBOREPO:
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+WITH [GLOBAL `TURBO`](https://turborepo.dev/docs/getting-started/installation#global-installation) INSTALLED:
 
-```sh
-turbo link
+```SH
+TURBO LINK
 ```
 
-Without global `turbo`:
+WITHOUT GLOBAL `TURBO`:
 
-```sh
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+```SH
+NPX TURBO LINK
+YARN EXEC TURBO LINK
+PNPM EXEC TURBO LINK
 ```
 
-## Useful Links
+## USEFUL LINKS
 
-Learn more about the power of Turborepo:
+LEARN MORE ABOUT THE POWER OF TURBOREPO:
 
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+- [TASKS](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
+- [CACHING](https://turborepo.dev/docs/crafting-your-repository/caching)
+- [REMOTE CACHING](https://turborepo.dev/docs/core-concepts/remote-caching)
+- [FILTERING](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
+- [CONFIGURATION OPTIONS](https://turborepo.dev/docs/reference/configuration)
+- [CLI USAGE](https://turborepo.dev/docs/reference/command-line-reference)

@@ -18,15 +18,18 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
       });
     }
     
-    const secret = process.env.JWT_SECRET;
+    const secret = process.env.JWT_ACCESS_SECRET || process.env.JWT_SECRET;
 
     if (!secret) {
-      throw new Error('JWT_SECRET is missing');
+      throw new Error('JWT access secret is missing');
     }
 
-    const decoded = jwt.verify(token, secret);
+    const decoded = jwt.verify(token, secret) as any;
 
-    req.user = decoded as any;
+    // Normalize payload so downstream code can rely on `req.user.id`.
+    const userId = decoded?.userId ?? decoded?.id;
+    const role = decoded?.role;
+    req.user = userId ? { id: userId, role } : (decoded as any);
 
     next();
   } catch (error) {

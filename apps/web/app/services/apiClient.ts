@@ -466,11 +466,22 @@ api.interceptors.response.use(
 );
 
 async function handleUnauthorized(originalRequest: RequestConfig): Promise<any> {
+  // Prevent retry if original request was the refresh endpoint itself
+  if (originalRequest.url?.includes(REFRESH_TOKEN_ENDPOINT)) {
+    console.warn('[API] Refresh token endpoint returned unauthorized');
+    handleAuthFailure('Token refresh failed');
+    const authErr = new Error('Unauthorized') as ApiError;
+    authErr.status = 401;
+    return Promise.reject(authErr);
+  }
+
   // Prevent infinite retry loops
   if (originalRequest._retry) {
     console.warn('[API] Token refresh already attempted, rejecting');
     handleAuthFailure('Token refresh failed');
-    return Promise.reject(new AxiosError('Unauthorized after token refresh'));
+    const authErr = new Error('Unauthorized after token refresh') as ApiError;
+    authErr.status = 401;
+    return Promise.reject(authErr);
   }
 
   originalRequest._retry = true;
@@ -508,10 +519,13 @@ async function handleUnauthorized(originalRequest: RequestConfig): Promise<any> 
     );
     tokenManager.clearRefresh();
 
-    console.error('[API] Token refresh failed:', refreshError);
     handleAuthFailure('Token refresh failed');
 
-    return Promise.reject(refreshError);
+    const authErr = (
+      refreshError instanceof Error ? refreshError : new Error('Token refresh failed')
+    ) as ApiError;
+    authErr.status = 401;
+    return Promise.reject(authErr);
   }
 }
 
@@ -604,12 +618,22 @@ async function performTokenRefresh(): Promise<string> {
 
     return data.accessToken;
   } catch (err) {
-    console.error('[API] Token refresh request failed:', err);
-
-    if (axios.isAxiosError(err) && err.code === 'ERR_CANCELED') {
-      throw new Error('Token refresh was canceled');
+    if (axios.isAxiosError(err)) {
+      if (err.code === 'ERR_CANCELED') {
+        throw new Error('Token refresh was canceled');
+      }
+      if (err.response?.status === 401 || err.response?.status === 400) {
+        console.warn('[API] Refresh token expired or not present');
+        const apiErr = new Error(
+          extractMessage(err.response.data) || 'Session expired. Please log in again.'
+        ) as ApiError;
+        apiErr.status = err.response.status;
+        apiErr.code = 'UNAUTHORIZED';
+        throw apiErr;
+      }
     }
 
+    console.error('[API] Token refresh request failed:', err);
     throw err;
   }
 }

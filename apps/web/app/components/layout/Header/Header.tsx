@@ -16,7 +16,10 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSearchProducts } from '@/app/hooks/products/useSearchProducts';
 import { Product } from '@/app/types/product/productype';
-
+import { useAuth } from '@/app/provider/AuthProvider';
+import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { User } from 'lucide-react';
 const navItems = ['Men', 'Women'] as const;
 type NavItem = (typeof navItems)[number];
 
@@ -33,6 +36,7 @@ export default function Header() {
   const closeMenuTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { data, isLoading } = useSearchProducts(search);
   const searchResults = data?.data ?? [];
+  const { user, isAuthenticated, loading, logout } = useAuth();
 
   const submitSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -75,12 +79,66 @@ export default function Header() {
             <a href="#" className="hover:underline">
               Help
             </a>
+
             <span className="text-gray-400">|</span>
-            <a href="#" className="hover:underline">
-              Join Us
-            </a>
-            <span className="text-gray-400">|</span>
-            <Link href={'/auth/signin'}>Signin</Link>
+
+            {loading ? null : isAuthenticated ? (
+              <div className="flex items-center gap-2">
+                <span>Welcome, {user?.firstName}</span>
+                <span className="text-gray-400">|</span>
+                <Menu>
+                  <MenuButton className="border-none">
+                    <User className="h-5 w-5" />
+                  </MenuButton>
+
+                  <MenuItems
+                    anchor="bottom end"
+                    className="z-50 mt-2 w-40 rounded-md bg-white shadow-lg border border-gray-200 p-1 focus:outline-none"
+                  >
+                    <MenuItem>
+                      {({ focus }) => (
+                        <Link
+                          href="/orders"
+                          className={`block px-3 py-2 ${focus ? 'bg-gray-100' : ''}`}
+                        >
+                          Orders
+                        </Link>
+                      )}
+                    </MenuItem>
+
+                    <MenuItem>
+                      {({ focus }) => (
+                        <Link
+                          href="/settings"
+                          className={`block px-3 py-2 ${focus ? 'bg-gray-100' : ''}`}
+                        >
+                          My Profile
+                        </Link>
+                      )}
+                    </MenuItem>
+
+                    <MenuItem>
+                      {({ focus }) => (
+                        <button
+                          onClick={logout}
+                          className={`block w-full text-left px-3 py-2 text-red-500 ${
+                            focus ? 'bg-gray-100' : ''
+                          }`}
+                        >
+                          Logout
+                        </button>
+                      )}
+                    </MenuItem>
+                  </MenuItems>
+                </Menu>
+              </div>
+            ) : (
+              <>
+                <Link href="/auth/signin">Sign In</Link>
+                <span className="text-gray-400">|</span>
+                <Link href="/auth/signup">Sign up</Link>
+              </>
+            )}
           </div>
         </div>
       )}

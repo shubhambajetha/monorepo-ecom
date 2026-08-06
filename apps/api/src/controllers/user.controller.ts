@@ -155,7 +155,6 @@ export const signupUser = async (req: Request, res: Response): Promise<Response>
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
-      
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Failed to register user';
@@ -354,9 +353,20 @@ export const refreshTokenHandler = async (req: Request, res: Response): Promise<
       duration: `${Date.now() - startTime}ms`,
     });
 
-    return sendSuccess<{ accessToken: string; expiresIn: number }>(res, 200, 'Token refreshed', {
+    return sendSuccess<{
+      accessToken: string;
+      expiresIn: number;
+      user: UserData;
+    }>(res, 200, 'Token refreshed', {
       accessToken: newAccessToken,
-      expiresIn: 15 * 60, // 15 minutes in seconds
+      expiresIn: 15 * 60,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      },
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Token refresh failed';

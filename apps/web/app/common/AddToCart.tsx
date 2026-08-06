@@ -43,18 +43,29 @@ export default function AddToCart({
         timer: 1500,
         showConfirmButton: false,
       });
-    } catch (error) {
+    } catch (error: any) {
+      startTransition(() => {
+        setOptimisticCart(!newValue);
+      });
+
+      const isUnauthorized =
+        error?.status === 401 ||
+        error?.message?.includes('Session expired') ||
+        error?.message?.includes('Unauthorized');
+
       Swal.fire({
         icon: 'error',
-        title: 'Failed',
-        text: 'Unable to update cart',
+        title: isUnauthorized ? 'Login Required' : 'Failed',
+        text: isUnauthorized
+          ? 'Please log in to add items to your cart.'
+          : error?.message || 'Unable to update cart',
       });
     }
   }
 
   return (
     <button
-      // disabled={loading}
+      disabled={loading}
       onClick={handleAddtoCart}
       className={`w-full py-2.5 px-4 rounded-md font-medium text-sm transition-all duration-150 flex items-center justify-center gap-2 ${
         optimisticCart
