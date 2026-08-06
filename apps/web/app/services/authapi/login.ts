@@ -55,12 +55,7 @@ function getErrorMessage(error: unknown, fallbackMessage: string): string {
   if (error instanceof AxiosError) {
     const responseData = error.response?.data as ApiErrorResponse | undefined;
 
-    return (
-      responseData?.message ||
-      responseData?.error ||
-      error.message ||
-      fallbackMessage
-    );
+    return responseData?.message || responseData?.error || error.message || fallbackMessage;
   }
 
   if (error instanceof Error) {
@@ -91,10 +86,8 @@ export async function signin(payload: SigninPayload): Promise<SigninResponse> {
       validatedPayload
     );
     const data = unwrapApiData(response.data);
-    setAuthToken(data.accessToken);
     return data;
   } catch (error) {
     throw new Error(getErrorMessage(error, 'Login failed'));
   }
 }
-

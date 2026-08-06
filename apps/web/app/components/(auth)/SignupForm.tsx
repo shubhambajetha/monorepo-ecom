@@ -55,7 +55,7 @@ export default function SignupForm() {
         passwordConfirm,
       });
       console.log('Signup success:', response);
-      router.push('/');
+      router.push('/auth/signin');
     } catch (error) {
       console.error('Signup error:', error);
       setErrorMessage(error instanceof Error ? error.message : 'Unable to create account');

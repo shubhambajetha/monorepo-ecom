@@ -5,9 +5,10 @@ import { useState } from 'react';
 import { Eye, EyeOff, Mail } from 'lucide-react';
 import { signin } from '@/app/services';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/provider/AuthProvider';
 
 export default function SigninForm() {
-  // const router
+  const { login } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,8 +32,7 @@ export default function SigninForm() {
       });
 
       console.log('Login success:', response);
-      // redirect after successful login
-      // router.replace('/dashboard');
+      login(response.accessToken, response.user);
       router.push('/');
     } catch (error) {
       console.error('Signin error:', error);
