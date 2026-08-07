@@ -7,6 +7,7 @@ import {
   countItems,
   removeSingle,
   clearCart,
+  updateCart,
 } from '../../controllers/cart/cart.controller';
 
 const router: ExpressRouter = Router();
@@ -26,6 +27,9 @@ router.get('/get', getCart);
 
 // Get cart items count
 router.get('/count', countItems);
+
+// update car items count
+router.patch('/update',updateCart)
 
 // Remove single cart item
 router.delete('/delete/:productId', removeSingle);

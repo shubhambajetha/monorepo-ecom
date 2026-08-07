@@ -48,7 +48,9 @@ export const endpoints = {
     countcart: '/cart/count',
     deletecart: (productId: string) => `/cart/delete/${productId}`,
     clearcart: '/cart/clear',
+    updatecart: (id: number) => `/cart/update${id}`,
   },
+  
   wishlists: {
     create: (productId: string) => `/wishlist/create/${productId}`,
     get: '/wishlist/get',

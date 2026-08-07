@@ -41,7 +41,7 @@ export const createCart = async (payload: CartPayload): Promise<ApiResponse<Cart
 /**
  * Get Cart
  */
-export const getCart = async (): Promise<ApiResponse<CartItem[]>> => {
+export const getCart = async (payload:CartPayload): Promise<ApiResponse<CartItem[]>> => {
   try {
     const response = await apiClient.get<ApiResponse<CartItem[]>>(endpoints.carts.getcart);
 
@@ -50,6 +50,17 @@ export const getCart = async (): Promise<ApiResponse<CartItem[]>> => {
     throw normalizeApiError(error);
   }
 };
+
+/**
+ * Count Cart Items
+ */
+export const updatecart = async(payload:CartPayload):Promise<ApiResponse<CartItem>>=>{
+  try{
+    const response = await apiClient.patch<ApiResponse<CartItem>>
+  }catch(error){
+    throw normalizeApiError(error)
+  }
+}
 
 /**
  * Count Cart Items
@@ -63,13 +74,14 @@ export const countCart = async (): Promise<ApiResponse<number>> => {
     throw normalizeApiError(error);
   }
 };
-
 /**
  * Delete Single Cart Item
  */
 export const deleteCartItem = async (productId: string): Promise<ApiResponse<null>> => {
   try {
-    const response = await apiClient.delete<ApiResponse<null>>(endpoints.carts.deletecart(productId));
+    const response = await apiClient.delete<ApiResponse<null>>(
+      endpoints.carts.deletecart(productId)
+    );
 
     return response.data;
   } catch (error) {
