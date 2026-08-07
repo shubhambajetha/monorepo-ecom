@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { prisma } from '../../config/prisma';
+import { number, string, success } from 'zod';
 
 /**
  * Create Cart / Add Item to Cart
@@ -45,10 +46,14 @@ export const createCart = async (req: Request, res: Response, next: NextFunction
       where: {
         userId_productId: { userId, productId },
       },
-      create: { userId, productId, quantity },
+      create: {
+        userId,
+        productId,
+        quantity: 1,
+      },
       update: {
         quantity: {
-          increment: quantity,
+          increment: 1,
         },
       },
     });
@@ -96,6 +101,67 @@ export const getCart = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
+/**
+ * Update Cart Quantity
+ */
+export const updateCart = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized',
+      });
+    }
+
+    const productId = typeof req.params.productId === 'string' ? req.params.productId.trim() : '';
+
+    const quantity = Number(req.body.quantity);
+
+    if (!productId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Product ID is required',
+      });
+    }
+
+    if (!Number.isSafeInteger(quantity) || quantity < 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'Quantity must be a positive whole number',
+      });
+    }
+
+    const updatedCart = await prisma.cartItem.update({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+      data: {
+        quantity,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Cart updated successfully',
+      data: updatedCart,
+    });
+  } catch (error: any) {
+    // Prisma record not found
+    if (error.code === 'P2025') {
+      return res.status(404).json({
+        success: false,
+        message: 'Cart item not found',
+      });
+    }
+
+    return next(error);
+  }
+};
 /**
  * Count Cart Items
  */

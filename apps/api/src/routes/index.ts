@@ -16,4 +16,5 @@ router.use('/homecate',homepage)
 router.use('/cart',cart)
 router.use('/wishlist', wishlist)
 
+
 export default router;
