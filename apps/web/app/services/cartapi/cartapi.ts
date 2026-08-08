@@ -41,7 +41,7 @@ export const createCart = async (payload: CartPayload): Promise<ApiResponse<Cart
 /**
  * Get Cart
  */
-export const getCart = async (payload:CartPayload): Promise<ApiResponse<CartItem[]>> => {
+export const getCart = async (payload: CartPayload): Promise<ApiResponse<CartItem[]>> => {
   try {
     const response = await apiClient.get<ApiResponse<CartItem[]>>(endpoints.carts.getcart);
 
@@ -54,13 +54,20 @@ export const getCart = async (payload:CartPayload): Promise<ApiResponse<CartItem
 /**
  * Count Cart Items
  */
-export const updatecart = async(payload:CartPayload):Promise<ApiResponse<CartItem>>=>{
-  try{
-    const response = await apiClient.patch<ApiResponse<CartItem>>
-  }catch(error){
-    throw normalizeApiError(error)
+export const updatecart = async (payload: CartPayload):Promise<ApiResponse<CartItem>> => {
+  try {
+    const response = await apiClient.patch<ApiResponse<CartItem>>(
+      endpoints.carts.updatecart(payload.productId),
+      {
+        quantity: payload.quantity,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw normalizeApiError(error);
   }
-}
+};
 
 /**
  * Count Cart Items
