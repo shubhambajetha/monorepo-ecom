@@ -227,8 +227,8 @@ export default function Header() {
                 </button>
 
                 <Link
-                  href="/wishlist"
-                  aria-label="Wishlist"
+                  href="/wishlisht"
+                  aria-label="Wishlisht"
                   className="rounded-full p-1 transition hover:bg-gray-100"
                 >
                   <HeartIcon className="h-6 w-6" />

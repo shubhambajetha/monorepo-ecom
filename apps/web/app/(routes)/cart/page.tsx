@@ -1,10 +1,8 @@
 import Alldeatils from '@/app/components/carts/Alldeatils';
-import React from 'react'
+import { getCart } from '@/app/services/cartapi/cartapi';
 
-const page = () => {
-  return (
-    <Alldeatils/>
-  )
+export default async function Page() {
+  const cart = await getCart();
+
+  return <Alldeatils getcarts={cart.data ?? []} />;
 }
-
-export default page

@@ -1,6 +1,7 @@
 import { ApiResponse } from '@/app/utils/api';
 import { apiClient, normalizeApiError } from '../apiClient';
 import { endpoints } from '@/app/constants/endpoint';
+import { Product } from '@/app/types/product/productype';
 
 export interface CartPayload {
   productId: string;
@@ -14,6 +15,7 @@ export interface CartItem {
   quantity: number;
   createdAt: string;
   updatedAt: string;
+  product: Product;
 }
 
 export interface ClearCartResponse {
@@ -41,7 +43,7 @@ export const createCart = async (payload: CartPayload): Promise<ApiResponse<Cart
 /**
  * Get Cart
  */
-export const getCart = async (payload: CartPayload): Promise<ApiResponse<CartItem[]>> => {
+export const getCart = async (): Promise<ApiResponse<CartItem[]>> => {
   try {
     const response = await apiClient.get<ApiResponse<CartItem[]>>(endpoints.carts.getcart);
 
@@ -54,7 +56,7 @@ export const getCart = async (payload: CartPayload): Promise<ApiResponse<CartIte
 /**
  * Count Cart Items
  */
-export const updatecart = async (payload: CartPayload):Promise<ApiResponse<CartItem>> => {
+export const updatecart = async (payload: CartPayload): Promise<ApiResponse<CartItem>> => {
   try {
     const response = await apiClient.patch<ApiResponse<CartItem>>(
       endpoints.carts.updatecart(payload.productId),
