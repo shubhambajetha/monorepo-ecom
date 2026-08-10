@@ -1,37 +1,27 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useState } from 'react';
-import { Trash2, Plus, Minus, Heart, Clock } from 'lucide-react';
 
-interface CartItem {
+import { Trash2, Plus, Heart, Clock } from 'lucide-react';
+import useGetCart from '@/app/hooks/cart/useGetCart';
+import { Product } from '@/app/types/product/productype';
+
+export interface CartItem {
   id: string;
-  name: string;
-  image: string;
-  price: number;
-  discription: string;
-  color: string;
-  size: string;
+  userId: string;
+  productId: string;
   quantity: number;
-  stockLeft?: number;
+  createdAt: string;
+  updatedAt: string;
+  product: Product;
 }
 
-const cartItems: CartItem[] = [
-  {
-    id: '1',
-    name: 'Nike Universe',
-    image: '/nike-logo.png',
-    price: 5495,
-    discription: "Women's High-Waisted 7/8 Leggings with No Front",
-    color: 'Black',
-    size: 'XS',
-    quantity: 1,
-    stockLeft: 2,
-  },
-];
+interface AlldeatilsProps {
+  getcarts: CartItem[];
+}
 
-const Cart = () => {
-  if (cartItems.length === 0) {
+const Carts = ({ getcarts }: AlldeatilsProps) => {
+  if (getcarts.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-6 mt-6 text-center">
         <h1 className="font-semibold text-xl">BAG</h1>
@@ -41,59 +31,62 @@ const Cart = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6 mt-6">
-      <h1 className="font-semibold text-xl mb-4">Bag</h1>
+    <div className="w-full">
+      <h1 className="font-semibold text-2xl mb-6">Bag</h1>
 
-      <div className="flex flex-col divide-y divide-gray-200">
-        {cartItems.map((item) => (
-          <div key={item.id} className="py-6">
-            <div className="flex gap-4">
-              <div className="relative w-28 h-28 shrink-0 bg-gray-100">
+      <div className="space-y-4">
+        {getcarts.map((items) => (
+          <div
+            key={items.id}
+            className="rounded-3xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5"
+          >
+            <div className="flex flex-col gap-4 lg:flex-row">
+              <div className="relative w-full h-64 rounded-3xl bg-gray-100 lg:w-40 lg:h-40">
                 <Image
-                  src={item.image}
+                  src={items.product.thumbnail}
                   fill
-                  alt={item.name}
-                  className="object-cover"
+                  alt={items.product.title}
+                  className="rounded-3xl object-cover"
                 />
               </div>
 
-              <div className="flex-1 flex justify-between">
-                <div>
-                  <p className="font-semibold">{item.name}</p>
-                  <p className="text-gray-600 text-sm mt-1">{item.discription}</p>
-                  <p className="text-gray-600 text-sm">{item.color}</p>
-                  <p className="text-sm underline mt-1">Size {item.size}</p>
+              <div className="flex-1">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <p className="text-lg font-semibold text-gray-900">{items.product.title}</p>
+                    <p className="text-gray-500 text-sm mt-2">{items.product.description}</p>
+                    <p className="text-gray-500 text-sm mt-1">{items.product.colors}</p>
+                    <p className="text-sm underline mt-2">Size {items.product.sizes}</p>
+                  </div>
+
+                  <p className="text-lg font-semibold text-gray-900 whitespace-nowrap">
+                    ₹ {items.product.price.toLocaleString('en-IN')}
+                  </p>
                 </div>
-                <p className="font-semibold whitespace-nowrap ml-4">
-                  ₹ {item.price.toLocaleString('en-IN')}
-                </p>
+
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-3 rounded-full border border-gray-200 bg-gray-50 px-3 py-2">
+                    <button aria-label="Remove item" className="text-gray-600 hover:text-gray-900">
+                      <Trash2 size={16} />
+                    </button>
+                    <span className="text-sm font-medium w-6 text-center">{items.quantity}</span>
+                    <button
+                      aria-label="Increase quantity"
+                      className="text-gray-600 hover:text-gray-900"
+                    >
+                      <Plus size={16} />
+                    </button>
+                  </div>
+
+                  <button
+                    aria-label="Save to wishlist"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 text-gray-600 transition hover:bg-gray-100"
+                  >
+                    <Heart size={16} />
+                  </button>
+                </div>
               </div>
             </div>
-
-            <div className="flex items-center gap-4 mt-4 ">
-              <div className="flex items-center gap-3 border rounded-full px-3 py-1.5">
-                <button aria-label="Remove item">
-                  <Trash2 size={16} />
-                </button>
-                <span className="text-sm w-4 text-center">{item.quantity}</span>
-                <button aria-label="Increase quantity">
-                  <Plus size={16} />
-                </button>
-              </div>
-              <button
-                aria-label="Save to wishlist"
-                className="border rounded-full w-9 h-9 flex items-center justify-center"
-              >
-                <Heart size={16} />
-              </button>
-            </div>
-
-            {item.stockLeft && item.stockLeft <= 3 && (
-              <div className="flex items-center gap-2 mt-3  text-amber-600 text-sm">
-                <Clock size={14} />
-                <span>Only {item.stockLeft} left.</span>
-              </div>
-            )}
           </div>
         ))}
       </div>
@@ -101,4 +94,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default Carts;

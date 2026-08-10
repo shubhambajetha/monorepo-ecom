@@ -1,12 +1,12 @@
 import WishLisht from '@/app/components/wishlisht/WishLisht';
-import React from 'react'
+import { getWishlist } from '@/app/services/wishlistapi/wishlistApi.ts';
 
-const page = () => {
+export default async function Page() {
+  const wishlist = await getWishlist();
+
   return (
     <div>
-      <WishLisht/>
+      <WishLisht wishlist={wishlist.data ?? []} />
     </div>
-  )
+  );
 }
-
-export default page

@@ -1,5 +1,5 @@
 'use client';
-import { startTransition, useOptimistic, useState } from 'react';
+import { startTransition, useOptimistic } from 'react';
 import useCreateWishlist from '../hooks/wishlisht/useCreateWishlist';
 import { Heart } from 'lucide-react';
 
@@ -34,14 +34,12 @@ export default function WishLisht({
       setOptimisticWishlist(nextvalue);
     });
 
-    // check what user need
     try {
       if (optimisticWishlist) {
         await deleteWishlist(productId);
       } else {
         await createWishlist(productId);
       }
-  
 
       Swal.fire({
         icon: 'success',
