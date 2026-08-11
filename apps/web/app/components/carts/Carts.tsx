@@ -1,10 +1,10 @@
 'use client';
 
 import Image from 'next/image';
-
-import { Trash2, Plus, Heart, Clock } from 'lucide-react';
-import useGetCart from '@/app/hooks/cart/useGetCart';
+import { Trash2, Plus, Heart, Minus } from 'lucide-react';
 import { Product } from '@/app/types/product/productype';
+import { useEffect, useState } from 'react';
+import { deleteCartItem, updatecart } from '@/app/services/cartapi/cartapi';
 
 export interface CartItem {
   id: string;
@@ -21,7 +21,59 @@ interface AlldeatilsProps {
 }
 
 const Carts = ({ getcarts }: AlldeatilsProps) => {
-  if (getcarts.length === 0) {
+  const [cartItems, setCartItems] = useState(getcarts);
+  const [loadingProductId, setLoadingProductId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setCartItems(getcarts);
+  }, [getcarts]);
+
+  const updateQuantity = async (productId: string, quantity: number, nextQuantity: number) => {
+    if (nextQuantity < 1) return;
+
+    const previousItems = cartItems;
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.productId === productId ? { ...item, quantity: nextQuantity } : item
+      )
+    );
+    setLoadingProductId(productId);
+
+    try {
+      await updatecart({ productId, quantity: nextQuantity });
+    } catch (error) {
+      setCartItems(previousItems);
+      console.error('Failed to update cart quantity', error);
+    } finally {
+      setLoadingProductId(null);
+    }
+  };
+
+  const increaseQuantity = async (productId: string, quantity: number) => {
+    await updateQuantity(productId, quantity, quantity + 1);
+  };
+
+  const decreaseQuantity = async (productId: string, quantity: number) => {
+    if (quantity <= 1) return;
+    await updateQuantity(productId, quantity, quantity - 1);
+  };
+
+  const removeItem = async (productId: string) => {
+    const previousItems = cartItems;
+    setCartItems((prev) => prev.filter((item) => item.productId !== productId));
+    setLoadingProductId(productId);
+
+    try {
+      await deleteCartItem(productId);
+    } catch (error) {
+      setCartItems(previousItems);
+      console.error('Failed to remove cart item', error);
+    } finally {
+      setLoadingProductId(null);
+    }
+  };
+
+  if (cartItems.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-6 mt-6 text-center">
         <h1 className="font-semibold text-xl">BAG</h1>
@@ -35,7 +87,7 @@ const Carts = ({ getcarts }: AlldeatilsProps) => {
       <h1 className="font-semibold text-2xl mb-6">Bag</h1>
 
       <div className="space-y-4">
-        {getcarts.map((items) => (
+        {cartItems.map((items) => (
           <div
             key={items.id}
             className="rounded-3xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5"
@@ -66,13 +118,28 @@ const Carts = ({ getcarts }: AlldeatilsProps) => {
 
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-center gap-3 rounded-full border border-gray-200 bg-gray-50 px-3 py-2">
-                    <button aria-label="Remove item" className="text-gray-600 hover:text-gray-900">
+                    <button
+                      aria-label="Remove item"
+                      onClick={() => removeItem(items.productId)}
+                      disabled={loadingProductId === items.productId}
+                      className="text-gray-600 hover:text-gray-900 disabled:opacity-50"
+                    >
                       <Trash2 size={16} />
+                    </button>
+                    <button
+                      aria-label="Decrease quantity"
+                      onClick={() => decreaseQuantity(items.productId, items.quantity)}
+                      disabled={loadingProductId === items.productId || items.quantity <= 1}
+                      className="text-gray-600 hover:text-gray-900 disabled:opacity-40"
+                    >
+                      <Minus size={16} />
                     </button>
                     <span className="text-sm font-medium w-6 text-center">{items.quantity}</span>
                     <button
                       aria-label="Increase quantity"
-                      className="text-gray-600 hover:text-gray-900"
+                      onClick={() => increaseQuantity(items.productId, items.quantity)}
+                      disabled={loadingProductId === items.productId}
+                      className="text-gray-600 hover:text-gray-900 disabled:opacity-40"
                     >
                       <Plus size={16} />
                     </button>

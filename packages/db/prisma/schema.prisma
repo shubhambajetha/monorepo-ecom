@@ -13,17 +13,18 @@ enum Role {
 }
 
 model User {
-  id           String      @id @default(cuid())
+  id           String     @id @default(cuid())
   firstName    String
   lastName     String?
-  email        String      @unique
+  email        String     @unique
   password     String
   refreshToken String?
-  role         Role        @default(USER)
+  role         Role       @default(USER)
   cartItems    CartItem[]
   wishlists    Wishlist[]
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  orders       order[]
 }
 
 model Category {
@@ -62,12 +63,12 @@ model Collection {
 }
 
 model Product {
-  id            String      @id @default(cuid())
+  id            String     @id @default(cuid())
   title         String
-  slug          String      @unique
+  slug          String     @unique
   description   String
   brand         String
-  sku           String      @unique
+  sku           String     @unique
   price         Float
   discountPrice Float?
   stock         Int
@@ -75,40 +76,52 @@ model Product {
   images        String[]
   sizes         String[]
   colors        String[]
-  rating        Float       @default(0)
-  isFeatured    Boolean     @default(false)
-  isActive      Boolean     @default(true)
-  isSpotlight   Boolean     @default(true)
+  rating        Float      @default(0)
+  isFeatured    Boolean    @default(false)
+  isActive      Boolean    @default(true)
+  isSpotlight   Boolean    @default(true)
   collectionId  String
-  collection    Collection  @relation(fields: [collectionId], references: [id])
+  collection    Collection @relation(fields: [collectionId], references: [id])
   cartItems     CartItem[]
   wishlists     Wishlist[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  orders        order[]
 }
 
 model CartItem {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   userId    String
-  user      User      @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   productId String
-  product   Product   @relation(fields: [productId], references: [id])
-  @@unique([userId,productId])
-  quantity  Int       @default(1)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId])
 }
 
 model Wishlist {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   userId    String
-  user      User      @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   productId String
-  product   Product   @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@unique([userId, productId])
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
 }
 
+model order {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-
+  @@unique([userId, productId])
+}

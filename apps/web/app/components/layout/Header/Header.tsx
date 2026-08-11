@@ -234,7 +234,7 @@ export default function Header() {
                   <HeartIcon className="h-6 w-6" />
                 </Link>
                 <Link
-                  href="/productcart"
+                  href="/cart"
                   aria-label="Shopping bag"
                   className="rounded-full p-1 transition hover:bg-gray-100"
                 >
