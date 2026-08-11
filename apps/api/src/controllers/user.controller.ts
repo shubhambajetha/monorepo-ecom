@@ -50,7 +50,7 @@ const getRefreshTokenSecret = (): string => {
 const getRefreshTokenCookieOptions = () => ({
   httpOnly: true,
   secure: process.env.NODE_ENV === 'production',
-  sameSite: 'none' as const,
+  sameSite: process.env.NODE_ENV === 'production' ? ('none' as const) : ('lax' as const),
   path: '/',
   maxAge: REFRESH_TOKEN_MAX_AGE,
 });
