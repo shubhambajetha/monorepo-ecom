@@ -28,8 +28,9 @@ router.get('/get', getCart);
 // Get cart items count
 router.get('/count', countItems);
 
-// update car items count
-router.patch('/update',updateCart)
+// update cart items count
+router.patch('/update/:productId', updateCart);
+router.patch('/update', updateCart);
 
 // Remove single cart item
 router.delete('/delete/:productId', removeSingle);

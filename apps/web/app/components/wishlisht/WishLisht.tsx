@@ -5,19 +5,31 @@ import Image from 'next/image';
 import { X } from 'lucide-react';
 import { WishlistItem } from '@/app/services/wishlistapi/wishlistApi.ts';
 
+import useGetWishlist from '@/app/hooks/wishlisht/useGetWishlist';
+import useDeleteWishlist from '@/app/hooks/wishlisht/useDeleteWishlist';
+import useMoveToCart from '@/app/hooks/wishlisht/useMoveToCart';
+
 interface WishLishtProps {
   wishlist: WishlistItem[];
 }
 
 const WishLisht = ({ wishlist }: WishLishtProps) => {
-  const [wishlishts, setWishlists] = useState<WishlistItem[]>(wishlist);
+  const { data: wishlistResponse } = useGetWishlist({
+    success: true,
+    message: '',
+    data: wishlist,
+  });
+  const deleteWishlistMutation = useDeleteWishlist();
+  const movetocartMutation = useMoveToCart();
 
-  const handleRemove = (id: string) => {
-    setWishlists((prev) => prev.filter((item) => item.id !== id));
+  const wishlishts = wishlistResponse?.data ?? wishlist;
+
+  const handleRemove = (productId: string) => {
+    deleteWishlistMutation.mutate(productId);
   };
 
-  const handleAddToCart = (item: WishlistItem) => {
-    console.log('Add to cart:', item);
+  const handleAddToCart = (productId: string) => {
+    movetocartMutation.mutate(productId);
   };
 
   return (
@@ -39,7 +51,7 @@ const WishLisht = ({ wishlist }: WishLishtProps) => {
               <div key={item.id} className="flex flex-col">
                 <div className="relative bg-gray-100 aspect-square overflow-hidden">
                   <button
-                    onClick={() => handleRemove(item.id)}
+                    onClick={() => handleRemove(item.productId)}
                     aria-label={`Remove ${item.product.title} from wishlist`}
                     className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors"
                   >
@@ -77,7 +89,7 @@ const WishLisht = ({ wishlist }: WishLishtProps) => {
                 </div>
 
                 <button
-                  onClick={() => handleAddToCart(item)}
+                  onClick={() => handleAddToCart(item.productId)}
                   className="mt-3 w-full rounded-full border border-gray-300 py-2.5 text-sm font-medium hover:bg-gray-50 transition-colors"
                 >
                   Add to cart

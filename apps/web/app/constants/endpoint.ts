@@ -48,12 +48,13 @@ export const endpoints = {
     countcart: '/cart/count',
     deletecart: (productId: string) => `/cart/delete/${productId}`,
     clearcart: '/cart/clear',
-    updatecart: (productId: string) => `/cart/update${productId}`,
+    updatecart: (productId: string) => `/cart/update/${productId}`,
   },
 
   wishlists: {
     create: (productId: string) => `/wishlist/create/${productId}`,
     get: '/wishlist/get',
+    movetocart: (productId: string) => `/wishlist/movetocart/${productId}`,
     delete: (productId: string) => `/wishlist/delete/${productId}`,
   },
 } as const;

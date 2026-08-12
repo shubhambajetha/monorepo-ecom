@@ -1,6 +1,8 @@
 import { ApiResponse } from '@/app/utils/api';
 import { apiClient, normalizeApiError } from '../apiClient';
 import { endpoints } from '@/app/constants/endpoint';
+import WishLisht from '@/app/common/WishLisht';
+import { CartItem } from '../cartapi/cartapi';
 
 export interface WishlistPayload {
   productId: string;
@@ -57,13 +59,24 @@ export const createWishlist = async (
 };
 
 /**
+ * move to cart
+ */
+export const moveToCart = async (productId: string): Promise<ApiResponse<CartItem>> => {
+  try {
+    const response = await apiClient.post<ApiResponse<CartItem>>(
+      endpoints.wishlists.movetocart(productId)
+    );
+    return response.data;
+  } catch (error) {
+    throw normalizeApiError(error);
+  }
+};
+/**
  * Get Wishlist
  */
 export const getWishlist = async (): Promise<ApiResponse<WishlistItem[]>> => {
   try {
-    const response = await apiClient.get<ApiResponse<WishlistItem[]>>(
-      endpoints.wishlists.get
-    );
+    const response = await apiClient.get<ApiResponse<WishlistItem[]>>(endpoints.wishlists.get);
 
     return response.data;
   } catch (error) {
@@ -74,9 +87,7 @@ export const getWishlist = async (): Promise<ApiResponse<WishlistItem[]>> => {
 /**
  * Remove Product from Wishlist
  */
-export const deleteWishlist = async (
-  productId: string
-): Promise<ApiResponse<null>> => {
+export const deleteWishlist = async (productId: string): Promise<ApiResponse<null>> => {
   try {
     const response = await apiClient.delete<ApiResponse<null>>(
       endpoints.wishlists.delete(productId)

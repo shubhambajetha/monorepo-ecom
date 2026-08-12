@@ -466,6 +466,13 @@ api.interceptors.response.use(
 );
 
 async function handleUnauthorized(originalRequest: RequestConfig): Promise<any> {
+  // Prevent token refresh on server-side (SSR) where browser cookies are unavailable
+  if (typeof window === 'undefined') {
+    const authErr = new Error('Unauthorized') as ApiError;
+    authErr.status = 401;
+    return Promise.reject(authErr);
+  }
+
   // Prevent retry if original request was the refresh endpoint itself
   if (originalRequest.url?.includes(REFRESH_TOKEN_ENDPOINT)) {
     console.warn('[API] Refresh token endpoint returned unauthorized');

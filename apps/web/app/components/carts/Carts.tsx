@@ -1,10 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import { Trash2, Plus, Heart, Minus } from 'lucide-react';
+import { Trash2, Plus, Heart, Minus, Loader2 } from 'lucide-react';
 import { Product } from '@/app/types/product/productype';
-import { useEffect, useState } from 'react';
-import { deleteCartItem, updatecart } from '@/app/services/cartapi/cartapi';
+import { useState } from 'react';
+import useDeleteCart from '@/app/hooks/cart/useDeleteCart';
+import useUpdateCart from '@/app/hooks/cart/useUpdateCart';
 
 export interface CartItem {
   id: string;
@@ -16,33 +17,22 @@ export interface CartItem {
   product: Product;
 }
 
-interface AlldeatilsProps {
-  getcarts: CartItem[];
+interface CartsProps {
+  cartItems: CartItem[];
+  isLoading?: boolean;
 }
 
-const Carts = ({ getcarts }: AlldeatilsProps) => {
-  const [cartItems, setCartItems] = useState(getcarts);
+const Carts = ({ cartItems, isLoading }: CartsProps) => {
+  const { mutateAsync: updateCartMutation } = useUpdateCart();
+  const { mutateAsync: deleteCartMutation } = useDeleteCart();
   const [loadingProductId, setLoadingProductId] = useState<string | null>(null);
-
-  useEffect(() => {
-    setCartItems(getcarts);
-  }, [getcarts]);
 
   const updateQuantity = async (productId: string, quantity: number, nextQuantity: number) => {
     if (nextQuantity < 1) return;
-
-    const previousItems = cartItems;
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.productId === productId ? { ...item, quantity: nextQuantity } : item
-      )
-    );
     setLoadingProductId(productId);
-
     try {
-      await updatecart({ productId, quantity: nextQuantity });
+      await updateCartMutation({ productId, quantity: nextQuantity });
     } catch (error) {
-      setCartItems(previousItems);
       console.error('Failed to update cart quantity', error);
     } finally {
       setLoadingProductId(null);
@@ -59,21 +49,26 @@ const Carts = ({ getcarts }: AlldeatilsProps) => {
   };
 
   const removeItem = async (productId: string) => {
-    const previousItems = cartItems;
-    setCartItems((prev) => prev.filter((item) => item.productId !== productId));
     setLoadingProductId(productId);
-
     try {
-      await deleteCartItem(productId);
+      await deleteCartMutation(productId);
     } catch (error) {
-      setCartItems(previousItems);
       console.error('Failed to remove cart item', error);
     } finally {
       setLoadingProductId(null);
     }
   };
 
-  if (cartItems.length === 0) {
+  if (isLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-12 text-center flex flex-col items-center justify-center gap-3">
+        <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
+        <p className="text-gray-500 text-sm">Loading your bag...</p>
+      </div>
+    );
+  }
+
+  if (!cartItems || cartItems.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-6 mt-6 text-center">
         <h1 className="font-semibold text-xl">BAG</h1>
@@ -95,9 +90,9 @@ const Carts = ({ getcarts }: AlldeatilsProps) => {
             <div className="flex flex-col gap-4 lg:flex-row">
               <div className="relative w-full h-64 rounded-3xl bg-gray-100 lg:w-40 lg:h-40">
                 <Image
-                  src={items.product.thumbnail}
+                  src={items.product?.thumbnail || '/placeholder.png'}
                   fill
-                  alt={items.product.title}
+                  alt={items.product?.title || 'Product thumbnail'}
                   className="rounded-3xl object-cover"
                 />
               </div>
@@ -105,14 +100,16 @@ const Carts = ({ getcarts }: AlldeatilsProps) => {
               <div className="flex-1">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <p className="text-lg font-semibold text-gray-900">{items.product.title}</p>
-                    <p className="text-gray-500 text-sm mt-2">{items.product.description}</p>
-                    <p className="text-gray-500 text-sm mt-1">{items.product.colors}</p>
-                    <p className="text-sm underline mt-2">Size {items.product.sizes}</p>
+                    <p className="text-lg font-semibold text-gray-900">{items.product?.title}</p>
+                    <p className="text-gray-500 text-sm mt-2">{items.product?.description}</p>
+                    <p className="text-gray-500 text-sm mt-1">{items.product?.colors}</p>
+                    {items.product?.sizes && (
+                      <p className="text-sm underline mt-2">Size {items.product.sizes}</p>
+                    )}
                   </div>
 
                   <p className="text-lg font-semibold text-gray-900 whitespace-nowrap">
-                    ₹ {items.product.price.toLocaleString('en-IN')}
+                    ₹ {((items.product?.discountPrice ?? items.product?.price ?? 0) * items.quantity).toLocaleString('en-IN')}
                   </p>
                 </div>
 
