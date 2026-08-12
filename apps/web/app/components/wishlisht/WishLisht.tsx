@@ -7,6 +7,7 @@ import { WishlistItem } from '@/app/services/wishlistapi/wishlistApi.ts';
 
 import useGetWishlist from '@/app/hooks/wishlisht/useGetWishlist';
 import useDeleteWishlist from '@/app/hooks/wishlisht/useDeleteWishlist';
+import useMoveToCart from '@/app/hooks/wishlisht/useMoveToCart';
 
 interface WishLishtProps {
   wishlist: WishlistItem[];
@@ -19,6 +20,7 @@ const WishLisht = ({ wishlist }: WishLishtProps) => {
     data: wishlist,
   });
   const deleteWishlistMutation = useDeleteWishlist();
+  const movetocartMutation = useMoveToCart();
 
   const wishlishts = wishlistResponse?.data ?? wishlist;
 
@@ -26,8 +28,8 @@ const WishLisht = ({ wishlist }: WishLishtProps) => {
     deleteWishlistMutation.mutate(productId);
   };
 
-  const handleAddToCart = (item: WishlistItem) => {
-    console.log('Add to cart:', item);
+  const handleAddToCart = (productId: string) => {
+    movetocartMutation.mutate(productId);
   };
 
   return (
@@ -87,7 +89,7 @@ const WishLisht = ({ wishlist }: WishLishtProps) => {
                 </div>
 
                 <button
-                  onClick={() => handleAddToCart(item)}
+                  onClick={() => handleAddToCart(item.productId)}
                   className="mt-3 w-full rounded-full border border-gray-300 py-2.5 text-sm font-medium hover:bg-gray-50 transition-colors"
                 >
                   Add to cart

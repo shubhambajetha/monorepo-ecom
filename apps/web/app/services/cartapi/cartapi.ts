@@ -46,7 +46,8 @@ export const createCart = async (payload: CartPayload): Promise<ApiResponse<Cart
 export const getCart = async (): Promise<ApiResponse<CartItem[]>> => {
   try {
     const response = await apiClient.get<ApiResponse<CartItem[]>>(endpoints.carts.getcart);
-
+    console.log("Hello");
+    console.log(response);
     return response.data;
   } catch (error) {
     throw normalizeApiError(error);

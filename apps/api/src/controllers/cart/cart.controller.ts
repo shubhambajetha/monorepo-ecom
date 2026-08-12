@@ -115,7 +115,12 @@ export const updateCart = async (req: Request, res: Response, next: NextFunction
       });
     }
 
-    const productId = typeof req.params.productId === 'string' ? req.params.productId.trim() : '';
+    const productId =
+      typeof req.params.productId === 'string' && req.params.productId.trim()
+        ? req.params.productId.trim()
+        : typeof req.body?.productId === 'string'
+        ? req.body.productId.trim()
+        : '';
 
     const quantity = Number(req.body.quantity);
 

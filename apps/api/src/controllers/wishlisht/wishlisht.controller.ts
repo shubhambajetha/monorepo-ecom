@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../config/prisma';
+import { success } from 'zod';
 
 export const createWishlist = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -100,7 +101,7 @@ export const getWishlist = async (req: Request, res: Response, next: NextFunctio
             stock: true,
           },
         },
-      }, 
+      },
       orderBy: {
         createdAt: 'desc',
       },
@@ -108,9 +109,98 @@ export const getWishlist = async (req: Request, res: Response, next: NextFunctio
 
     return res.status(200).json({
       success: true,
-      status: true,
       message: 'Wishlist fetched successfully',
       data: wishlist,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const movetocart = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({
+        status: false,
+        message: 'user unauthenticated',
+      });
+    }
+    // check the product id
+    const productId = typeof req.params.productId === 'string' ? req.params.productId.trim() : '';
+    if (!productId) {
+      return res.status(400).json({
+        success: false,
+        status: false,
+        message: 'product id not found',
+      });
+    }
+    // check the product exist in the wishlist
+    const existingItem = await prisma.wishlist.findUnique({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    });
+    if (!existingItem) {
+      return res.status(400).json({
+        success: false,
+        status: false,
+        message: 'item not found in existing wishlisht',
+      });
+    }
+    //  check the product already in the cart
+    const existingCartItem = await prisma.cartItem.findUnique({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    });
+    let cartItem;
+    if (existingCartItem) {
+      // already in cart increase the card quantity
+      cartItem = await prisma.cartItem.update({
+        where: {
+          userId_productId: {
+            userId,
+            productId,
+          },
+        },
+        data: {
+          quantity: {
+            increment: 1,
+          },
+        },
+      });
+    } else {
+      // not in cart create cart item
+      cartItem = await prisma.cartItem.create({
+        data: {
+          userId,
+          productId,
+          quantity: 1,
+        },
+      });
+    }
+    // remove product from wishlisht
+    await prisma.wishlist.delete({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    });
+
+    return res.status(200).json({
+      status: true,
+      success: true,
+      message: 'product moved to card sucessfully',
+      data:cartItem
     });
   } catch (error) {
     next(error);
@@ -174,4 +264,3 @@ export const deleteWishlist = async (req: Request, res: Response, next: NextFunc
     next(error);
   }
 };
-

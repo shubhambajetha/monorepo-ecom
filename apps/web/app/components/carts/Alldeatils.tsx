@@ -1,32 +1,39 @@
+'use client';
+
 import React from 'react';
 import Carts from './Carts';
 import Summary from './Summary';
-
-import { Product } from '@/app/types/product/productype';
-
-export interface CartItem {
-  id: string;
-  userId: string;
-  productId: string;
-  quantity: number;
-  createdAt: string;
-  updatedAt: string;
-  product: Product;
-}
+import useGetCart from '@/app/hooks/cart/useGetCart';
+import { CartItem } from '@/app/services/cartapi/cartapi';
 
 interface AlldeatilsProps {
-  getcarts: CartItem[];
+  getcarts?: CartItem[];
 }
 
-const Alldeatils = ({ getcarts }: AlldeatilsProps) => {
-  return (
-    <div>
-      <Carts getcarts={getcarts} />
+const Alldeatils = ({ getcarts = [] }: AlldeatilsProps) => {
+  const { data: cartResponse, isLoading } = useGetCart();
+  const cartItems = cartResponse?.data ?? getcarts;
 
-      <div className="rounded-3xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
-        <Summary />
+  return (
+    <main className="mx-auto w-full max-w-[1200px] px-4 py-8 sm:px-6 lg:px-8">
+      {/* Page title */}
+      <h1 className="mb-8 text-2xl font-semibold tracking-tight">Bag</h1>
+
+      {/* Main cart layout */}
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
+        {/* Cart products */}
+        <section className="min-w-0">
+          <Carts cartItems={cartItems} isLoading={isLoading} />
+        </section>
+
+        {/* Summary */}
+        <aside className="lg:sticky lg:top-6">
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+            <Summary cartItems={cartItems} />
+          </div>
+        </aside>
       </div>
-    </div>
+    </main>
   );
 };
 
