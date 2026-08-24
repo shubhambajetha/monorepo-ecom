@@ -1,38 +1,42 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # Dependencies
-node_modules
-.pnp
+node_modules/
+.pnp/
 .pnp.js
+.yarn/
 
-# Local env files
+# Environment files and secrets
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
 
-# Testing
-coverage
-
-# Turbo
-.turbo
-
-# Vercel
-.vercel
-
-# Build Outputs
+# Build and cache output
 .next/
 out/
-build
-dist
+build/
+dist/
+coverage/
+.turbo/
+*.tsbuildinfo
+apps/*/next-env.d.ts
+packages/db/generated/
 
+# Hosting and local tooling
+.vercel/
+.pnpm-store/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
 
-# Debug
+# Runtime uploads and logs
+apps/api/uploads/
+*.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
+pnpm-debug.log*
 
-# Misc
+# OS files
 .DS_Store
-*.pem
+Thumbs.db

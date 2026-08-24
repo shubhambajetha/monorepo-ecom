@@ -1,159 +1,57 @@
-# TURBOREPO STARTER
+# My E-commerce
 
-THIS TURBOREPO STARTER IS MAINTAINED BY THE TURBOREPO CORE TEAM.
+PNPM/Turborepo monorepo for the storefront, API, and shared packages.
 
-## USING THIS EXAMPLE
+## Structure
 
-RUN THE FOLLOWING COMMAND:
-
-```SH
-NPX CREATE-TURBO@LATEST
+```
+apps/
+  api/       Express API (port 4000)
+  web/       Next.js storefront (port 3000)
+  docs/      Documentation site
+packages/
+  db/        Prisma schema, migrations, and database client
+  shared/    Shared application code
+  ui/        Shared UI components
+  eslint-config/ and typescript-config/  Shared tooling configuration
 ```
 
-## WHAT'S INSIDE?
+There is one repository-wide `.gitignore`. Generated output, dependencies, local uploads, and all real environment files are ignored from the root, so individual packages do not need their own `.gitignore` files.
 
-THIS TURBOREPO INCLUDES THE FOLLOWING PACKAGES/APPS:
+## First-time setup (including a new PC)
 
-### APPS AND PACKAGES
+1. Install Node.js 18+ and pnpm 9+.
+2. Run `pnpm install` from the repository root.
+3. Create the local environment files from their templates:
 
-- `DOCS`: A [NEXT.JS](https://nextjs.org/) APP
-- `WEB`: ANOTHER [NEXT.JS](https://nextjs.org/) APP
-- `@REPO/UI`: A STUB REACT COMPONENT LIBRARY SHARED BY BOTH `WEB` AND `DOCS` APPLICATIONS
-- `@REPO/ESLINT-CONFIG`: `ESLINT` CONFIGURATIONS (INCLUDES `ESLINT-CONFIG-NEXT` AND `ESLINT-CONFIG-PRETTIER`)
-- `@REPO/TYPESCRIPT-CONFIG`: `TSCONFIG.JSON`S USED THROUGHOUT THE MONOREPO
+   ```powershell
+   Copy-Item .env.example .env
+   Copy-Item apps/api/.env.example apps/api/.env
+   Copy-Item apps/web/.env.local.example apps/web/.env.local
+   Copy-Item packages/db/.env.example packages/db/.env
+   ```
 
-EACH PACKAGE/APP IS 100% [TYPESCRIPT](https://www.typescriptlang.org/).
+4. Replace the placeholder secrets and database connection strings in those files.
+5. Start development with `pnpm dev`.
 
-### UTILITIES
+## Environment files
 
-THIS TURBOREPO HAS SOME ADDITIONAL TOOLS ALREADY SETUP FOR YOU:
+| File | Used by |
+| --- | --- |
+| `.env` | Shared API secrets. Loaded by `apps/api`. |
+| `apps/api/.env` | API port, CORS settings, and API database connection. Overrides root values. |
+| `apps/web/.env.local` | Browser-safe Next.js variables such as `NEXT_PUBLIC_API_BASE`. |
+| `packages/db/.env` | Prisma commands and database seeding. Keep its `DATABASE_URL` aligned with the API one. |
 
-- [TYPESCRIPT](https://www.typescriptlang.org/) FOR STATIC TYPE CHECKING
-- [ESLINT](https://eslint.org/) FOR CODE LINTING
-- [PRETTIER](https://prettier.io) FOR CODE FORMATTING
+Commit only the `*.example` templates—never the real `.env` files.
 
-### BUILD
+## Useful commands
 
-TO BUILD ALL APPS AND PACKAGES, RUN THE FOLLOWING COMMAND:
-
-WITH [GLOBAL `TURBO`](https://turborepo.dev/docs/getting-started/installation#global-installation) INSTALLED (RECOMMENDED):
-
-```SH
-CD MY-TURBOREPO
-TURBO BUILD
+```bash
+pnpm dev
+pnpm build
+pnpm lint
+pnpm check-types
+pnpm --filter @ecomerse/db migrate:dev
+pnpm --filter @ecomerse/db db:seed
 ```
-
-WITHOUT GLOBAL `TURBO`, USE YOUR PACKAGE MANAGER:
-
-```SH
-CD MY-TURBOREPO
-NPX TURBO BUILD
-YARN DLX TURBO BUILD
-PNPM EXEC TURBO BUILD
-```
-
-YOU CAN BUILD A SPECIFIC PACKAGE BY USING A [FILTER](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-WITH [GLOBAL `TURBO`](https://turborepo.dev/docs/getting-started/installation#global-installation) INSTALLED:
-
-```SH
-TURBO BUILD --FILTER=DOCS
-```
-
-WITHOUT GLOBAL `TURBO`:
-
-```SH
-NPX TURBO BUILD --FILTER=DOCS
-YARN EXEC TURBO BUILD --FILTER=DOCS
-PNPM EXEC TURBO BUILD --FILTER=DOCS
-```
-
-### DEVELOP
-
-TO DEVELOP ALL APPS AND PACKAGES, RUN THE FOLLOWING COMMAND:
-
-WITH [GLOBAL `TURBO`](https://turborepo.dev/docs/getting-started/installation#global-installation) INSTALLED (RECOMMENDED):
-
-```SH
-CD MY-TURBOREPO
-TURBO DEV
-```
-
-WITHOUT GLOBAL `TURBO`, USE YOUR PACKAGE MANAGER:
-
-```SH
-CD MY-TURBOREPO
-NPX TURBO DEV
-YARN EXEC TURBO DEV
-PNPM EXEC TURBO DEV
-```
-
-YOU CAN DEVELOP A SPECIFIC PACKAGE BY USING A [FILTER](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-WITH [GLOBAL `TURBO`](https://turborepo.dev/docs/getting-started/installation#global-installation) INSTALLED:
-
-```SH
-TURBO DEV --FILTER=WEB
-```
-
-WITHOUT GLOBAL `TURBO`:
-
-```SH
-NPX TURBO DEV --FILTER=WEB
-YARN EXEC TURBO DEV --FILTER=WEB
-PNPM EXEC TURBO DEV --FILTER=WEB
-```
-
-### REMOTE CACHING
-
-> [!TIP]
-> VERCEL REMOTE CACHE IS FREE FOR ALL PLANS. GET STARTED TODAY AT [VERCEL.COM](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-TURBOREPO CAN USE A TECHNIQUE KNOWN AS [REMOTE CACHING](https://turborepo.dev/docs/core-concepts/remote-caching) TO SHARE CACHE ARTIFACTS ACROSS MACHINES, ENABLING YOU TO SHARE BUILD CACHES WITH YOUR TEAM AND CI/CD PIPELINES.
-
-BY DEFAULT, TURBOREPO WILL CACHE LOCALLY. TO ENABLE REMOTE CACHING YOU WILL NEED AN ACCOUNT WITH VERCEL. IF YOU DON'T HAVE AN ACCOUNT YOU CAN [CREATE ONE](https://vercel.com/signup?utm_source=turborepo-examples), THEN ENTER THE FOLLOWING COMMANDS:
-
-WITH [GLOBAL `TURBO`](https://turborepo.dev/docs/getting-started/installation#global-installation) INSTALLED (RECOMMENDED):
-
-```SH
-CD MY-TURBOREPO
-TURBO LOGIN
-```
-
-WITHOUT GLOBAL `TURBO`, USE YOUR PACKAGE MANAGER:
-
-```SH
-CD MY-TURBOREPO
-NPX TURBO LOGIN
-YARN EXEC TURBO LOGIN
-PNPM EXEC TURBO LOGIN
-```
-
-THIS WILL AUTHENTICATE THE TURBOREPO CLI WITH YOUR [VERCEL ACCOUNT](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-NEXT, YOU CAN LINK YOUR TURBOREPO TO YOUR REMOTE CACHE BY RUNNING THE FOLLOWING COMMAND FROM THE ROOT OF YOUR TURBOREPO:
-
-WITH [GLOBAL `TURBO`](https://turborepo.dev/docs/getting-started/installation#global-installation) INSTALLED:
-
-```SH
-TURBO LINK
-```
-
-WITHOUT GLOBAL `TURBO`:
-
-```SH
-NPX TURBO LINK
-YARN EXEC TURBO LINK
-PNPM EXEC TURBO LINK
-```
-
-## USEFUL LINKS
-
-LEARN MORE ABOUT THE POWER OF TURBOREPO:
-
-- [TASKS](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [CACHING](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [REMOTE CACHING](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [FILTERING](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [CONFIGURATION OPTIONS](https://turborepo.dev/docs/reference/configuration)
-- [CLI USAGE](https://turborepo.dev/docs/reference/command-line-reference)
