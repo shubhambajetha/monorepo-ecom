@@ -9,10 +9,10 @@ export const endpoints = {
   },
   category: {
     createcategory: '/admincate/categories',
-    getcategory: (id: number) => `/usercate/categories/${id}`,
+    getcategory: (id: string | number) => `/usercate/categories/${id}`,
     getallcategory: '/usercate/categories/',
-    updatecategory: (id: number) => `/admincate/categories/${id}`,
-    deletecategory: (id: number) => `/admincate/categories/${id}`,
+    updatecategory: (id: string | number) => `/admincate/categories/${id}`,
+    deletecategory: (id: string | number) => `/admincate/categories/${id}`,
   },
   subcategory: {
     createsubcategory: '/admincate/subcategories',

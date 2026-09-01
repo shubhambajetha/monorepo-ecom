@@ -1,13 +1,12 @@
 import AddCategory from '@/app/components/admin/category/AddCategory';
-import { createCategory } from '@/app/services/categoryapi/category';
 import React from 'react';
 
-const page = () => {
+const Page = () => {
   return (
     <div>
-      <AddCategory createcategory={createCategory}/>
+      <AddCategory />
     </div>
   );
 };
 
-export default page;
+export default Page;
