@@ -1,12 +1,19 @@
 import Allcategory from '@/app/components/admin/category/Allcategory';
-import React from 'react'
+import { getAllCategories } from '@/app/services/categoryapi/category';
 
-const page = () => {
+export const dynamic = 'force-dynamic';
+
+export default async function Page() {
+  let response;
+  try {
+    response = await getAllCategories();
+  } catch (error) {
+    console.error('Failed to fetch categories:', error);
+  }
+
   return (
     <div>
-        <Allcategory/>
+      <Allcategory initialData={response} />
     </div>
-  )
+  );
 }
-
-export default page

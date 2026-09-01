@@ -13,10 +13,13 @@
   },
   "scripts": {
     "prisma": "pnpm exec prisma",
+    "generate": "pnpm exec prisma generate",
     "migrate:dev": "pnpm exec prisma migrate dev",
     "db:seed": "pnpm exec prisma db seed",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ./node_modules/typescript/lib/tsc.js"
+    "check-types": "node ./node_modules/typescript/lib/tsc.js --noEmit",
+    "build": "pnpm exec prisma generate && node ./node_modules/typescript/lib/tsc.js",
+    "dev": "node ./node_modules/typescript/lib/tsc.js -w"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

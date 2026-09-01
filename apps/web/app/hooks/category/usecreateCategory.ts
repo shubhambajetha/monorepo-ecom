@@ -1,12 +1,13 @@
+'use client';
 import { createCategory } from '@/app/services/categoryapi/category';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function useCreateCategory() {
-  const querclinet = useQueryClient();
+ const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createCategory,
     onSuccess: () => {
-      querclinet.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ['categories'],
       });
     },

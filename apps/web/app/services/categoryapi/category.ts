@@ -28,7 +28,7 @@ export const getAllCategories = async (): Promise<ApiResponse<Category[]>> => {
   }
 };
 
-export const getCategoryById = async (id: number): Promise<ApiResponse<Category>> => {
+export const getCategoryById = async (id: string | number): Promise<ApiResponse<Category>> => {
   try {
     const response = await apiClient.get<ApiResponse<Category>>(endpoints.category.getcategory(id));
     return response?.data;
@@ -38,7 +38,7 @@ export const getCategoryById = async (id: number): Promise<ApiResponse<Category>
 };
 
 export const updateCategory = async (
-  id: number,
+  id: string | number,
   payload: CategoryPayload
 ): Promise<ApiResponse<Category>> => {
   try {
@@ -53,7 +53,7 @@ export const updateCategory = async (
   }
 };
 
-export const deletecategory = async (id: number): Promise<ApiResponse<null>> => {
+export const deletecategory = async (id: string | number): Promise<ApiResponse<null>> => {
   try {
     const response = await apiClient.delete<ApiResponse<null>>(
       endpoints.category.deletecategory(id)

@@ -1,11 +1,19 @@
 'use client';
 
-import React, { use, useState } from 'react';
+import useCreateCategory from '@/app/hooks/category/usecreateCategory';
+import React, { useState } from 'react';
 
 const AddCategory = () => {
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
   const [image, setImage] = useState<File | null>(null);
+
+  const {
+    mutate,
+    isPending,
+    isError,
+    error,
+  } = useCreateCategory();
 
   const handleCategoryName = (value: string) => {
     setName(value);
@@ -19,21 +27,55 @@ const AddCategory = () => {
     setSlug(generatedSlug);
   };
 
+  const handleSubmit = () => {
+    if (!name.trim()) {
+      alert('Category name is required');
+      return;
+    }
+
+    mutate(
+      {
+        name,
+        slug,
+        image,
+      },
+      {
+        onSuccess: () => {
+          console.log('Category created successfully');
+
+          setName('');
+          setSlug('');
+          setImage(null);
+        },
+      }
+    );
+  };
+
   return (
     <div className="max-w-[1450px] mx-auto px-4 py-4">
-      {/* Heading */}
-      <div className="mb-6 ">
-        <h1 className="text-xl font-semibold text-gray-800">Add Category</h1>
 
-        <p className="text-sm text-gray-500 mt-1">Create a new product category</p>
+      {/* Heading */}
+      <div className="mb-6">
+        <h1 className="text-xl font-semibold text-gray-800">
+          Add Category
+        </h1>
+
+        <p className="text-sm text-gray-500 mt-1">
+          Create a new product category
+        </p>
       </div>
 
       {/* Card */}
       <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
           {/* Category Name */}
           <div className="flex flex-col gap-2">
-            <label htmlFor="category" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="category"
+              className="text-sm font-medium text-gray-700"
+            >
               Category Name
             </label>
 
@@ -41,7 +83,9 @@ const AddCategory = () => {
               type="text"
               id="category"
               value={name}
-              onChange={(e) => handleCategoryName(e.target.value)}
+              onChange={(e) =>
+                handleCategoryName(e.target.value)
+              }
               placeholder="Enter category name"
               className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-black/10 focus:border-black transition"
             />
@@ -49,7 +93,10 @@ const AddCategory = () => {
 
           {/* Slug */}
           <div className="flex flex-col gap-2">
-            <label htmlFor="slug" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="slug"
+              className="text-sm font-medium text-gray-700"
+            >
               Slug
             </label>
 
@@ -62,19 +109,27 @@ const AddCategory = () => {
               className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-black/10 focus:border-black transition"
             />
 
-            <p className="text-xs text-gray-400">URL: /category/{slug || 'category-slug'}</p>
+            <p className="text-xs text-gray-400">
+              URL: /category/{slug || 'category-slug'}
+            </p>
           </div>
 
           {/* Image */}
           <div className="flex flex-col gap-2 md:col-span-2">
-            <label htmlFor="image" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="image"
+              className="text-sm font-medium text-gray-700"
+            >
               Category Image
             </label>
 
             <input
               type="file"
               id="image"
-              onChange={(e) => setImage(e.target.files?.[0] || null)}
+              accept="image/*"
+              onChange={(e) =>
+                setImage(e.target.files?.[0] || null)
+              }
               className="block w-full text-sm text-gray-600
               file:mr-4 file:rounded-lg file:border-0
               file:bg-black file:px-4 file:py-2
@@ -83,12 +138,27 @@ const AddCategory = () => {
           </div>
         </div>
 
+        {/* Error */}
+        {isError && (
+          <p className="mt-4 text-sm text-red-500">
+            {error instanceof Error
+              ? error.message
+              : 'Failed to create category'}
+          </p>
+        )}
+
         {/* Button */}
         <div className="mt-8 flex justify-end">
-          <button className="rounded-xl bg-black px-6 py-3 text-sm font-medium text-white hover:bg-gray-800 transition">
-            Add Category
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={isPending}
+            className="rounded-xl bg-black px-6 py-3 text-sm font-medium text-white hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isPending ? 'Adding...' : 'Add Category'}
           </button>
         </div>
+
       </div>
     </div>
   );
