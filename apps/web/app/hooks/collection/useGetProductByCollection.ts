@@ -35,3 +35,4 @@ export default function useGetProductByCollections(
 
     enabled: !!category && !!collection,
   });
+}
