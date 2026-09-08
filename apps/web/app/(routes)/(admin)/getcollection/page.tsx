@@ -1,10 +1,16 @@
-import GetCollection from '@/app/components/admin/collection/GetCollection';
-import React from 'react'
+import GetCollection from "@/app/components/admin/collection/GetCollection";
+import { getAllCollections } from "@/app/services/collectionapi/collectionapi";
 
-const page = () => {
-  return (
-    <div><GetCollection/></div>
-  )
+export default async function page(){
+  let response;
+  try{
+    response = await getAllCollections();
+  }catch(error){
+     console.error('Failed to fetch collections:', error);
+  }
+return(
+  <>
+  <GetCollection intialData={response}/>
+  </>
+)
 }
-
-export default page

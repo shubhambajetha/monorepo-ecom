@@ -1,12 +1,18 @@
+import React, { Suspense } from 'react';
 import AddSubcategory from '@/app/components/admin/subcategory/AddSubcategory';
-import React from 'react';
 
-const page = () => {
+const Page = () => {
   return (
-    <div>
+    <Suspense
+      fallback={
+        <div className="max-w-[1450px] mx-auto px-4 py-8 text-center text-gray-500">
+          Loading subcategory form...
+        </div>
+      }
+    >
       <AddSubcategory />
-    </div>
+    </Suspense>
   );
 };
 
-export default page;
+export default Page;

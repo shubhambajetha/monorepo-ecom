@@ -1,10 +1,18 @@
+import React, { Suspense } from 'react';
 import AddProduct from '@/app/components/admin/products/AddProduct';
-import React from 'react'
 
-const page = () => {
+const Page = () => {
   return (
-    <div><AddProduct/></div>
-  )
-}
+    <Suspense
+      fallback={
+        <div className="max-w-5xl mx-auto px-4 py-12 text-center text-gray-500">
+          Loading product form...
+        </div>
+      }
+    >
+      <AddProduct />
+    </Suspense>
+  );
+};
 
-export default page
+export default Page;

@@ -49,11 +49,11 @@ const mainNavItems: NavItem[] = [
     children: [
       {
         label: 'All Category',
-        path: '/admin/allcategory',
+        path: '/allcategory',
       },
       {
         label: 'Add Category',
-        path: '/admin/create-category',
+        path: '/create-category',
       },
     ],
   },
@@ -64,11 +64,11 @@ const mainNavItems: NavItem[] = [
     children: [
       {
         label: 'sub category',
-        path: '/admin/subcategory',
+        path: '/subcategory',
       },
       {
         label: 'get all category',
-        path: '/admin/getallsub',
+        path: '/getallsub',
       },
     ],
   },
@@ -79,26 +79,26 @@ const mainNavItems: NavItem[] = [
     children: [
       {
         label: 'All collections',
-        path: '/admin/getcollection',
+        path: '/getcollection',
       },
       {
         label: 'Add Collection',
-        path: '/admin/collection',
+        path: '/collection',
       },
     ],
   },
   {
-    label: 'product',
-    icon: <HiOutlineUsers className={iconClass} />,
+    label: 'Product',
+    icon: <HiOutlineCube className={iconClass} />,
     hasChevron: true,
     children: [
       {
-        label: 'All Product',
-        path: '/admin/product',
+        label: 'All Products',
+        path: '/getproduct',
       },
       {
         label: 'Add Product',
-        path: 'admin/getproduct',
+        path: '/products',
       },
     ],
   },
@@ -163,9 +163,8 @@ export default function SideBar() {
         aria-label="Toggle sidebar"
       >
         <HiOutlineChevronRight
-          className={`w-[13px] h-[13px] text-white transition-transform duration-300 ${
-            collapsed ? 'rotate-180' : 'rotate-0'
-          }`}
+          className={`w-[13px] h-[13px] text-white transition-transform duration-300 ${collapsed ? 'rotate-180' : 'rotate-0'
+            }`}
         />
       </button>
       <nav className="flex-1 py-[10px] overflow-y-auto overflow-x-hidden scrollbar-none">
@@ -232,10 +231,9 @@ function NavRow({ item, active, collapsed, onClick, openDropdown, setOpenDropdow
           group relative flex items-center gap-[11px] cursor-pointer my-px
           transition-colors duration-150 overflow-hidden whitespace-nowrap
           ${collapsed ? 'justify-center px-0 py-[10px]' : 'px-[18px] py-[9px]'}
-          ${
-            active
-              ? 'bg-orange-500/[0.13] text-orange-400'
-              : 'text-[#7c8494] hover:bg-white/[0.05] hover:text-[#c8d0e0]'
+          ${active
+            ? 'bg-orange-500/[0.13] text-orange-400'
+            : 'text-[#7c8494] hover:bg-white/[0.05] hover:text-[#c8d0e0]'
           }
         `}
       >
@@ -251,9 +249,8 @@ function NavRow({ item, active, collapsed, onClick, openDropdown, setOpenDropdow
 
         {!collapsed && item.hasChevron && (
           <span
-            className={`opacity-35 flex-shrink-0 transition-transform duration-300 ${
-              isOpen ? 'rotate-90' : ''
-            }`}
+            className={`opacity-35 flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-90' : ''
+              }`}
           >
             <HiOutlineChevronRight className="w-[13px] h-[13px]" />
           </span>

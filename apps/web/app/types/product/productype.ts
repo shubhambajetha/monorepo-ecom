@@ -19,6 +19,7 @@ export interface Product {
   isFeatured: boolean;
   isActive: boolean;
   collectionId: string;
+  collection?: Collection;
   createdAt: string;
   updatedAt: string;
 }
@@ -53,9 +54,9 @@ export interface ProductPayload {
   description: string;
   brand: string;
   sku: string;
-  price: number;
-  discountPrice?: number;
-  stock: number;
+  price: number | string;
+  discountPrice?: number | string | null;
+  stock: number | string;
   thumbnail?: File | string | null;
   images?: (File | string | null)[];
   sizes: string[];

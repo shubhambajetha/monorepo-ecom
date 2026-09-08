@@ -40,6 +40,9 @@ export const createSubCategoryFormData = (payload: subcategoryPayload): FormData
   appendTextField(formData, 'name', payload.name);
   appendTextField(formData, 'slug', payload.slug);
   appendTextField(formData, 'categoryId', payload.categoryId);
+  if (payload.isFeatured !== undefined) {
+    appendTextField(formData, 'isFeatured', String(payload.isFeatured));
+  }
   appendFileField(formData, 'image', payload.image);
 
   return formData;
@@ -51,6 +54,9 @@ export const updateSubCategoryFormData = (payload: subcategoryPayload): FormData
   appendTextField(formData, 'name', payload.name);
   appendTextField(formData, 'slug', payload.slug);
   appendTextField(formData, 'categoryId', payload.categoryId);
+  if (payload.isFeatured !== undefined) {
+    appendTextField(formData, 'isFeatured', String(payload.isFeatured));
+  }
   appendFileField(formData, 'image', payload.image);
 
   return formData;

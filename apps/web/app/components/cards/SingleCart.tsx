@@ -2,11 +2,12 @@
 import { ShirtIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Product } from '@/app/types/product/productype';
+import { Collection } from '@/app/types/collection/collectiontype';
 import { resolveApiAssetUrl } from '@/app/lib/config';
 import WishLisht from '@/app/common/WishLisht';
 
 export interface SingleCartProps {
-  product?: Partial<Product> & {
+  product?: Omit<Partial<Product>, 'collection'> & {
     title?: string;
     category?: string;
     brand?: string;
@@ -19,7 +20,7 @@ export interface SingleCartProps {
     images?: string[];
     slug?: string;
     id?: string;
-    collection?: string;
+    collection?: string | Collection;
   };
 }
 
