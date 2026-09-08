@@ -1,18 +1,18 @@
 import { createsubcat } from '@/app/services/subcategoryapi/subcategory';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-
 export default function useCreateSubCategory() {
-  const queryclient = useQueryClient();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createsubcat,
     onSuccess: () => {
-      queryclient.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ['subcategories'],
       });
     },
-    onError:(error:any)=>{
-        console.log('Create category failed', error?.message)
-    }
-  })
+    onError: (error: any) => {
+      console.error('Create subcategory failed', error?.message);
+    },
+  });
 }
+

@@ -35,7 +35,7 @@ export const getAllCollections = async (): Promise<ApiResponse<Collection[]>> =>
   }
 };
 
-export const getCollectionById = async (id: number): Promise<ApiResponse<Collection>> => {
+export const getCollectionById = async (id: string): Promise<ApiResponse<Collection>> => {
   try {
     const response = await apiClient.get<ApiResponse<Collection>>(
       endpoints.collection.getcollection(id)
@@ -69,7 +69,7 @@ export const getProductsByCollection = async (
 };
 
 export const updateCollection = async (
-  id: number,
+  id: string,
   payload: CollectionPayload
 ): Promise<ApiResponse<Collection>> => {
   try {
@@ -84,7 +84,7 @@ export const updateCollection = async (
   }
 };
 
-export const deleteCollection = async (id: number): Promise<ApiResponse<null>> => {
+export const deleteCollection = async (id: string): Promise<ApiResponse<null>> => {
   try {
     const response = await apiClient.delete<ApiResponse<null>>(
       endpoints.collection.deletecollection(id)

@@ -8,7 +8,7 @@ import {
 import { ApiResponse } from '@/app/utils/api';
 import { apiClient, normalizeApiError } from '../apiClient';
 import { endpoints } from '@/app/constants/endpoint';
-import { createProductFormData } from '@/app/utils/categories/formData';
+import { createProductFormData, updateProductFormData } from '@/app/utils/categories/formData';
 
 export const createproduct = async (payload: ProductPayload): Promise<ApiResponse<Product>> => {
   try {
@@ -22,7 +22,7 @@ export const createproduct = async (payload: ProductPayload): Promise<ApiRespons
   }
 };
 
-export const getproduct = async (id: number): Promise<ApiResponse<Product>> => {
+export const getproduct = async (id: string): Promise<ApiResponse<Product>> => {
   try {
     const response = await apiClient.get<ApiResponse<Product>>(endpoints.product.getproduct(id));
     return response?.data;
@@ -73,13 +73,13 @@ export const searchProduct = async (search: string): Promise<PaginatedResponse<P
 };
 
 export const updateProduct = async (
-  id: number,
+  id: string,
   payload: ProductPayload
 ): Promise<ApiResponse<Product>> => {
   try {
     const response = await apiClient.put<ApiResponse<Product>>(
       endpoints.product.updateproduct(id),
-      payload
+      updateProductFormData(payload)
     );
     return response?.data;
   } catch (error) {
@@ -87,7 +87,7 @@ export const updateProduct = async (
   }
 };
 
-export const deleteproduct = async (id: number): Promise<ApiResponse<null>> => {
+export const deleteproduct = async (id: string): Promise<ApiResponse<null>> => {
   try {
     const response = await apiClient.delete<ApiResponse<null>>(endpoints.product.deleteproduct(id));
     return response?.data;

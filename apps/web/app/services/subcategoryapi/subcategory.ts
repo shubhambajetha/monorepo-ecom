@@ -1,4 +1,4 @@
-import { subcateCategory, subcategoryPayload } from '@/app/types/subcatgory/subcategorytype';
+import { SubCategory, subcategoryPayload } from '@/app/types/subcatgory/subcategorytype';
 import { ApiResponse } from '@/app/utils/api';
 import { apiClient, normalizeApiError } from '../apiClient';
 import { endpoints } from '@/app/constants/endpoint';
@@ -6,9 +6,9 @@ import { createSubCategoryFormData, updateSubCategoryFormData } from '@/app/util
 
 export const createsubcat = async (
   payload: subcategoryPayload
-): Promise<ApiResponse<subcateCategory>> => {
+): Promise<ApiResponse<SubCategory>> => {
   try {
-    const response = await apiClient.post<ApiResponse<subcateCategory>>(
+    const response = await apiClient.post<ApiResponse<SubCategory>>(
       endpoints.subcategory.createsubcategory,
       createSubCategoryFormData(payload)
     );
@@ -18,9 +18,9 @@ export const createsubcat = async (
   }
 };
 
-export const getsubcat = async (id: number): Promise<ApiResponse<subcateCategory>> => {
+export const getsubcat = async (id: string | number): Promise<ApiResponse<SubCategory>> => {
   try {
-    const response = await apiClient.get<ApiResponse<subcateCategory>>(
+    const response = await apiClient.get<ApiResponse<SubCategory>>(
       endpoints.subcategory.getsubcategory(id)
     );
     return response?.data;
@@ -29,9 +29,9 @@ export const getsubcat = async (id: number): Promise<ApiResponse<subcateCategory
   }
 };
 
-export const getallsubcat = async (): Promise<ApiResponse<subcateCategory>> => {
+export const getallsubcat = async (): Promise<ApiResponse<SubCategory[]>> => {
   try {
-    const response = await apiClient.get<ApiResponse<subcateCategory>>(
+    const response = await apiClient.get<ApiResponse<SubCategory[]>>(
       endpoints.subcategory.getallsubcategory
     );
     return response?.data;
@@ -41,11 +41,11 @@ export const getallsubcat = async (): Promise<ApiResponse<subcateCategory>> => {
 };
 
 export const getupdatesubcat = async (
-  id: number,
+  id: string | number,
   payload: subcategoryPayload
-): Promise<ApiResponse<subcateCategory>> => {
+): Promise<ApiResponse<SubCategory>> => {
   try {
-    const response = await apiClient.put<ApiResponse<subcateCategory>>(
+    const response = await apiClient.put<ApiResponse<SubCategory>>(
       endpoints.subcategory.updatesubcategory(id),
       updateSubCategoryFormData(payload)
     );
@@ -55,7 +55,7 @@ export const getupdatesubcat = async (
   }
 };
 
-export const getdeletesubcat = async (id: number): Promise<ApiResponse<null>> => {
+export const getdeletesubcat = async (id: string | number): Promise<ApiResponse<null>> => {
   try {
     const response = await apiClient.delete<ApiResponse<null>>(
       endpoints.subcategory.deletesubcategory(id)

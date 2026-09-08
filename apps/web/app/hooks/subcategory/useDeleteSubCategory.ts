@@ -5,8 +5,7 @@ export default function useDeleteSubCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number) => getdeletesubcat(id),
-
+    mutationFn: (id: string | number) => getdeletesubcat(id),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['subcategories'],
@@ -14,3 +13,4 @@ export default function useDeleteSubCategory() {
     },
   });
 }
+

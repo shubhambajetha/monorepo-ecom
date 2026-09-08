@@ -1,11 +1,18 @@
+import React, { Suspense } from 'react';
 import AddCollection from '@/app/components/admin/collection/AddCollection';
-import GetCollection from '@/app/components/admin/collection/GetCollection';
-import React from 'react'
 
-const page = () => {
+const Page = () => {
   return (
-    <div><AddCollection/></div>
-  )
-}
+    <Suspense
+      fallback={
+        <div className="max-w-4xl mx-auto px-4 py-12 text-center text-gray-500">
+          Loading collection form...
+        </div>
+      }
+    >
+      <AddCollection />
+    </Suspense>
+  );
+};
 
-export default page
+export default Page;

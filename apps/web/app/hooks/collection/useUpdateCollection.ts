@@ -2,20 +2,18 @@ import { updateCollection } from '@/app/services/collectionapi/collectionapi';
 import { CollectionPayload } from '@/app/types/collection/collectiontype';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export default function useUpdateCollection(id: number) {
+export default function useUpdateCollection(id: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: CollectionPayload) => 
-      updateCollection(id, payload),
+    mutationFn: (payload: CollectionPayload) => updateCollection(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['collections'],
       });
     },
-
     onError: (error: any) => {
-      console.log('Update collection failed', error?.message);
+      console.error('Update collection failed', error?.message);
     },
   });
 }

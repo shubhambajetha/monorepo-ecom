@@ -5,7 +5,7 @@ export default function useDeleteCollection() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number) => deleteCollection(id),
+    mutationFn: (id: string) => deleteCollection(id),
 
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -14,7 +14,7 @@ export default function useDeleteCollection() {
     },
 
     onError: (error: any) => {
-      console.log("Delete collection failed", error?.message);
+      console.error("Delete collection failed", error?.message);
     },
   });
 }

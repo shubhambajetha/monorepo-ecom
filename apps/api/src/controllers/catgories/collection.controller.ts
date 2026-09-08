@@ -46,6 +46,7 @@ export const createCollection = async (req: Request, res: Response, next: NextFu
 
     const newCollection = await prisma.collection.create({
       data: { name, slug, bannerImage, subcategoryId },
+      include: { subcategory: true },
     });
 
     return res.status(201).json({
@@ -68,6 +69,7 @@ export const getCollection = async (
 
     const collection = await prisma.collection.findUnique({
       where: { id },
+      include: { subcategory: true },
     });
 
     if (!collection) {
@@ -91,6 +93,7 @@ export const getAllCollections = async (req: Request, res: Response, next: NextF
   try {
     const collections = await prisma.collection.findMany({
       include: { subcategory: true },
+      orderBy: { createdAt: 'desc' },
     });
 
     return res.status(200).json({
@@ -266,6 +269,7 @@ export const updateCollection = async (
         ...(subcategoryId ? { subcategoryId } : {}),
         ...(bannerImage ? { bannerImage } : {}),
       },
+      include: { subcategory: true },
     });
 
     return res.status(200).json({
@@ -294,6 +298,17 @@ export const deleteCollection = async (
       return res.status(404).json({
         success: false,
         message: 'Collection not found',
+      });
+    }
+
+    const productCount = await prisma.product.count({
+      where: { collectionId: id },
+    });
+
+    if (productCount > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Cannot delete collection. It is linked to ${productCount} product(s). Please reassign or delete the products first.`,
       });
     }
 
