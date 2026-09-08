@@ -15,12 +15,19 @@ interface JWTPayload {
   userId: string;
   role?: Role;
 }
+export interface Pagination {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
 
 interface ApiResponse<T = any> {
   success: boolean;
   message: string;
   data?: T;
   error?: string;
+  pagination?: Pagination;  
 }
 
 interface UserData {

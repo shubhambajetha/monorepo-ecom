@@ -184,7 +184,9 @@ export const getProduct = async (
 
 export const ProductBySlug = async (req: Request, res: Response, next: NextFunction) => {
   try {
+  
     const { category, collection, slug } = req.query;
+    
 
     if (!category || !collection || !slug) {
       return res.status(400).json({
