@@ -6,7 +6,7 @@ import {
   updateCollectionFormData,
 } from '@/app/utils/categories/formData';
 import { apiClient, normalizeApiError } from '../apiClient';
-import { Product } from '@/app/types/product/productype';
+import { PaginatedResponse, Product } from '@/app/types/product/productype';
 
 export const createCollection = async (
   payload: CollectionPayload
@@ -49,22 +49,26 @@ export const getCollectionById = async (id: string): Promise<ApiResponse<Collect
 
 export const getProductsByCollection = async (
   category: string,
-  collection: string
-): Promise<ApiResponse<Product[]>> => {
+  collection: string,
+  page: number = 1,
+  limit: number = 20
+): Promise<PaginatedResponse<Product>> => {
   try {
-    const response = await apiClient.get<ApiResponse<Product[]>>(
+    const response = await apiClient.get<PaginatedResponse<Product>>(
       endpoints.collection.getProductsByCollection,
       {
         params: {
           category,
           collection,
+          page,
+          limit,
         },
       }
     );
 
     return response.data;
   } catch (error) {
-    throw normalizeApiError(error);
+    throw error;
   }
 };
 

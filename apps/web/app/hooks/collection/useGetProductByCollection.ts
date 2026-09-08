@@ -1,13 +1,37 @@
 import { getProductsByCollection } from "@/app/services/collectionapi/collectionapi";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 export default function useGetProductByCollections(
   category: string,
-  collection: string
+  collection: string,
+  limit: number = 20
 ) {
-  return useQuery({
-    queryKey: ["getbycollection", category, collection],
-    queryFn: () => getProductsByCollection(category, collection),
+  return useInfiniteQuery({
+    queryKey: [
+      "getbycollection",
+      category,
+      collection,
+      limit,
+    ],
+
+    queryFn: ({ pageParam }) =>
+      getProductsByCollection(
+        category,
+        collection,
+        pageParam,
+        limit
+      ),
+
+    initialPageParam: 1,
+
+    getNextPageParam: (lastPage) => {
+      if (!lastPage?.pagination) return undefined;
+      const { page, totalPages } = lastPage.pagination;
+
+      return page < totalPages
+        ? page + 1
+        : undefined;
+    },
+
     enabled: !!category && !!collection,
   });
-}

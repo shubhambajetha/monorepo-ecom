@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SingleCart from '../cards/SingleCart';
 import FilterOption from './FilterOption';
 import TopBar from './TopBar';
@@ -16,21 +16,47 @@ interface ProductCardProps {
 
 const ProductCard = ({ category = '', collection = '', initialProducts }: ProductCardProps) => {
   const [filtersVisible, setFiltersVisible] = useState(true);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  const { data, isLoading, isError } = useGetProductByCollections(category, collection);
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetProductByCollections(category, collection);
 
-  const rawData = initialProducts ?? data;
-  const products: Product[] = Array.isArray(rawData)
-    ? rawData
-    : Array.isArray(rawData?.data)
-      ? rawData.data
-      : [];
+  const products: Product[] = initialProducts
+    ? (Array.isArray(initialProducts) ? initialProducts : initialProducts?.data ?? [])
+    : (data?.pages.flatMap((page) => page.data ?? []) ?? []);
+
+  const totalCount = initialProducts
+    ? products.length
+    : (data?.pages[0]?.pagination?.total ?? products.length);
+
+  useEffect(() => {
+    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <div className="py-2 mx-2">
       <TopBar
         title={collection ? collection.toUpperCase() : 'Products'}
-        count={products.length}
+        count={totalCount}
         filtersVisible={filtersVisible}
         onToggleFilters={() => setFiltersVisible(!filtersVisible)}
       />
@@ -61,21 +87,30 @@ const ProductCard = ({ category = '', collection = '', initialProducts }: Produc
               <p className="text-gray-500">No products found.</p>
             </div>
           ) : (
-            <div
-              className={`
-                grid gap-4
-                grid-cols-2
-                sm:grid-cols-2
-                ${filtersVisible ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}
-              `}
-            >
-              {products.map((product) => (
-                <SingleCart
-                  key={product.id || product.slug}
-                  product={{ ...product, category, collection }}
-                />
-              ))}
-            </div>
+            <>
+              <div
+                className={`
+                  grid gap-4
+                  grid-cols-2
+                  sm:grid-cols-2
+                  ${filtersVisible ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}
+                `}
+              >
+                {products.map((product) => (
+                  <SingleCart
+                    key={product.id || product.slug}
+                    product={{ ...product, category, collection }}
+                  />
+                ))}
+              </div>
+
+              {/* Scroll Trigger Sentinel */}
+              <div ref={loadMoreRef} className="py-6 flex justify-center items-center">
+                {isFetchingNextPage && (
+                  <p className="text-sm text-gray-500 animate-pulse">Loading more products...</p>
+                )}
+              </div>
+            </>
           )}
         </div>
       </div>

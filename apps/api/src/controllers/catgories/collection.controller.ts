@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../config/prisma';
+import { getPagination } from '../../helpers/pagination';
+import { productInclude } from '../../helpers/productInclude';
 
 
 interface CollectionParams {
@@ -162,13 +164,13 @@ export const subcollection = async (req: Request, res: Response, next: NextFunct
     next(error);
   }
 };
-
 export const getProductsByCollection = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
+    const { page, limit, skip } = getPagination(req.query);
     const { category, collection } = req.query;
 
     if (!category || !collection) {
@@ -178,27 +180,44 @@ export const getProductsByCollection = async (
       });
     }
 
-    const products = await prisma.product.findMany({
-      where: {
-        collection: {
-          slug: collection as string,
-          subcategory: {
-            category: {
-              slug: category as string,
-            },
+    const where = {
+      collection: {
+        slug: collection as string,
+        subcategory: {
+          category: {
+            slug: category as string,
           },
         },
-        isActive: true,
       },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+      isActive: true,
+    };
+
+    const [products, total] = await prisma.$transaction([
+      prisma.product.findMany({
+        where,
+        orderBy: {
+          createdAt: "desc",
+        },
+        skip,
+        take: limit,
+        include: productInclude,
+      }),
+
+      prisma.product.count({
+        where,
+      }),
+    ]);
 
     return res.status(200).json({
       success: true,
       message: "Products fetched successfully",
       data: products,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     next(error);
