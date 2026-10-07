@@ -4,6 +4,9 @@ import React, { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperType } from 'swiper';
 import { Navigation } from 'swiper/modules';
+import Link from 'next/link';
+import { ChevronLeft, ChevronRight, ArrowRight, Flame } from 'lucide-react';
+
 import 'swiper/css';
 import 'swiper/css/navigation';
 
@@ -31,60 +34,51 @@ const Swiperspo: React.FC = () => {
   const progressWidth = isBeginning ? `${(1 / totalSlides) * 100}%` : isEnd ? '100%' : '50%';
 
   return (
-    <section className="bg-brand-paper py-14 px-4">
+    <section className="bg-white py-16 md:py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-100">
       <div className="relative max-w-[1560px] mx-auto">
         {/* Header */}
-        <div className="flex items-end justify-between mb-9">
-          <h2 className="text-4xl md:text-5xl font-extrabold uppercase tracking-tight leading-none text-brand-ink">
-            Shop by <span className="text-brand-accent">Featured</span>
-          </h2>
-          <a
-            href="#"
-            className="text-xs font-bold uppercase tracking-widest text-brand-ink border-b-2 border-brand-ink pb-0.5 hover:text-brand-accent hover:border-brand-accent transition-colors"
-          >
-            View All
-          </a>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 text-orange-600 text-xs font-bold uppercase tracking-wider mb-3">
+              <Flame className="w-3.5 h-3.5 text-orange-600" />
+              <span>Athletic Discipline</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold uppercase tracking-tight leading-none text-slate-900">
+              Shop by <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600">Sport</span>
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/product-listing"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900 hover:text-red-600 transition-colors group mr-2"
+            >
+              <span>Explore All Sports</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+
+            {/* Prev Button */}
+            <button
+              onClick={() => swiperRef.current?.slidePrev()}
+              disabled={isBeginning}
+              aria-label="Previous sport"
+              className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-900 hover:text-white text-slate-700 flex items-center justify-center shadow-xs transition-colors disabled:opacity-30 disabled:pointer-events-none"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            {/* Next Button */}
+            <button
+              onClick={() => swiperRef.current?.slideNext()}
+              disabled={isEnd}
+              aria-label="Next sport"
+              className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-900 hover:text-white text-slate-700 flex items-center justify-center shadow-xs transition-colors disabled:opacity-30 disabled:pointer-events-none"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
         </div>
-
-        {/* Prev Button */}
-        <button
-          onClick={() => swiperRef.current?.slidePrev()}
-          disabled={isBeginning}
-          aria-label="Previous"
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-brand-ink text-brand-elevated flex items-center justify-center shadow-lg transition-all duration-200 hover:bg-brand-accent hover:scale-110 disabled:opacity-0 disabled:pointer-events-none max-sm:hidden"
-        >
-          <svg
-            className="w-4 h-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </button>
-
-        {/* Next Button */}
-        <button
-          onClick={() => swiperRef.current?.slideNext()}
-          disabled={isEnd}
-          aria-label="Next"
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-brand-ink text-brand-elevated flex items-center justify-center shadow-lg transition-all duration-200 hover:bg-brand-accent hover:scale-110 disabled:opacity-0 disabled:pointer-events-none max-sm:hidden"
-        >
-          <svg
-            className="w-4 h-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="9 6 15 12 9 18" />
-          </svg>
-        </button>
 
         {/* Swiper */}
         <Swiper
@@ -109,51 +103,45 @@ const Swiperspo: React.FC = () => {
         >
           {items.map((item, i) => (
             <SwiperSlide key={i}>
-              <a href="#" className="group block">
+              <Link
+                href={`/product-listing?search=${encodeURIComponent(item.title)}`}
+                className="group block"
+              >
                 {/* Image */}
-                <div className="relative overflow-hidden rounded-sm bg-brand-surface aspect-[3/4]">
+                <div className="relative overflow-hidden rounded-2xl bg-slate-100 aspect-[3/4] shadow-xs group-hover:shadow-xl transition-all duration-300">
                   <img
                     src={item.img}
                     alt={item.title}
                     loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-108"
                   />
 
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-brand-ink/40 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="w-full text-center text-brand-elevated bg-brand-accent text-xs font-bold uppercase tracking-widest py-2.5 rounded-sm">
-                      Shop Now
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent flex flex-col justify-end p-5">
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-orange-400 mb-1">
+                      {item.tag}
+                    </span>
+                    <h3 className="text-xl font-black uppercase text-white tracking-tight group-hover:text-orange-400 transition-colors">
+                      {item.title}
+                    </h3>
+                  </div>
+
+                  {/* Hover overlay button */}
+                  <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span className="w-full block text-center text-slate-900 bg-white/95 backdrop-blur-sm text-xs font-bold uppercase tracking-wider py-2.5 rounded-xl shadow-md">
+                      Shop {item.title}
                     </span>
                   </div>
                 </div>
-
-                {/* Footer */}
-                <div className="flex items-center justify-between mt-3">
-                  <h3 className="text-lg font-medium uppercase text-brand-ink">
-                    {item.title}
-                  </h3>
-                  <svg
-                    className="w-5 h-5 text-brand-muted/50 transition-all duration-200 group-hover:text-brand-accent group-hover:translate-x-1"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
-                </div>
-              </a>
+              </Link>
             </SwiperSlide>
           ))}
         </Swiper>
 
         {/* Progress bar */}
-        <div className="mt-7 h-0.5 bg-brand-border rounded-full overflow-hidden">
+        <div className="mt-8 h-1 bg-slate-100 rounded-full overflow-hidden">
           <div
-            className="h-full bg-brand-ink rounded-full transition-all duration-300"
+            className="h-full bg-slate-900 rounded-full transition-all duration-300"
             style={{ width: progressWidth }}
           />
         </div>
@@ -163,3 +151,4 @@ const Swiperspo: React.FC = () => {
 };
 
 export default Swiperspo;
+

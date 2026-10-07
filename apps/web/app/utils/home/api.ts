@@ -12,16 +12,21 @@ export interface HomePageData {
   spotlight: spotlight[];
 }
 
-export const getHomePage = async (params: collectionParam): Promise<HomePageData> => {
+export const getHomePage = async (params?: collectionParam): Promise<HomePageData> => {
+  const cleanParams =
+    params?.category && params.category.trim() && params.category !== 'undefined'
+      ? { category: params.category.trim() }
+      : undefined;
+
   const [collection, newarrival, spotlight] = await Promise.all([
-    getcollectionData(params),
-    getnewarrival(params),
-    getsportlightdata(params),
+    getcollectionData(cleanParams),
+    getnewarrival(cleanParams),
+    getsportlightdata(cleanParams),
   ]);
 
   const normalizedCollections = (collection.data ?? []).map((item) => ({
     ...item,
-    bannerImage: resolveApiAssetUrl(item.bannerImage),
+    bannerImage: resolveApiAssetUrl(item.bannerImage) ?? item.bannerImage,
   }));
 
   const normalizedNewArrival = (newarrival.data ?? []).map((item) => ({
@@ -40,3 +45,4 @@ export const getHomePage = async (params: collectionParam): Promise<HomePageData
     spotlight: normalizedSpotlight,
   };
 };
+

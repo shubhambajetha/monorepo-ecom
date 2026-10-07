@@ -53,6 +53,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
       colors,
       isFeatured,
       isActive,
+      isSpotlight,
     } = req.body;
 
     const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
@@ -98,6 +99,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
         colors: parseArray(colors),
         isFeatured: parseBool(isFeatured) ?? false,
         isActive: parseBool(isActive) ?? true,
+        isSpotlight: parseBool(isSpotlight) ?? true,
       },
     });
 
@@ -261,6 +263,7 @@ export const updateProduct = async (
       colors,
       isFeatured,
       isActive,
+      isSpotlight,
     } = req.body;
 
     const existingProduct = await prisma.product.findUnique({ where: { id } });
@@ -318,8 +321,9 @@ export const updateProduct = async (
         images,
         sizes: sizes ? parseArray(sizes) : undefined,
         colors: colors ? parseArray(colors) : undefined,
-        isFeatured: parseBool(isFeatured),
-        isActive: parseBool(isActive),
+        isFeatured: isFeatured !== undefined ? parseBool(isFeatured) : undefined,
+        isActive: isActive !== undefined ? parseBool(isActive) : undefined,
+        isSpotlight: isSpotlight !== undefined ? parseBool(isSpotlight) : undefined,
       },
     });
 

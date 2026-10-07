@@ -43,4 +43,5 @@ router.get('/products/:id', getProduct);
 router.get('/productbyslug', ProductBySlug)
 router.get('/product/featured', getfeaturedproduct);
 
+
 export default router;

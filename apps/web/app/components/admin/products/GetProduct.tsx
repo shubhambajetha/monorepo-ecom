@@ -298,6 +298,11 @@ const GetProduct = ({ initialData }: GetProductProps) => {
                     <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                   </span>
                 )}
+                {p.isSpotlight && (
+                  <span title="Spotlight Product" className="text-[10px] font-bold text-orange-500 bg-orange-50 px-1 rounded border border-orange-200">
+                    S
+                  </span>
+                )}
               </div>
 
               {/* Actions */}

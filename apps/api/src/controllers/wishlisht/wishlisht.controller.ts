@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../config/prisma';
-import { success } from 'zod';
 
 export const createWishlist = async (req: Request, res: Response, next: NextFunction) => {
   try {

@@ -18,6 +18,7 @@ export interface Product {
   rating: number;
   isFeatured: boolean;
   isActive: boolean;
+  isSpotlight: boolean;
   collectionId: string;
   collection?: Collection;
   createdAt: string;
@@ -39,6 +40,7 @@ export interface ProductQueryParams {
   maxPrice?: string;
   inStock?: string;
   isFeatured?: string;
+  isSpotlight?: string;
   size?: string;
   color?: string;
   search?: string;
@@ -63,6 +65,7 @@ export interface ProductPayload {
   colors: string[];
   isFeatured?: boolean;
   isActive?: boolean;
+  isSpotlight?: boolean;
   collectionId: string;
 }
 

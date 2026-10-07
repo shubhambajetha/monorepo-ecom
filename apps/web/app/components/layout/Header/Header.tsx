@@ -255,7 +255,7 @@ export default function Header() {
             <Link href="/product-listing" aria-label="Search products">
               <MagnifyingGlassIcon className="h-6 w-6" />
             </Link>
-            <Link href="/productcart" aria-label="Shopping bag">
+            <Link href="/cart" aria-label="Shopping bag">
               <ShoppingBagIcon className="h-6 w-6" />
             </Link>
 

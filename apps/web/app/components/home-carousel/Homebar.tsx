@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ChevronLeftIcon, ChevronRightIcon, PauseIcon, PlayIcon } from '@heroicons/react/24/solid';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -141,7 +142,7 @@ export default function Homebar() {
       </Swiper>
 
       {/* Text Content */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-20 z-10 flex justify-center px-4 sm:bottom-24 sm:px-6">
+      <div className="absolute inset-x-0 bottom-20 z-10 flex justify-center px-4 sm:bottom-24 sm:px-6 pointer-events-none">
         <AnimatePresence mode="wait">
           <motion.div
             key={slides[activeIndex]?.id}
@@ -155,42 +156,68 @@ export default function Homebar() {
               x: activeIndex > prevIndex ? -72 : 72,
             }}
             transition={{ duration: 0.6 }}
-            className="flex max-w-[980px] flex-col items-center text-center"
+            className="flex max-w-[980px] flex-col items-center text-center pointer-events-auto"
           >
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
               {slides[activeIndex]?.type === 'image' ? 'New Arrival' : 'Featured Video'}
             </p>
 
-            <h2 className="text-4xl font-black uppercase sm:text-6xl">
+            <h2 className="text-4xl font-black uppercase sm:text-6xl text-white tracking-tight drop-shadow-md">
               {slides[activeIndex]?.title}
             </h2>
 
-            <p className="mt-3 max-w-[860px] text-sm text-white/90 sm:text-base">
+            <p className="mt-3 max-w-[860px] text-sm text-white/90 sm:text-base drop-shadow-sm">
               {slides[activeIndex]?.subtitle}
             </p>
+
+            <div className="mt-6 flex items-center gap-4">
+              <Link
+                href="/product-listing"
+                className="px-7 py-3 rounded-full bg-white text-slate-900 hover:bg-slate-900 hover:text-white font-bold text-xs uppercase tracking-wider shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+              >
+                Shop Now
+              </Link>
+            </div>
           </motion.div>
         </AnimatePresence>
+      </div>
+
+      {/* Slide Indicators */}
+      <div className="absolute bottom-8 left-8 z-20 flex items-center gap-2">
+        {slides.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => swiperRef.current?.slideTo(idx)}
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              activeIndex === idx ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/70'
+            }`}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
+        ))}
       </div>
 
       {/* Controls */}
       <div className="absolute bottom-6 right-6 z-20 flex gap-2">
         <button
           onClick={goToPrevious}
-          className="grid h-10 w-10 place-items-center rounded-full border border-white/30 bg-black/40 hover:bg-white/10"
+          aria-label="Previous slide"
+          className="grid h-10 w-10 place-items-center rounded-full border border-white/30 bg-black/40 hover:bg-white/10 text-white transition-colors"
         >
           <ChevronLeftIcon className="h-5 w-5" />
         </button>
 
         <button
           onClick={togglePlay}
-          className="grid h-10 w-10 place-items-center rounded-full border border-white/30 bg-black/40 hover:bg-white/10"
+          aria-label={isPlaying ? 'Pause autoplay' : 'Start autoplay'}
+          className="grid h-10 w-10 place-items-center rounded-full border border-white/30 bg-black/40 hover:bg-white/10 text-white transition-colors"
         >
           {isPlaying ? <PauseIcon className="h-5 w-5" /> : <PlayIcon className="h-5 w-5" />}
         </button>
 
         <button
           onClick={goToNext}
-          className="grid h-10 w-10 place-items-center rounded-full border border-white/30 bg-black/40 hover:bg-white/10"
+          aria-label="Next slide"
+          className="grid h-10 w-10 place-items-center rounded-full border border-white/30 bg-black/40 hover:bg-white/10 text-white transition-colors"
         >
           <ChevronRightIcon className="h-5 w-5" />
         </button>

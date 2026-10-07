@@ -4,16 +4,17 @@ import NewArival from './components/homepage/newarrival/NewArival';
 import Spotlight from './components/homepage/spotlight/Spotlight';
 import { getHomePage } from './utils/home/api';
 
-export default async function HomeData({ category }: { category: string }) {
-  const data = await getHomePage({
-    category,
-  });
+export default async function HomeData({ category }: { category?: string } = {}) {
+  const data = await getHomePage(category ? { category } : undefined);
+
   return (
-    <>
+    <div className="w-full flex flex-col bg-white overflow-hidden">
       <Homebar />
       <Feature category={category} data={data.collection} />
       <NewArival data={data.newarrival} />
       <Spotlight data={data.spotlight} />
-    </>
+    </div>
   );
 }
+
+
