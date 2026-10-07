@@ -99,6 +99,7 @@ export const createProductFormData = (payload: ProductPayload): FormData => {
   appendTextField(formData, 'collectionId', payload.collectionId);
   appendTextField(formData, 'isFeatured', payload.isFeatured);
   appendTextField(formData, 'isActive', payload.isActive);
+  appendTextField(formData, 'isSpotlight', payload.isSpotlight);
 
   // Thumbnail
   appendFileField(formData, 'thumbnail', payload.thumbnail as File);

@@ -47,6 +47,7 @@ const AddProduct = ({ productId: propProductId }: AddProductProps) => {
   const [collectionId, setCollectionId] = useState('');
   const [isFeatured, setIsFeatured] = useState(false);
   const [isActive, setIsActive] = useState(true);
+  const [isSpotlight, setIsSpotlight] = useState(true);
 
   // Sizes & Colors
   const [sizes, setSizes] = useState<string[]>([]);
@@ -95,6 +96,7 @@ const AddProduct = ({ productId: propProductId }: AddProductProps) => {
       setCollectionId(p.collectionId || '');
       setIsFeatured(Boolean(p.isFeatured));
       setIsActive(Boolean(p.isActive));
+      setIsSpotlight(p.isSpotlight !== undefined ? Boolean(p.isSpotlight) : true);
       setSizes(p.sizes || []);
       setColors(p.colors || []);
       setIsSlugManuallyEdited(true);
@@ -314,6 +316,7 @@ const AddProduct = ({ productId: propProductId }: AddProductProps) => {
       colors,
       isFeatured,
       isActive,
+      isSpotlight,
     };
 
     if (isEditMode) {
@@ -339,6 +342,9 @@ const AddProduct = ({ productId: propProductId }: AddProductProps) => {
           setDiscountPrice('');
           setStock('10');
           setCollectionId('');
+          setIsFeatured(false);
+          setIsActive(true);
+          setIsSpotlight(true);
           setSizes([]);
           setColors([]);
           setThumbnailFile(null);
@@ -600,7 +606,7 @@ const AddProduct = ({ productId: propProductId }: AddProductProps) => {
           </div>
 
           {/* Visibility / Status Toggles */}
-          <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-gray-100">
+          <div className="pt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-gray-100">
             <label className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 cursor-pointer hover:bg-gray-50 transition">
               <input
                 type="checkbox"
@@ -610,7 +616,7 @@ const AddProduct = ({ productId: propProductId }: AddProductProps) => {
               />
               <div>
                 <span className="font-semibold text-gray-900 text-sm block">Active Product</span>
-                <span className="text-xs text-gray-400">Visible and purchasable in store</span>
+                <span className="text-xs text-gray-400">Visible and purchasable</span>
               </div>
             </label>
 
@@ -625,7 +631,22 @@ const AddProduct = ({ productId: propProductId }: AddProductProps) => {
                 <span className="font-semibold text-gray-900 text-sm flex items-center gap-1.5">
                   <Sparkles className="w-4 h-4 text-amber-500" /> Featured Product
                 </span>
-                <span className="text-xs text-gray-400">Highlight in home & featured carousels</span>
+                <span className="text-xs text-gray-400">Highlight in featured sections</span>
+              </div>
+            </label>
+
+            <label className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 cursor-pointer hover:bg-gray-50 transition">
+              <input
+                type="checkbox"
+                checked={isSpotlight}
+                onChange={(e) => setIsSpotlight(e.target.checked)}
+                className="w-5 h-5 accent-orange-500 rounded"
+              />
+              <div>
+                <span className="font-semibold text-gray-900 text-sm flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-orange-500" /> Spotlight Product
+                </span>
+                <span className="text-xs text-gray-400">Display in homepage Spotlight</span>
               </div>
             </label>
           </div>

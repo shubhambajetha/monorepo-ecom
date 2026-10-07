@@ -6,7 +6,7 @@ const router: ExpressRouter = Router();
 
 router.get('/homedata/categories/',getHomeCollections)
 router.get("/homedata/newarrival/", getHomelatestproduct);
-router.get('/homedata/sportlight/', getHomeSportlight)
+router.get('/homedata/sportlight/', getHomeSportlight);
 
 
 

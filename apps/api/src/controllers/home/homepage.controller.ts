@@ -13,11 +13,25 @@ export const getHomeCollections = async (req: Request, res: Response, next: Next
   try {
     const { category } = req.query;
 
+    const categorySlug =
+      typeof category === 'string' && category.trim() && category !== 'undefined'
+        ? category.trim()
+        : undefined;
+
     const collections = await prisma.collection.findMany({
-      where: {
+      where: categorySlug
+        ? {
+            subcategory: {
+              category: {
+                slug: categorySlug,
+              },
+            },
+          }
+        : {},
+      include: {
         subcategory: {
-          category: {
-            slug: category as string,
+          include: {
+            category: true,
           },
         },
       },
@@ -42,26 +56,41 @@ export const getHomelatestproduct = async (req: Request, res: Response, next: Ne
   try {
     const { category } = req.query;
 
+    const categorySlug =
+      typeof category === 'string' && category.trim() && category !== 'undefined'
+        ? category.trim()
+        : undefined;
+
     const newArrival = await prisma.product.findMany({
       where: {
+        isActive: true,
+        ...(categorySlug
+          ? {
+              collection: {
+                subcategory: {
+                  category: {
+                    slug: categorySlug,
+                  },
+                },
+              },
+            }
+          : {}),
+      },
+      include: {
         collection: {
-          subcategory: {
-            category: {
-              slug: category as string,
+          include: {
+            subcategory: {
+              include: {
+                category: true,
+              },
             },
           },
         },
       },
-      select: {
-        id: true,
-        title: true,
-        thumbnail: true,
-      },
       orderBy: {
         createdAt: 'desc',
       },
-      take: 8,
-      // include: productInclude,
+      take: 12,
     });
 
     return res.status(200).json({
@@ -77,18 +106,42 @@ export const getHomeSportlight = async (req: Request, res: Response, next: NextF
   try {
     const { category } = req.query;
 
+    const categorySlug =
+      typeof category === 'string' && category.trim() && category !== 'undefined'
+        ? category.trim()
+        : undefined;
+
     const spotlight = await prisma.product.findMany({
       where: {
+        isSpotlight: true,
+        isActive: true,
+        ...(categorySlug
+          ? {
+              collection: {
+                subcategory: {
+                  category: {
+                    slug: categorySlug,
+                  },
+                },
+              },
+            }
+          : {}),
+      },
+      include: {
         collection: {
-          subcategory: {
-            category: {
-              slug: category as string,
+          include: {
+            subcategory: {
+              include: {
+                category: true,
+              },
             },
           },
         },
-        isSpotlight: true,
       },
-      take: 12,
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 30,
     });
 
     return res.status(200).json({
@@ -100,3 +153,4 @@ export const getHomeSportlight = async (req: Request, res: Response, next: NextF
     next(error);
   }
 };
+
